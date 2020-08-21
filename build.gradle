@@ -1,0 +1,57 @@
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+
+group = 'hu.webarticum'
+description = 'Aurora TimeTable Core Librarys'
+
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+version = '0.1.0' // FIXME
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    
+    // XXX
+    implementation 'junit:junit:4.12'
+}
+
+task buildFullSource(type: Exec) {
+    mkdir 'build/full-source'
+    def filename = project.jar.archiveName.replaceAll(/\.jar$/, '') + "-source.zip"
+    commandLine 'git', 'archive', '--format', 'zip', '-o', './build/full-source/' + filename, '--', 'HEAD'
+}
+
+task buildEverything(type: Copy, dependsOn: [
+    'jar', 'buildFullSource'
+]) {
+    into 'build/everything'
+    
+    from ('build/libs') {
+        include '*.jar'
+    }
+    
+    from ('build/full-source') {
+        include '*.zip'
+    }
+}

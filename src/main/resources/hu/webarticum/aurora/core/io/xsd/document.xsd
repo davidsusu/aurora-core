@@ -1,0 +1,454 @@
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="https://orarend-program.hu/xml/schema/document"
+  xmlns="https://orarend-program.hu/xml/schema/document"
+  elementFormDefault="qualified"
+>
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:all>
+        
+        <xs:element name="header" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="info" minOccurs="0" maxOccurs="unbounded" type="infoDefinition" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="periods" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="period" type="periodDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="timingSets" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="timingSet" type="timingSetDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="tags" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="tag" type="tagDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="resources" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="resource" type="resourceDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="blocks" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="block" type="blockDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="boards" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="board" type="boardDefinition" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="extraData" type="hasAnyDataDefinition" minOccurs="0" maxOccurs="1" />
+        
+      </xs:all>
+    </xs:complexType>
+    
+  </xs:element>
+  
+  <xs:simpleType name="char">
+    <xs:restriction base="xs:string">
+      <xs:length value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="color">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  
+  <xs:simpleType name="id">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="timePoint">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="W\.\d+ D\.\d+ ([01]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="timeLength">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((([1-9][0-9]*|[0-9]):)?([0-5]?[0-9]):)?([0-5]?[0-9])"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="tagType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="subject" />
+      <xs:enumeration value="language" />
+      <xs:enumeration value="other" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="resourceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="class" />
+      <xs:enumeration value="person" />
+      <xs:enumeration value="locale" />
+      <xs:enumeration value="object" />
+      <xs:enumeration value="other" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="infoDefinition">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="periodDefinition">
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="label" type="xs:string" use="required" />
+    <xs:attribute name="term" type="xs:nonNegativeInteger" />
+    <xs:attribute name="position" type="xs:nonNegativeInteger" />
+  </xs:complexType>
+  
+  <xs:complexType name="periodReference">
+    <xs:attribute name="periodId" type="id" />
+  </xs:complexType>
+  
+  <!-- XXX: type? switches?? -->
+  <xs:complexType name="timeLimitDefinition">
+    <xs:sequence>
+      <xs:element name="switch" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="time" type="timePoint" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" /> <!-- XXX: requied? -->
+    <xs:attribute name="startState" />
+  </xs:complexType>
+  
+  <xs:complexType name="timeLimitOptionallyWithPeriodDefinition">
+    <xs:complexContent>
+      <xs:extension base="timeLimitDefinition">
+        <xs:attribute name="periodId" type="id" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="timingSetDefinition">
+    <xs:sequence>
+      <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="label" type="xs:string" />
+          <xs:attribute name="time" type="timePoint" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="label" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="timingSetOptionallyWithPeriodDefinition">
+    <xs:complexContent>
+      <xs:extension base="timingSetDefinition">
+        <xs:attribute name="periodId" type="id" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="timingSetReference">
+    <xs:attribute name="timingSetId" type="id" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="timingSetOptionallyWithPeriodReference">
+    <xs:complexContent>
+      <xs:extension base="timingSetReference">
+        <xs:attribute name="periodId" type="id" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="tagDefinition">
+    <xs:all>
+      <xs:element name="timingSets" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="timingSet" type="timingSetDefinition" />
+              <xs:element name="timingSetRef" type="timingSetReference" />
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="timeLimits" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="timeLimit" type="timeLimitDefinition" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="type" type="tagType" use="required" />
+    <xs:attribute name="label" type="xs:string" use="required" />
+    <xs:attribute name="acronym" type="xs:string" />
+    <xs:attribute name="color" type="color" />
+    <xs:attribute name="timeLimitEnabled" type="xs:boolean" />
+    <xs:attribute name="timingSetEnabled" type="xs:boolean" />
+  </xs:complexType>
+  
+  <xs:complexType name="tagReference">
+    <xs:attribute name="tagId" type="id" />
+  </xs:complexType>
+  
+  <xs:complexType name="resourceDefinition">
+    <xs:all>
+      <xs:element name="splittings" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="splitting" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <!-- XXX minOccurs="1" ? -->
+                  <xs:element name="part" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="name" use="required" />
+                      <xs:attribute name="label" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" use="required" />
+                <xs:attribute name="label" use="required" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="timingSets" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="timingSet" type="timingSetOptionallyWithPeriodDefinition" />
+              <xs:element name="timingSetRef" type="timingSetOptionallyWithPeriodReference" />
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="timeLimits" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="timeLimit" type="timeLimitOptionallyWithPeriodDefinition" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="type" type="resourceType" use="required" />
+    <xs:attribute name="label" type="xs:string" use="required" />
+    <xs:attribute name="acronym" type="xs:string" />
+    <xs:attribute name="color" type="color" />
+    <xs:attribute name="quantity" type="xs:positiveInteger" />
+    <xs:attribute name="timeLimitEnabled" type="xs:boolean" />
+    <xs:attribute name="timingSetEnabled" type="xs:boolean" />
+  </xs:complexType>
+  
+  <xs:complexType name="resourceReference">
+    <xs:attribute name="resourceId" type="id" />
+  </xs:complexType>
+  
+  <xs:complexType name="resourceSubset">
+    <xs:sequence>
+      <xs:element name="subset" type="resourceSubset" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="whole" />
+          <xs:enumeration value="part" />
+          <xs:enumeration value="union" />
+          <xs:enumeration value="intersection" />
+          <xs:enumeration value="difference" />
+          <xs:enumeration value="symmetricDifference" />
+          <xs:enumeration value="inverse" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="partName" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="resourceOptionallySubset">
+    <xs:complexContent>
+      <xs:extension base="resourceReference">
+        <xs:sequence>
+          <xs:element name="subset" type="resourceSubset" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="activityDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="periodRef" type="periodReference" />
+        <xs:element name="tagRef" type="tagReference" />
+        <xs:element name="resourceRef" type="resourceOptionallySubset" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="label" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="blockDefinition">
+    <xs:sequence>
+      <xs:element name="activity" type="activityDefinition" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="length" type="timeLength" />
+  </xs:complexType>
+  
+  <xs:complexType name="blockReference">
+    <xs:attribute name="blockId" type="id" />
+  </xs:complexType>
+  
+  <xs:complexType name="boardDefinition">
+    <xs:sequence>
+      <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="blockId" type="id" use="required" />
+          <xs:attribute name="time" type="timePoint" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="id" />
+    <xs:attribute name="label" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="boardReference">
+    <xs:attribute name="boardId" type="id" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeNull" />
+  
+  <xs:complexType name="dataTypeBoolean">
+    <xs:attribute name="value" type="xs:boolean" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeByte">
+    <xs:attribute name="value" type="xs:byte" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeShort">
+    <xs:attribute name="value" type="xs:short" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeInteger">
+    <xs:attribute name="value" type="xs:integer" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeLong">
+    <xs:attribute name="value" type="xs:long" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeFloat">
+    <xs:attribute name="value" type="xs:float" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeDouble">
+    <xs:attribute name="value" type="xs:double" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeCharacter">
+    <xs:attribute name="value" type="char" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeString">
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <!-- XXX / TODO -->
+  <xs:complexType name="dataTypeObject">
+    <xs:sequence>
+      <xs:any processContents="skip" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeMap">
+    <xs:sequence>
+      <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key" type="hasAnyDataDefinition" />
+            <xs:element name="value" type="hasAnyDataDefinition" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeList">
+    <xs:sequence>
+      <xs:group ref="anyDataGroup" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="dataTypeSet">
+    <xs:sequence>
+      <xs:group ref="anyDataGroup" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:group name="anyDataGroup">
+    <xs:choice>
+      <xs:element name="null" type="dataTypeNull" />
+      <xs:element name="boolean" type="dataTypeBoolean" />
+      <xs:element name="byte" type="dataTypeByte" />
+      <xs:element name="short" type="dataTypeShort" />
+      <xs:element name="int" type="dataTypeInteger" />
+      <xs:element name="long" type="dataTypeLong" />
+      <xs:element name="double" type="dataTypeDouble" />
+      <xs:element name="char" type="dataTypeCharacter" />
+      <xs:element name="string" type="dataTypeString" />
+      <xs:element name="map" type="dataTypeMap" />
+      <xs:element name="list" type="dataTypeList" />
+      <xs:element name="set" type="dataTypeSet" />
+      <xs:element name="period" type="periodDefinition" />
+      <xs:element name="periodRef" type="periodReference" />
+      <xs:element name="timingSet" type="timingSetDefinition" />
+      <xs:element name="timingSetRef" type="timingSetReference" />
+      <xs:element name="timeLimit" type="timeLimitDefinition" />
+      <xs:element name="tag" type="tagDefinition" />
+      <xs:element name="tagRef" type="tagReference" />
+      <xs:element name="resource" type="resourceDefinition" />
+      <xs:element name="resourceRef" type="resourceReference" />
+      <xs:element name="block" type="blockDefinition" />
+      <xs:element name="blockRef" type="blockReference" />
+      <xs:element name="boardRef" type="boardReference" />
+      <xs:element name="object" type="dataTypeObject" />
+    </xs:choice>
+  </xs:group>
+  
+  <xs:complexType name="hasAnyDataDefinition">
+    <xs:sequence>
+      <xs:group ref="anyDataGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  
+</xs:schema>
