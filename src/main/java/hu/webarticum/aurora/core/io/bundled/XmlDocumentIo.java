@@ -394,7 +394,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             if (period!=null) {
                 timeLimitElement.setAttribute("period", periodStore.register(period, Store.REGISTER_MODE.INSERT_AUTO));
             }
-            // FIXME: kulon-kulon?
+            // FIXME: dedicated elements?
             CustomTimeLimit customTimeLimit = new CustomTimeLimit(timeLimit);
             timeLimitElement.setAttribute("type", "custom");
             timeLimitElement.setAttribute("startState", customTimeLimit.getStartState()?"1":"0");
@@ -500,7 +500,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         protected Element createValueElement(Value value) {
             Element resultElement;
-            Value.TYPE valueType = value.getType();
+            Value.Type valueType = value.getType();
             switch (valueType) {
                 case BOOLEAN:
                     resultElement = xmlDocument.createElement("boolean");
@@ -633,9 +633,6 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                         resultElement = xmlDocument.createElement("blockRef");
                         resultElement.setAttribute("blockId", blockId);
                     }
-                    break;
-                case OBJECT:
-                    resultElement = xmlDocument.createElement("object");
                     break;
                 case NULL:
                 default:
@@ -1124,7 +1121,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         public Value processValueElement(Element valueElement) {
             if (valueElement==null) {
-                return new Value(Value.TYPE.NULL);
+                return new Value(Value.Type.NULL);
             }
 
             String tagName = valueElement.getTagName();
@@ -1134,7 +1131,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
             
             if (tagName.equals("null")) {
-                return new Value(Value.TYPE.NULL);
+                return new Value(Value.Type.NULL);
             } else if (tagName.equals("boolean")) {
                 return new Value(!valueStr.matches("|0|false"));
             } else if (tagName.equals("byte")) {
@@ -1151,18 +1148,18 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 return new Value(getNumberValue(valueStr).doubleValue());
             } else if (tagName.equals("char")) {
                 if (valueStr.isEmpty()) {
-                    return new Value(Value.TYPE.CHAR);
+                    return new Value(Value.Type.CHAR);
                 } else {
                     return new Value(valueStr.charAt(0));
                 }
             } else if (tagName.equals("string")) {
                 return new Value(valueStr);
             } else if (tagName.equals("map")) {
-                Value mapValue = new Value(Value.TYPE.MAP);
+                Value mapValue = new Value(Value.Type.MAP);
                 Value.ValueMap map = mapValue.getAccess().get().getAsMap();
                 for (Element entryElement: findAllByTagName(valueElement, "entry")) {
-                    Value keyValue = new Value(Value.TYPE.NULL);
-                    Value subValue = new Value(Value.TYPE.NULL);
+                    Value keyValue = new Value(Value.Type.NULL);
+                    Value subValue = new Value(Value.Type.NULL);
                     Element keyWrapperElement = findFirstByTagName(entryElement, "key");
                     if (keyWrapperElement!=null) {
                         Element keyElement = findFirstByTagName(keyWrapperElement, "*");
@@ -1181,14 +1178,14 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 }
                 return mapValue;
             } else if (tagName.equals("list")) {
-                Value listValue = new Value(Value.TYPE.LIST);
+                Value listValue = new Value(Value.Type.LIST);
                 Value.ValueList list = listValue.getAccess().get().getAsList();
                 for (Element itemElement: findAllByTagName(valueElement, "*")) {
                     list.add(processValueElement(itemElement));
                 }
                 return listValue;
             } else if (tagName.equals("set")) {
-                Value setValue = new Value(Value.TYPE.SET);
+                Value setValue = new Value(Value.Type.SET);
                 Value.ValueSet set = setValue.getAccess().get().getAsSet();
                 for (Element itemElement: findAllByTagName(valueElement, "*")) {
                     set.add(processValueElement(itemElement));
@@ -1275,18 +1272,13 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                     block = new Block();
                 }
                 return new Value(block);
-            } else if (tagName.equals("object")) {
-                
-                // TODO
-                
-                return new Value(Value.TYPE.OBJECT);
             } else {
-                return new Value(Value.TYPE.NULL);
+                return new Value(Value.Type.NULL);
             }
         }
         
         protected Number getNumberValue(String valueStr) {
-            Number result = new Integer(0);
+            Number result = Integer.valueOf(0);
             if (!valueStr.isEmpty()) {
                 if (valueStr.indexOf('.')==(-1)) {
                     try {

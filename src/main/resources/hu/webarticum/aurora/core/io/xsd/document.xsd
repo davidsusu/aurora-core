@@ -382,14 +382,6 @@
     <xs:attribute name="value" type="xs:string" use="required" />
   </xs:complexType>
   
-  <!-- XXX / TODO -->
-  <xs:complexType name="dataTypeObject">
-    <xs:sequence>
-      <xs:any processContents="skip" minOccurs="0" maxOccurs="1" />
-    </xs:sequence>
-    <xs:anyAttribute processContents="skip" />
-  </xs:complexType>
-  
   <xs:complexType name="dataTypeMap">
     <xs:sequence>
       <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
@@ -441,7 +433,6 @@
       <xs:element name="block" type="blockDefinition" />
       <xs:element name="blockRef" type="blockReference" />
       <xs:element name="boardRef" type="boardReference" />
-      <xs:element name="object" type="dataTypeObject" />
     </xs:choice>
   </xs:group>
   

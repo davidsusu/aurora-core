@@ -20,11 +20,11 @@ public class Value implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    protected Object value;
+    protected Serializable value;
     
-    protected TYPE type;
+    protected Type type;
     
-    public enum TYPE {
+    public enum Type {
         NULL,
         
         BOOLEAN,
@@ -51,146 +51,144 @@ public class Value implements Serializable {
         BLOCK,
         ACTIVITY,
         TIMETABLE,
-        
-        OBJECT,
     }
 
     public Value() {
         this.value = null;
-        this.type = TYPE.NULL;
+        this.type = Type.NULL;
     }
     
     public Value(boolean value) {
         this.value = (Boolean)value;
-        this.type = TYPE.BOOLEAN;
+        this.type = Type.BOOLEAN;
     }
 
     public Value(byte value) {
         this.value = (Byte)value;
-        this.type = TYPE.BYTE;
+        this.type = Type.BYTE;
     }
     
     public Value(short value) {
         this.value = (Short)value;
-        this.type = TYPE.SHORT;
+        this.type = Type.SHORT;
     }
 
     public Value(int value) {
         this.value = (Integer)value;
-        this.type = TYPE.INT;
+        this.type = Type.INT;
     }
 
     public Value(long value) {
         this.value = (Long)value;
-        this.type = TYPE.LONG;
+        this.type = Type.LONG;
     }
 
     public Value(float value) {
         this.value = (Float)value;
-        this.type = TYPE.FLOAT;
+        this.type = Type.FLOAT;
     }
 
     public Value(double value) {
         this.value = (Double)value;
-        this.type = TYPE.DOUBLE;
+        this.type = Type.DOUBLE;
     }
 
     public Value(char value) {
         this.value = (Character)value;
-        this.type = TYPE.CHAR;
+        this.type = Type.CHAR;
     }
     
     public Value(Boolean value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.BOOLEAN;
+        this.type = (value == null) ? Type.NULL : Type.BOOLEAN;
     }
 
     public Value(Byte value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.BYTE;
+        this.type = (value == null) ? Type.NULL : Type.BYTE;
     }
     
     public Value(Short value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.SHORT;
+        this.type = (value == null) ? Type.NULL : Type.SHORT;
     }
 
     public Value(Integer value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.INT;
+        this.type = (value == null) ? Type.NULL : Type.INT;
     }
 
     public Value(Long value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.LONG;
+        this.type = (value == null) ? Type.NULL : Type.LONG;
     }
 
     public Value(Float value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.FLOAT;
+        this.type = (value == null) ? Type.NULL : Type.FLOAT;
     }
 
     public Value(Double value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.DOUBLE;
+        this.type = (value == null) ? Type.NULL : Type.DOUBLE;
     }
 
     public Value(Character value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.CHAR;
+        this.type = (value == null) ? Type.NULL : Type.CHAR;
     }
 
     public Value(String value) {
         this.value = value;
-        this.type = (value == null) ? TYPE.NULL : TYPE.STRING;
+        this.type = (value == null) ? Type.NULL : Type.STRING;
     }
     
     public Value(Period period) {
         this.value = period;
-        this.type = TYPE.PERIOD;
+        this.type = Type.PERIOD;
     }
     
     public Value(TimingSet timingSet) {
         this.value = timingSet;
-        this.type = TYPE.TIMINGSET;
+        this.type = Type.TIMINGSET;
     }
     
     public Value(TimeLimit timeLimit) {
         this.value = timeLimit;
-        this.type = TYPE.TIMELIMIT;
+        this.type = Type.TIMELIMIT;
     }
     
     public Value(Tag tag) {
         this.value = tag;
-        this.type = TYPE.TAG;
+        this.type = Type.TAG;
     }
     
     public Value(Resource resource) {
         this.value = resource;
-        this.type = TYPE.RESOURCE;
+        this.type = Type.RESOURCE;
     }
     
     public Value(ResourceSubset resourceSubset) {
         this.value = resourceSubset;
-        this.type = TYPE.RESOURCESUBSET;
+        this.type = Type.RESOURCESUBSET;
     }
 
     public Value(Block block) {
         this.value = block;
-        this.type = TYPE.BLOCK;
+        this.type = Type.BLOCK;
     }
 
     public Value(Activity activity) {
         this.value = activity;
-        this.type = TYPE.ACTIVITY;
+        this.type = Type.ACTIVITY;
     }
 
     public Value(Board board) {
         this.value = board;
-        this.type = TYPE.TIMETABLE;
+        this.type = Type.TIMETABLE;
     }
     
-    public Value(TYPE type) {
+    public Value(Type type) {
         this.value = createByType(type);
         this.type = type;
     }
@@ -202,23 +200,26 @@ public class Value implements Serializable {
 
     public Value(ValueMap valueMap) {
         this.value = valueMap;
-        this.type = TYPE.MAP;
+        this.type = Type.MAP;
     }
 
     public Value(ValueList valueList) {
         this.value = valueList;
-        this.type = TYPE.LIST;
+        this.type = Type.LIST;
     }
 
     public Value(ValueSet valueSet) {
         this.value = valueSet;
-        this.type = TYPE.SET;
+        this.type = Type.SET;
     }
 
-    // FIXME
     public Value(Object object) {
-        if (object instanceof TYPE) {
-            TYPE type = (TYPE)object;
+        this((Serializable) object);
+    }
+    
+    public Value(Serializable object) {
+        if (object instanceof Type) {
+            Type type = (Type)object;
             this.type = type;
             this.value = createByType(type);
         } else if (object instanceof Value) {
@@ -231,7 +232,7 @@ public class Value implements Serializable {
         }
     }
     
-    protected Object createByType(TYPE type) {
+    protected Serializable createByType(Type type) {
         switch (type) {
             case BOOLEAN:
                 return Boolean.valueOf(false);
@@ -275,70 +276,68 @@ public class Value implements Serializable {
                 return new Activity();
             case TIMETABLE:
                 return new Board();
-            case OBJECT:
-                return new Object();
             case NULL:
             default:
                 return null;
         }
     }
     
-    protected TYPE getTypeFor(Object object) {
+    protected Type getTypeFor(Object object) {
         if (object == null) {
-            return TYPE.NULL;
+            return Type.NULL;
         } else if (object instanceof Boolean) {
-            return TYPE.BOOLEAN;
+            return Type.BOOLEAN;
         } else if (object instanceof Byte) {
-            return TYPE.BYTE;
+            return Type.BYTE;
         } else if (object instanceof Short) {
-            return TYPE.SHORT;
+            return Type.SHORT;
         } else if (object instanceof Integer) {
-            return TYPE.INT;
+            return Type.INT;
         } else if (object instanceof Long) {
-            return TYPE.LONG;
+            return Type.LONG;
         } else if (object instanceof Float) {
-            return TYPE.FLOAT;
+            return Type.FLOAT;
         } else if (object instanceof Double) {
-            return TYPE.DOUBLE;
+            return Type.DOUBLE;
         } else if (object instanceof Character) {
-            return TYPE.CHAR;
+            return Type.CHAR;
         } else if (object instanceof String) {
-            return TYPE.STRING;
+            return Type.STRING;
         } else if (object instanceof ValueMap) {
-            return TYPE.MAP;
+            return Type.MAP;
         } else if (object instanceof ValueList) {
-            return TYPE.LIST;
+            return Type.LIST;
         } else if (object instanceof ValueSet) {
-            return TYPE.SET;
+            return Type.SET;
         } else if (object instanceof Period) {
-            return TYPE.PERIOD;
+            return Type.PERIOD;
         } else if (object instanceof TimingSet) {
-            return TYPE.TIMINGSET;
+            return Type.TIMINGSET;
         } else if (object instanceof TimeLimit) {
-            return TYPE.TIMELIMIT;
+            return Type.TIMELIMIT;
         } else if (object instanceof Tag) {
-            return TYPE.TAG;
+            return Type.TAG;
         } else if (object instanceof Resource) {
-            return TYPE.RESOURCE;
+            return Type.RESOURCE;
         } else if (object instanceof ResourceSubset) {
-            return TYPE.RESOURCESUBSET;
+            return Type.RESOURCESUBSET;
         } else if (object instanceof Block) {
-            return TYPE.BLOCK;
+            return Type.BLOCK;
         } else if (object instanceof Activity) {
-            return TYPE.ACTIVITY;
+            return Type.ACTIVITY;
         } else if (object instanceof Board) {
-            return TYPE.TIMETABLE;
+            return Type.TIMETABLE;
         } else {
-            return TYPE.OBJECT;
+            throw new IllegalArgumentException(String.format("Unknown type: %s", object.getClass().getName()));
         }
     }
     
-    public TYPE getType() {
+    public Type getType() {
         return type;
     }
     
     public boolean isNull() {
-        return (type == TYPE.NULL);
+        return (type == Type.NULL);
     }
 
     public Object get() {
@@ -443,7 +442,7 @@ public class Value implements Serializable {
     }
     
     public ValueMap getAsMap() {
-        if (type== TYPE.MAP) {
+        if (type== Type.MAP) {
             return (ValueMap)value;
         } else {
             return new ValueMap();
@@ -451,9 +450,9 @@ public class Value implements Serializable {
     }
 
     public ValueList getAsList() {
-        if (type == TYPE.LIST) {
+        if (type == Type.LIST) {
             return (ValueList)value;
-        } else if (type == TYPE.SET) {
+        } else if (type == Type.SET) {
             return new ValueList((ValueSet)value);
         } else {
             return new ValueList();
@@ -461,9 +460,9 @@ public class Value implements Serializable {
     }
 
     public ValueSet getAsSet() {
-        if (type == TYPE.SET) {
+        if (type == Type.SET) {
             return (ValueSet)value;
-        } else if (type == TYPE.LIST) {
+        } else if (type == Type.LIST) {
             return new ValueSet((ValueList)value);
         } else {
             return new ValueSet();
@@ -471,7 +470,7 @@ public class Value implements Serializable {
     }
     
     public Period getAsPeriod() {
-        if (type == TYPE.PERIOD) {
+        if (type == Type.PERIOD) {
             return (Period)value;
         } else {
             return new Period();
@@ -479,7 +478,7 @@ public class Value implements Serializable {
     }
     
     public TimingSet getAsTimingSet() {
-        if (type == TYPE.TIMINGSET) {
+        if (type == Type.TIMINGSET) {
             return (TimingSet)value;
         } else {
             return new TimingSet();
@@ -487,7 +486,7 @@ public class Value implements Serializable {
     }
     
     public TimeLimit getAsTimeLimit() {
-        if (type == TYPE.TIMELIMIT) {
+        if (type == Type.TIMELIMIT) {
             return (TimeLimit)value;
         } else {
             return new NeverTimeLimit();
@@ -495,7 +494,7 @@ public class Value implements Serializable {
     }
     
     public Tag getAsTag() {
-        if (type == TYPE.TAG) {
+        if (type == Type.TAG) {
             return (Tag)value;
         } else {
             return new Tag();
@@ -503,7 +502,7 @@ public class Value implements Serializable {
     }
     
     public Resource getAsResource() {
-        if (type == TYPE.RESOURCE) {
+        if (type == Type.RESOURCE) {
             return (Resource)value;
         } else {
             return new Resource();
@@ -511,7 +510,7 @@ public class Value implements Serializable {
     }
     
     public ResourceSubset getAsResourceSubset() {
-        if (type == TYPE.RESOURCESUBSET) {
+        if (type == Type.RESOURCESUBSET) {
             return (ResourceSubset)value;
         } else {
             return new ResourceSubset.Whole(new Resource());
@@ -519,7 +518,7 @@ public class Value implements Serializable {
     }
 
     public Block getAsBlock() {
-        if (type == TYPE.BLOCK) {
+        if (type == Type.BLOCK) {
             return (Block)value;
         } else {
             return new Block();
@@ -527,7 +526,7 @@ public class Value implements Serializable {
     }
 
     public Activity getAsActivity() {
-        if (type == TYPE.ACTIVITY) {
+        if (type == Type.ACTIVITY) {
             return (Activity)value;
         } else {
             return new Activity();
@@ -535,7 +534,7 @@ public class Value implements Serializable {
     }
 
     public Board getAsBoard() {
-        if (type == TYPE.TIMETABLE) {
+        if (type == Type.TIMETABLE) {
             return (Board)value;
         } else {
             return new Board();
@@ -547,14 +546,14 @@ public class Value implements Serializable {
     }
     
     private void walk(Value value, Value parentValue, Value[] path, WalkCallback callback) {
-        Value.TYPE type = value.getType();
-        if (type == Value.TYPE.MAP) {
+        Value.Type type = value.getType();
+        if (type == Value.Type.MAP) {
             for (Map.Entry<Value, Value> entry: value.getAsMap().entrySet()) {
                 Value keyValue = entry.getKey();
                 Value valueValue = entry.getValue();
                 walk(valueValue, keyValue, extendValueArray(path, keyValue), callback);
             }
-        } else if (type == Value.TYPE.LIST || type == Value.TYPE.SET) {
+        } else if (type == Value.Type.LIST || type == Value.Type.SET) {
             int i = 0;
             for (Value subValue: value.getAsList()) {
                 walk(subValue, value, extendValueArray(path, new Value(i)), callback);
@@ -638,7 +637,6 @@ public class Value implements Serializable {
         
     }
     
-    // XXX: Tree?
     public class ValueMap extends TreeMap<Value, Value> {
         
         private static final long serialVersionUID = 1L;
@@ -660,6 +658,16 @@ public class Value implements Serializable {
             for (Map.Entry<? extends Object, ? extends Object> entry: map.entrySet()) {
                 put(new Value(entry.getKey()), new Value(entry.getValue()));
             }
+        }
+        
+        @Override
+        public ValueSet keySet() {
+            return new ValueSet(super.keySet());
+        }
+
+        @Override
+        public ValueList values() {
+            return new ValueList(super.values());
         }
         
     }
@@ -692,7 +700,6 @@ public class Value implements Serializable {
         
     }
 
-    // XXX: Tree?
     public class ValueSet extends TreeSet<Value> {
         
         private static final long serialVersionUID = 1L;
@@ -718,27 +725,45 @@ public class Value implements Serializable {
         
     }
     
-    // FIXME/TODO
     public class ValueComparator implements Comparator<Value>, Serializable {
         
         private static final long serialVersionUID = 1L;
 
         @Override
         public int compare(Value value1, Value value2) {
-            Value.TYPE type1 = value1.getType();
-            Value.TYPE type2 = value2.getType();
+            Value.Type type1 = value1.getType();
+            Value.Type type2 = value2.getType();
             int typeResult = type1.compareTo(type2);
             if (typeResult != 0) {
                 return typeResult;
             }
             switch (type1) {
-                
-                // TODO: all comparable types...
-                
+                case NULL:
+                    return 0;
+                case BOOLEAN:
+                    return value1.getAsBoolean().compareTo(value2.getAsBoolean());
+                case CHAR:
+                case BYTE:
+                case SHORT:
                 case INT:
-                    return value1.getAsInt().compareTo(value2.getAsInt());
+                case LONG:
+                    return value1.getAsLong().compareTo(value2.getAsLong());
+                case FLOAT:
+                case DOUBLE:
+                    return value1.getAsDouble().compareTo(value2.getAsDouble());
                 case STRING:
                     return value1.getAsString().compareTo(value2.getAsString());
+                case LIST:
+                case SET:
+                    return compareLists(value1.getAsList(), value2.getAsList());
+                case MAP:
+                    ValueMap map1 = value1.getAsMap();
+                    ValueMap map2 = value2.getAsMap();
+                    int keyCmp = compareLists(new ValueList(map1.keySet()), new ValueList(map2.keySet()));
+                    if (keyCmp != 0) {
+                        return keyCmp;
+                    }
+                    return compareLists(map1.values(), map2.values());
                 default:
                     Object object1 = value1.get();
                     Object object2 = value2.get();
@@ -754,6 +779,19 @@ public class Value implements Serializable {
                         return Integer.compare(System.identityHashCode(object1), System.identityHashCode(object2));
                     }
             }
+        }
+        
+        private int compareLists(ValueList list1, ValueList list2) {
+            int size1 = list1.size();
+            int size2 = list2.size();
+            int commonSize = Math.min(size1, size2);
+            for (int i = 0; i < commonSize; i++) {
+                int cmp = compare(list1.get(i), list2.get(i));
+                if (cmp != 0) {
+                    return cmp;
+                }
+            }
+            return Integer.compare(size1, size2);
         }
         
     }
@@ -785,7 +823,7 @@ public class Value implements Serializable {
                     if (firstChar == PATH_INDEX_BEGIN) {
                         String indexToken = token.substring(1, token.length() - 1);
                         if (indexToken.isEmpty()) {
-                            nextValue = new Value(Value.TYPE.NULL);
+                            nextValue = new Value(Value.Type.NULL);
                         } else {
                             int index = -1;
                             try {
@@ -793,7 +831,7 @@ public class Value implements Serializable {
                             } catch(NumberFormatException e) {
                             }
                             if (index >= 0) {
-                                nextValue = new Value(new Integer(index));
+                                nextValue = new Value(Integer.valueOf(index));
                             } else {
                                 nextValue = new Value(indexToken);
                             }
@@ -804,6 +842,7 @@ public class Value implements Serializable {
                         try {
                             bindingIndex = Integer.parseInt(bindingIndexToken);
                         } catch(NumberFormatException e) {
+                            // will be handled later
                         }
                         if (bindingIndex < 0 || bindingIndex >= bindings.length) {
                             throw new AccessPathSyntaxException("Wrong binding index: " + bindingIndexToken);
@@ -874,11 +913,11 @@ public class Value implements Serializable {
             if (routeResult.exists()) {
                 return routeResult.getValue();
             } else {
-                return new Value(TYPE.NULL);
+                return new Value(Type.NULL);
             }
         }
 
-        public Value get(TYPE requiredType) {
+        public Value get(Type requiredType) {
             RouteResult routeResult = route();
             if (routeResult.exists()) {
                 return routeResult.getValue();
@@ -907,7 +946,7 @@ public class Value implements Serializable {
             }
         }
 
-        public Value getReferenced(TYPE requiredType) {
+        public Value getReferenced(Type requiredType) {
             RouteResult routeResult = route();
             if (routeResult.exists()) {
                 return routeResult.getValue();
@@ -928,11 +967,11 @@ public class Value implements Serializable {
             }
         }
 
-        public Value getReferenced(TYPE requiredType, Value fallbackValue) {
+        public Value getReferenced(Type requiredType, Value fallbackValue) {
             RouteResult routeResult = route();
-            Value value = routeResult.getValue();
-            if (routeResult.exists() && value.getType().equals(requiredType)) {
-                return value;
+            Value foundValue = routeResult.getValue();
+            if (routeResult.exists() && foundValue.getType().equals(requiredType)) {
+                return foundValue;
             } else {
                 set(fallbackValue);
                 return fallbackValue;
@@ -943,7 +982,6 @@ public class Value implements Serializable {
             return contains(new Value(object));
         }
 
-        // TODO: visit all set elements
         public boolean contains(Value value) {
             Value parentValue = get();
             switch (parentValue.getType()) {
@@ -962,7 +1000,7 @@ public class Value implements Serializable {
             set(new Value(object));
         }
 
-        public void set(TYPE type) {
+        public void set(Type type) {
             set(new Value(type));
         }
         
@@ -975,10 +1013,10 @@ public class Value implements Serializable {
                 value.value = valueToSet.value;
                 value.type = valueToSet.type;
             } else {
-                TYPE type = value.getType();
+                Type type = value.getType();
                 Value nextKey = pathList.get(0);
                 List<Value> subPathList = pathList.subList(1, pathList.size());
-                if (type == TYPE.MAP) {
+                if (type == Type.MAP) {
                     ValueMap map = value.getAsMap();
                     Value subValue;
                     if (map.containsKey(nextKey)) {
@@ -988,7 +1026,7 @@ public class Value implements Serializable {
                         map.put(nextKey, subValue);
                     }
                     setValue(subValue, valueToSet, subPathList);
-                } else if (type == TYPE.LIST) {
+                } else if (type == Type.LIST) {
                     ValueList list = value.getAsList();
                     int indexKey = nextKey.getAsIndex(-1);
                     if (nextKey.isNull()) {
@@ -997,7 +1035,7 @@ public class Value implements Serializable {
                     if (indexKey < 0) {
                         ValueMap map = value.new ValueMap();
                         value.value = map;
-                        value.type = TYPE.MAP;
+                        value.type = Type.MAP;
                         int listSize = list.size();
                         for (int i = 0; i < listSize; i++) {
                             map.put(new Value(i), list.get(i));
@@ -1024,7 +1062,7 @@ public class Value implements Serializable {
                         }
                         setValue(subValue, valueToSet, subPathList);
                     }
-                } else if (type == TYPE.SET) {
+                } else if (type == Type.SET) {
                     ValueSet set = value.getAsSet();
                     if (nextKey.isNull()) {
                         Value subValue = new Value();
@@ -1037,7 +1075,7 @@ public class Value implements Serializable {
                         if (nextIndex >= 0 && nextIndex < size) {
                             ValueList list = value.new ValueList();
                             value.value = list;
-                            value.type = TYPE.LIST;
+                            value.type = Type.LIST;
                             Value subValue = new Value();
                             for (Value existingValue: set) {
                                 list.add(existingValue);
@@ -1047,7 +1085,7 @@ public class Value implements Serializable {
                         } else {
                             ValueMap map = value.new ValueMap();
                             value.value = map;
-                            value.type = TYPE.MAP;
+                            value.type = Type.MAP;
                             {
                                 int i = 0;
                                 for (Value existingValue: set) {
@@ -1064,16 +1102,16 @@ public class Value implements Serializable {
                     if (nextKey.isNull()) {
                         ValueSet set = value.new ValueSet();
                         value.value = set;
-                        value.type = TYPE.SET;
+                        value.type = Type.SET;
                         Value subValue = new Value();
                         set.add(subValue);
                         setValue(subValue, valueToSet, subPathList);
                     } else {
                         int intNextKey = nextKey.getAsInt();
-                        if (nextKey.getType() == TYPE.INT && intNextKey >= 0) {
+                        if (nextKey.getType() == Type.INT && intNextKey >= 0) {
                             ValueList list = value.new ValueList();
                             value.value = list;
-                            value.type = TYPE.LIST;
+                            value.type = Type.LIST;
                             Value subValue = new Value();
                             for (int i = 0; i < intNextKey; i++) {
                                 list.add(new Value());
@@ -1083,7 +1121,7 @@ public class Value implements Serializable {
                         } else {
                             ValueMap map = value.new ValueMap();
                             value.value = map;
-                            value.type = TYPE.MAP;
+                            value.type = Type.MAP;
                             Value subValue = new Value();
                             map.put(nextKey, subValue);
                             setValue(subValue, valueToSet, subPathList);
@@ -1213,8 +1251,8 @@ public class Value implements Serializable {
             }
             Value nextKey = pathList.get(0);
             List<Value> subPathList = pathList.subList(1, pathList.size());
-            Value.TYPE valueType = value.getType();
-            if (valueType == Value.TYPE.LIST) {
+            Value.Type valueType = value.getType();
+            if (valueType == Value.Type.LIST) {
                 int index = nextKey.getAsIndex(-1);
                 List<Value> list = value.getAsList();
                 if (index < 0 || index >= list.size()) {
@@ -1224,7 +1262,7 @@ public class Value implements Serializable {
                 RouteResult subResult = routeValue(subValue, subPathList);
                 subResult.wrapParent(value);
                 return subResult;
-            } else if (valueType == Value.TYPE.MAP) {
+            } else if (valueType == Value.Type.MAP) {
                 Map<Value, Value> map = value.getAsMap();
                 if (!map.containsKey(nextKey)) {
                     return new RouteResult(false, null);
@@ -1233,10 +1271,10 @@ public class Value implements Serializable {
                 RouteResult subResult = routeValue(subValue, subPathList);
                 subResult.wrapParent(value);
                 return subResult;
-            } else if (valueType == Value.TYPE.SET) {
+            } else if (valueType == Value.Type.SET) {
                 Set<Value> set = value.getAsSet();
                 if (!nextKey.isNull()) {
-                    if (nextKey.getType() == Value.TYPE.INT) {
+                    if (nextKey.getType() == Value.Type.INT) {
                         int index = nextKey.getAsInt();
                         if (index < set.size()) {
                             int i = 0;
