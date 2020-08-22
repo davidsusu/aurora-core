@@ -168,7 +168,7 @@ public class BlockTest {
         )).isEmpty();
         assertThat(independentBlock.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        )).isEmpty();;
+        )).isEmpty();
         assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(class1)).isEmpty();
         assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(class2)).isEmpty();
         assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(teacher1)).isEmpty();

@@ -6,12 +6,13 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-public class PeriodSet extends TreeSet<Period> implements Comparable<PeriodSet> {
+public class PeriodSet extends TreeSet<Period> implements Comparable<PeriodSet> { // NOSONAR super.equals() is OK
     
     private static final long serialVersionUID = 1L;
     
     
-    private Comparator<Period> comparator;
+    /** @serial */
+    private Comparator<Period> comparator; // NOSONAR serial
     
 
     public PeriodSet() {

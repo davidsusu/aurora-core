@@ -11,11 +11,13 @@ public class Activity implements Labeled {
 
     private static final long serialVersionUID = 1L;
 
+    
     private String label = "";
 
     private ResourceManager resourceManager = new ResourceManager();
 
     private TagManager tagManager = new TagManager();
+    
     
     public Activity() {
     }
@@ -34,6 +36,7 @@ public class Activity implements Labeled {
         this.label = label;
     }
 
+    
     public void setLabel(String label) {
         this.label = label;
     }
@@ -60,11 +63,14 @@ public class Activity implements Labeled {
         return new ActivityList(this).conflictsWith(new ActivityList(other));
     }
     
+    
     public class ResourceManager implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private ResourceSubsetList resourceSubsets = new ResourceSubsetList();
+        
         
         public void add(ResourceSubset resourceSubset) {
             resourceSubsets.add(resourceSubset);
@@ -171,12 +177,15 @@ public class Activity implements Labeled {
 
     }
     
+    
     public class TagManager implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private Set<Tag> tags = new HashSet<Tag>();
 
+        
         public void add(Tag tag) {
             tags.add(tag);
         }

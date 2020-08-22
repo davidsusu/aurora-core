@@ -20,9 +20,11 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
 
     private static final long serialVersionUID = 1L;
 
+    
     private ArrayList<Entry> entries;
 
     private boolean sorted = true;
+    
     
     public ActivityFlow() {
         this.entries = new ArrayList<Entry>();
@@ -36,6 +38,7 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
         this.entries = entries;
     }
 
+    
     public List<Entry> getEntries() {
         return new ArrayList<Entry>(entries);
     }
@@ -163,21 +166,25 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
         return entries.toString();
     }
     
+    
     public class Entry implements Intervalable, Serializable {
         
         private static final long serialVersionUID = 1L;
 
+        
         private final Activity activity;
 
         private final Interval interval;
 
         private final PeriodSet periods;
         
+        
         public Entry(Activity activity, Interval interval, Collection<Period> periods) {
             this.activity = activity;
             this.interval = interval;
             this.periods = new PeriodSet(periods);
         }
+        
         
         public Interval getInterval() {
             return interval;
@@ -223,12 +230,14 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
         
     }
     
+    
     public interface EntryFilter {
         
         public boolean validate(Entry entry);
         
     }
 
+    
     public static class ActivityEntryFilter implements EntryFilter {
         
         private final ActivityFilter activityFilter;
@@ -245,6 +254,7 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
         }
         
     }
+    
     
     public static class SortComparator implements Comparator<Entry> {
         

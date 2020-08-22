@@ -8,7 +8,9 @@ public class NeverTimeLimit implements TimeLimit {
 
     private static final long serialVersionUID = 1L;
 
+    
     public static final TimeLimit INSTANCE = new NeverTimeLimit();
+    
     
     @Override
     public boolean contains(Time time) {

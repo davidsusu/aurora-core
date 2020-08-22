@@ -16,12 +16,15 @@ public class Store<T> implements Iterable<T>, Serializable {
     
     private static final long serialVersionUID = 1L;
     
+
+    /** @serial */
+    protected final Map<String, T> idItemMap = new HashMap<String, T>(); // NOSONAR serial
+
+    /** @serial */
+    protected final Map<T, String> itemIdMap; // NOSONAR serial
     
-    protected final Map<String, T> idItemMap = new HashMap<String, T>();
-    
-    protected final Map<T, String> itemIdMap;
-    
-    protected final List<StoreListener<T>> listeners = new ArrayList<StoreListener<T>>(1);
+    /** @serial */
+    protected final List<StoreListener<T>> listeners = new ArrayList<StoreListener<T>>(1); // NOSONAR serial
     
     
     public enum REGISTER_MODE {
@@ -43,6 +46,7 @@ public class Store<T> implements Iterable<T>, Serializable {
         itemIdMap = createItemIdMap(comparator);
     }
     
+    
     private static <T> Map<T, String> createItemIdMap(Comparator<T> comparator) {
         if (comparator == null) {
             return new HashMap<T, String>();
@@ -50,6 +54,7 @@ public class Store<T> implements Iterable<T>, Serializable {
             return new TreeMap<T, String>(new MultiComparator<T>(comparator));
         }
     }
+    
 
     public String register(T item) {
         return register(item, getDefaultIdFor(item), DEFAULT_REGISTER_MODE);
@@ -344,7 +349,7 @@ public class Store<T> implements Iterable<T>, Serializable {
     }
     
     
-    public interface StoreListener<T> extends EventListener {
+    public interface StoreListener<T> extends EventListener, Serializable {
 
         public void registered(RegisterEvent<T> registerEvent);
 
@@ -354,6 +359,7 @@ public class Store<T> implements Iterable<T>, Serializable {
         
         public void storeRefreshed(StoreRefreshEvent<T> storeRefreshEvent);
         
+        
         public static class RegisterEvent<T> {
 
             private final Store<T> store;
@@ -362,67 +368,13 @@ public class Store<T> implements Iterable<T>, Serializable {
             
             private final T item;
             
+            
             public RegisterEvent(Store<T> store, String id, T item) {
                 this.store = store;
                 this.id = id;
                 this.item = item;
             }
-
-            public Store<T> getStore() {
-                return store;
-            }
-
-            public String getId() {
-                return id;
-            }
             
-            public T getItem() {
-                return item;
-            }
-            
-        }
-
-        public static class RemoveEvent<T> {
-            
-            private final Store<T> store;
-            
-            private final String id;
-            
-            private final T item;
-            
-            public RemoveEvent(Store<T> store, String id, T item) {
-                this.store = store;
-                this.id = id;
-                this.item = item;
-            }
-
-            public Store<T> getStore() {
-                return store;
-            }
-
-            public String getId() {
-                return id;
-            }
-            
-            public T getItem() {
-                return item;
-            }
-            
-        }
-
-        public static class ItemRefreshEvent<T> {
-
-            private final Store<T> store;
-            
-            private final String id;
-            
-            private final T item;
-            
-            public ItemRefreshEvent(Store<T> store, String id, T item) {
-                this.store = store;
-                this.id = id;
-                this.item = item;
-            }
 
             public Store<T> getStore() {
                 return store;
@@ -438,16 +390,81 @@ public class Store<T> implements Iterable<T>, Serializable {
             
         }
         
+
+        public static class RemoveEvent<T> {
+            
+            private final Store<T> store;
+            
+            private final String id;
+            
+            private final T item;
+            
+            
+            public RemoveEvent(Store<T> store, String id, T item) {
+                this.store = store;
+                this.id = id;
+                this.item = item;
+            }
+            
+
+            public Store<T> getStore() {
+                return store;
+            }
+
+            public String getId() {
+                return id;
+            }
+            
+            public T getItem() {
+                return item;
+            }
+            
+        }
+
+        
+        public static class ItemRefreshEvent<T> {
+
+            private final Store<T> store;
+            
+            private final String id;
+            
+            private final T item;
+            
+            
+            public ItemRefreshEvent(Store<T> store, String id, T item) {
+                this.store = store;
+                this.id = id;
+                this.item = item;
+            }
+
+            
+            public Store<T> getStore() {
+                return store;
+            }
+
+            public String getId() {
+                return id;
+            }
+            
+            public T getItem() {
+                return item;
+            }
+            
+        }
+        
+        
         public static class StoreRefreshEvent<T> {
             
             private final Store<T> store;
 
             private final boolean reordered;
             
+            
             public StoreRefreshEvent(Store<T> store, boolean reordered) {
                 this.store = store;
                 this.reordered = reordered;
             }
+            
             
             public Store<T> getStore() {
                 return store;
@@ -468,9 +485,11 @@ public class Store<T> implements Iterable<T>, Serializable {
         
         private T currentItem = null;
         
+        
         StoreIterator() {
             this.innerIterator = itemIdMap.keySet().iterator();
         }
+        
         
         @Override
         public boolean hasNext() {
@@ -495,15 +514,18 @@ public class Store<T> implements Iterable<T>, Serializable {
         
     }
     
+    
     private class StoreEntryIterator implements Iterator<Map.Entry<String, T>> {
         
         private final Iterator<Map.Entry<T, String>> innerIterator;
         
         private StoreEntry currentEntry = null;
         
+        
         StoreEntryIterator() {
             this.innerIterator = itemIdMap.entrySet().iterator();
         }
+        
         
         @Override
         public boolean hasNext() {
@@ -528,16 +550,19 @@ public class Store<T> implements Iterable<T>, Serializable {
             }
         }
         
+        
         private class StoreEntry implements Map.Entry<String, T> {
 
             private final String id;
 
             private final T item;
             
+            
             StoreEntry(String id, T item) {
                 this.id = id;
                 this.item = item;
             }
+            
             
             @Override
             public String getKey() {
@@ -574,6 +599,7 @@ public class Store<T> implements Iterable<T>, Serializable {
         public final V value;
         
         public final Iterator<Map.Entry<K, V>> iterator;
+        
         
         public MapSearchResult(boolean found, V value, Iterator<Map.Entry<K, V>> iterator) {
             this.found = found;

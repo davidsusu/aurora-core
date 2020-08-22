@@ -8,7 +8,9 @@ public class AlwaysTimeLimit implements TimeLimit {
 
     private static final long serialVersionUID = 1L;
 
+    
     public static final TimeLimit INSTANCE = new AlwaysTimeLimit();
+    
     
     @Override
     public boolean contains(Time time) {

@@ -21,12 +21,14 @@ public class Board implements Iterable<Board.Entry>, Labeled {
 
     private static final long serialVersionUID = 1L;
 
+    
     private String label = "";
     
     private boolean sorted = false;
     
     private EntryList entries = new EntryList();
 
+    
     public Board() {
         this.sorted = true;
     }
@@ -51,6 +53,7 @@ public class Board implements Iterable<Board.Entry>, Labeled {
         applyFrom(other);
     }
 
+    
     public Board copy() {
         return new Board(this);
     }
@@ -344,13 +347,17 @@ public class Board implements Iterable<Board.Entry>, Labeled {
         sorted = true;
     }
     
+    
     public static class Entry implements Intervalable, Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Block block;
+        
         private final Time time;
 
+        
         public Entry(Entry other) {
             this.block = other.block;
             this.time = other.time;
@@ -360,6 +367,7 @@ public class Board implements Iterable<Board.Entry>, Labeled {
             this.block = block;
             this.time = time;
         }
+        
         
         public Block getBlock() {
             return block;
@@ -394,10 +402,12 @@ public class Board implements Iterable<Board.Entry>, Labeled {
         
     }
     
+    
     public static class EntryList extends LinkedList<Entry> implements List<Entry>, Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         public EntryList() {
             super();
         }
@@ -406,9 +416,11 @@ public class Board implements Iterable<Board.Entry>, Labeled {
             super(entries);
         }
         
+        
         public void sort() {
             Collections.sort(this, new SortComparator());
         }
+        
         
         private static class SortComparator implements Comparator<Entry> {
 

@@ -16,8 +16,10 @@ public class TimingSet extends TreeSet<TimingSet.TimeEntry> implements Labeled {
 
     private static final long serialVersionUID = 1L;
 
+    
     private String label = "";
 
+    
     public TimingSet() {
         super();
     }
@@ -66,6 +68,7 @@ public class TimingSet extends TreeSet<TimingSet.TimeEntry> implements Labeled {
         }
     }
 
+    
     public void setLabel(String label) {
         this.label = label;
     }
@@ -192,14 +195,17 @@ public class TimingSet extends TreeSet<TimingSet.TimeEntry> implements Labeled {
         return (this == object);
     }
     
+    
     public static class TimeEntry implements Labeled, Comparable<TimeEntry> {
         
         private static final long serialVersionUID = 1L;
 
+        
         private Time time;
 
         private String label;
 
+        
         public TimeEntry(Time time) {
             this.time = time;
             this.label = "";
@@ -214,6 +220,7 @@ public class TimingSet extends TreeSet<TimingSet.TimeEntry> implements Labeled {
             this.time = other.time;
             this.label = other.label;
         }
+        
         
         public void setTime(Time time) {
             this.time = time;

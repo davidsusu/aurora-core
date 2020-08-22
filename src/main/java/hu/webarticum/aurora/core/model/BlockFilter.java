@@ -9,15 +9,19 @@ public interface BlockFilter extends Serializable {
 
     boolean validate(Block block);
 
+    
     public static class ActivityBlockFilter implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ActivityFilter activityFilter;
+        
         
         public ActivityBlockFilter(ActivityFilter activityFilter) {
             this.activityFilter = activityFilter;
         }
+        
         
         @Override
         public boolean validate(Block block) {
@@ -34,12 +38,15 @@ public interface BlockFilter extends Serializable {
         }
         
     }
+    
 
     public static class PeriodBlockFilter implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final PeriodSet periods = new PeriodSet();
+        
         
         public PeriodBlockFilter(Period period) {
             this.periods.add(period);
@@ -49,6 +56,7 @@ public interface BlockFilter extends Serializable {
             this.periods.addAll(periods);
         }
 
+        
         @Override
         public boolean validate(Block block) {
             PeriodSet commonPeriods = block.getActivityManager().getPeriods();
@@ -58,12 +66,15 @@ public interface BlockFilter extends Serializable {
         
     }
     
+    
     public static class PeriodActivityBlockFilter extends ActivityBlockFilter {
 
         private static final long serialVersionUID = 1L;
         
+        
         private final PeriodSet periods = new PeriodSet();
 
+        
         public PeriodActivityBlockFilter(ActivityFilter activityFilter, Period period) {
             super(activityFilter);
             this.periods.add(period);
@@ -74,6 +85,7 @@ public interface BlockFilter extends Serializable {
             this.periods.addAll(periods);
         }
 
+        
         @Override
         public boolean validate(Block block) {
             List<Activity> activities = block.getActivityManager().getActivities(periods);
@@ -81,22 +93,26 @@ public interface BlockFilter extends Serializable {
         }
         
     }
+    
 
     public static class TrueBlockFilter implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         @Override
         public boolean validate(Block block) {
             return true;
         }
         
     }
+    
 
     public static class FalseBlockFilter implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         @Override
         public boolean validate(Block block) {
             return false;
@@ -104,16 +120,20 @@ public interface BlockFilter extends Serializable {
         
     }
 
+    
     public static class And implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final BlockFilter[] filters;
+        
         
         public And(BlockFilter... filters) {
             this.filters = filters;
         }
 
+        
         @Override
         public boolean validate(Block block) {
             for (BlockFilter filter : filters) {
@@ -126,16 +146,20 @@ public interface BlockFilter extends Serializable {
         
     }
 
+    
     public static class Or implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final BlockFilter[] filters;
+        
         
         public Or(BlockFilter... filters) {
             this.filters = filters;
         }
 
+        
         @Override
         public boolean validate(Block block) {
             for (BlockFilter filter : filters) {
@@ -148,16 +172,20 @@ public interface BlockFilter extends Serializable {
         
     }
 
+    
     public static class Not implements BlockFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final BlockFilter filter;
 
+        
         public Not(BlockFilter filter) {
             this.filter = filter;
         }
 
+        
         @Override
         public boolean validate(Block block) {
             return !filter.validate(block);

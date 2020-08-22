@@ -20,9 +20,6 @@ public class Value implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    protected Serializable value;
-    
-    protected Type type;
     
     public enum Type {
         NULL,
@@ -52,7 +49,13 @@ public class Value implements Serializable {
         ACTIVITY,
         TIMETABLE,
     }
+    
 
+    protected Serializable value;
+    
+    protected Type type;
+    
+    
     public Value() {
         this.value = null;
         this.type = Type.NULL;
@@ -232,6 +235,7 @@ public class Value implements Serializable {
         }
     }
     
+    
     protected Serializable createByType(Type type) {
         switch (type) {
             case BOOLEAN:
@@ -358,14 +362,15 @@ public class Value implements Serializable {
         if (value == null) {
             return 0;
         } else if (value instanceof Number) {
-            return (Number)value;
+            return (Number) value;
         } else if (value instanceof Boolean) {
-            return ((Boolean)value)?1:0;
+            return ((Boolean) value).booleanValue() ? 1 : 0;
         } else if (value instanceof String) {
             int result = 0;
             try {
                 result = Integer.parseInt((String)value);
             } catch (NumberFormatException e) {
+                // zero will be used
             }
             return result;
         } else {
@@ -377,14 +382,15 @@ public class Value implements Serializable {
         if (value == null) {
             return fallback;
         } else if (value instanceof Number) {
-            return ((Number)value).intValue();
+            return ((Number) value).intValue();
         } else if (value instanceof Boolean) {
-            return ((Boolean)value)?1:0;
+            return ((Boolean) value).booleanValue() ? 1 : 0;
         } else if (value instanceof String) {
             int result = fallback;
             try {
                 result = Integer.parseInt((String)value);
             } catch (NumberFormatException e) {
+                // fallback will be used
             }
             return result;
         } else {
@@ -546,14 +552,14 @@ public class Value implements Serializable {
     }
     
     private void walk(Value value, Value parentValue, Value[] path, WalkCallback callback) {
-        Value.Type type = value.getType();
-        if (type == Value.Type.MAP) {
+        Value.Type valueType = value.getType();
+        if (valueType == Value.Type.MAP) {
             for (Map.Entry<Value, Value> entry: value.getAsMap().entrySet()) {
                 Value keyValue = entry.getKey();
                 Value valueValue = entry.getValue();
                 walk(valueValue, keyValue, extendValueArray(path, keyValue), callback);
             }
-        } else if (type == Value.Type.LIST || type == Value.Type.SET) {
+        } else if (valueType == Value.Type.LIST || valueType == Value.Type.SET) {
             int i = 0;
             for (Value subValue: value.getAsList()) {
                 walk(subValue, value, extendValueArray(path, new Value(i)), callback);
@@ -621,6 +627,7 @@ public class Value implements Serializable {
     public String toString() {
         return getAsString();
     }
+    
 
     public static Value[] wrapToValues(Object... objects) {
         Value[] result = new Value[objects.length];
@@ -631,16 +638,19 @@ public class Value implements Serializable {
         return result;
     }
     
+    
     public interface WalkCallback {
         
         public void touch(Value value, Value parentValue, Value[] path);
         
     }
     
+    
     public class ValueMap extends TreeMap<Value, Value> {
         
         private static final long serialVersionUID = 1L;
 
+        
         protected ValueMap() {
             super(new ValueComparator());
         }
@@ -649,6 +659,7 @@ public class Value implements Serializable {
             super(new ValueComparator());
             putAll(map);
         }
+        
         
         public void putRaw(Object keyObject, Object valueObject) {
             put(new Value(keyObject), new Value(valueObject));
@@ -672,10 +683,12 @@ public class Value implements Serializable {
         
     }
 
+    
     public class ValueList extends ArrayList<Value> {
         
         private static final long serialVersionUID = 1L;
 
+        
         protected ValueList() {
             super();
         }
@@ -683,6 +696,7 @@ public class Value implements Serializable {
         protected ValueList(Collection<Value> values) {
             super(values);
         }
+        
         
         public void addRaw(Object object) {
             add(new Value(object));
@@ -699,11 +713,13 @@ public class Value implements Serializable {
         }
         
     }
+    
 
     public class ValueSet extends TreeSet<Value> {
         
         private static final long serialVersionUID = 1L;
 
+        
         protected ValueSet() {
             super(new ValueComparator());
         }
@@ -712,6 +728,7 @@ public class Value implements Serializable {
             super(new ValueComparator());
             addAll(values);
         }
+        
         
         public void addRaw(Object object) {
             add(new Value(object));
@@ -724,6 +741,7 @@ public class Value implements Serializable {
         }
         
     }
+    
     
     public class ValueComparator implements Comparator<Value>, Serializable {
         
@@ -805,8 +823,10 @@ public class Value implements Serializable {
         public static final char PATH_BINDING_BEGIN = '{';
         public static final char PATH_BINDING_END = '}';
 
+        
         public final List<Value> pathList;
 
+        
         public Access(String path, Object... bindings) {
             this(path, wrapToValues(bindings));
         }
@@ -829,6 +849,7 @@ public class Value implements Serializable {
                             try {
                                 index = Integer.parseInt(indexToken);
                             } catch(NumberFormatException e) {
+                                // -1 will be used
                             }
                             if (index >= 0) {
                                 nextValue = new Value(Integer.valueOf(index));
@@ -870,6 +891,7 @@ public class Value implements Serializable {
                 this.pathList.add(new Value(object));
             }
         }
+        
         
         public boolean exists() {
             RouteResult routeResult = route();
@@ -1013,10 +1035,10 @@ public class Value implements Serializable {
                 value.value = valueToSet.value;
                 value.type = valueToSet.type;
             } else {
-                Type type = value.getType();
+                Type valueType = value.getType();
                 Value nextKey = pathList.get(0);
                 List<Value> subPathList = pathList.subList(1, pathList.size());
-                if (type == Type.MAP) {
+                if (valueType == Type.MAP) {
                     ValueMap map = value.getAsMap();
                     Value subValue;
                     if (map.containsKey(nextKey)) {
@@ -1026,7 +1048,7 @@ public class Value implements Serializable {
                         map.put(nextKey, subValue);
                     }
                     setValue(subValue, valueToSet, subPathList);
-                } else if (type == Type.LIST) {
+                } else if (valueType == Type.LIST) {
                     ValueList list = value.getAsList();
                     int indexKey = nextKey.getAsIndex(-1);
                     if (nextKey.isNull()) {
@@ -1062,7 +1084,7 @@ public class Value implements Serializable {
                         }
                         setValue(subValue, valueToSet, subPathList);
                     }
-                } else if (type == Type.SET) {
+                } else if (valueType == Type.SET) {
                     ValueSet set = value.getAsSet();
                     if (nextKey.isNull()) {
                         Value subValue = new Value();
@@ -1214,7 +1236,7 @@ public class Value implements Serializable {
                         modeStatus = MODE_STATUS_CLOSED;
                         jumpTokenizer(result, itemBuilder);
                     }
-                } else if (modeStatus == MODE_STATUS_BINDING) {
+                } else { // modeStatus == MODE_STATUS_BINDING
                     itemBuilder.append(c);
                     if (c == PATH_BINDING_END) {
                         jumpTokenizer(result, itemBuilder);
@@ -1302,7 +1324,8 @@ public class Value implements Serializable {
             }
         }
         
-        protected class RouteResult {
+        
+        private class RouteResult {
             
             public final boolean exists;
             
@@ -1310,6 +1333,7 @@ public class Value implements Serializable {
             
             public final List<Value> existingParents = new LinkedList<Value>();
 
+            
             public RouteResult(boolean exists, Value value) {
                 this.exists = exists;
                 this.value = value;

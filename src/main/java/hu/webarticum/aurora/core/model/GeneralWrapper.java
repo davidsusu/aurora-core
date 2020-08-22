@@ -6,12 +6,14 @@ public class GeneralWrapper<T> {
 
     private T item = null;
 
+    
     public GeneralWrapper() {
     }
 
     public GeneralWrapper(T item) {
         this.item = item;
     }
+    
     
     public synchronized void set(T item) {
         this.item = item;
@@ -24,11 +26,7 @@ public class GeneralWrapper<T> {
     public synchronized boolean isNull() {
         return (item == null);
     }
-
-    @Override
-    public int hashCode() {
-        return item == null ? 0 : item.hashCode();
-    }
+    
     
     public static class WrapperComparator<T> implements Comparator<GeneralWrapper<T>> {
         

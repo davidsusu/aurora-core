@@ -22,13 +22,16 @@ public class Block implements Labeled {
 
     private static final long serialVersionUID = 1L;
 
+    
     public static final long DEFAULT_LENGTH = 45 * Time.MINUTE;
+    
     
     private String label;
     
     private long length;
 
     private final ActivityManager activityManager = new ActivityManager();
+    
     
     public Block(Block other) {
         this.label = other.label;
@@ -57,6 +60,7 @@ public class Block implements Labeled {
         this.label = label;
         this.length = length;
     }
+    
     
     public void setLabel(String label) {
         this.label = label;
@@ -197,7 +201,7 @@ public class Block implements Labeled {
     public boolean conflictsWith(Block other) {
         ActivityManager otherActivityManager = other.getActivityManager();
         PeriodSet periods = activityManager.getPeriods();
-        Set<List<ActivityList>> activityPairSet = new HashSet<List<ActivityList>>(1, periods.size() + 1);
+        Set<List<ActivityList>> activityPairSet = new HashSet<List<ActivityList>>(periods.size() + 1);
         for (Period period: periods) {
             ActivityList activities1 = activityManager.getActivities(period);
             ActivityList activities2 = otherActivityManager.getActivities(period);
@@ -216,7 +220,9 @@ public class Block implements Labeled {
 
         private static final long serialVersionUID = 1L;
 
+        
         private List<ActivityEntry> entries = new LinkedList<ActivityEntry>();
+        
         
         public Block getBlock() {
             return Block.this;
@@ -383,13 +389,16 @@ public class Block implements Labeled {
             return entries.iterator();
         }
         
+        
         public class ActivityEntry implements Serializable {
 
             private static final long serialVersionUID = 1L;
 
+            
             private Activity activity;
             
             private PeriodSet periods;
+            
             
             private ActivityEntry(Activity activity, Collection<Period> periods) {
                 this.activity = activity;
@@ -400,6 +409,7 @@ public class Block implements Labeled {
                 this.activity = activity;
                 this.periods = new PeriodSet(Arrays.asList(periods));
             }
+            
             
             public Activity getActivity() {
                 return activity;

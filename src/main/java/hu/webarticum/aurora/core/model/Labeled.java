@@ -45,6 +45,7 @@ public interface Labeled extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private enum CharacterType { LETTER, DIGIT, OTHER }
         
         
@@ -165,16 +166,20 @@ public interface Labeled extends Serializable {
             return result;
         }
     }
+    
 
     public static class StringLabeled implements Labeled {
 
         private static final long serialVersionUID = 1L;
 
+        
         private String str;
+        
         
         public StringLabeled(String str) {
             this.str = str;
         }
+        
 
         @Override
         public String getLabel() {
@@ -188,13 +193,16 @@ public interface Labeled extends Serializable {
         
     }
     
+    
     public static class Wrapper extends GeneralWrapper<Labeled> implements Labeled {
 
         private static final long serialVersionUID = 1L;
         
+        
         public Wrapper(Labeled labeled) {
             super(labeled);
         }
+        
         
         @Override
         public String getLabel() {
@@ -212,9 +220,11 @@ public interface Labeled extends Serializable {
 
         private static final long serialVersionUID = 1L;
         
+        
         public GenericWrapper(T labeled) {
             super(labeled);
         }
+        
         
         @Override
         public String getLabel() {
@@ -232,7 +242,9 @@ public interface Labeled extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private Labeled labeled;
+        
         
         public PairWrapper(String str, T item) {
             super(item);
@@ -244,6 +256,7 @@ public interface Labeled extends Serializable {
             this.labeled = labeled;
         }
         
+        
         @Override
         public String getLabel() {
             return labeled.getLabel();
@@ -254,21 +267,17 @@ public interface Labeled extends Serializable {
             return labeled.getLabel();
         }
         
-        @Override
-        public int hashCode() {
-            int labeledHashCode = labeled == null ? 0 : labeled.hashCode();
-            return super.hashCode() + (37 * labeledHashCode);
-        }
-        
     }
 
     public static class ListWrapper extends AbstractList<Labeled> { // NOSONAR
 
         private List<? extends Labeled> wrappedList;
         
+        
         public ListWrapper(List<? extends Labeled> wrappedList) {
             this.wrappedList = wrappedList;
         }
+        
         
         @Override
         public Labeled get(int index) {
@@ -286,6 +295,7 @@ public interface Labeled extends Serializable {
         
         private static final long serialVersionUID = 1L;
 
+        
         public LabeledStore() {
             this(new GenericLabeledComparator<L>());
         }
@@ -293,6 +303,7 @@ public interface Labeled extends Serializable {
         public LabeledStore(Comparator<L> comparator) {
             super(comparator);
         }
+        
 
         @Override
         public String getDefaultIdFor(L item) {

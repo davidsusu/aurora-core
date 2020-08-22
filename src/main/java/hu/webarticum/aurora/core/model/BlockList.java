@@ -12,6 +12,7 @@ public class BlockList extends ArrayList<Block> {
 
     private static final long serialVersionUID = 1L;
 
+    
     public BlockList() {
         super();
     }
@@ -23,6 +24,7 @@ public class BlockList extends ArrayList<Block> {
     public BlockList(Collection<Block> blocks) {
         super(blocks);
     }
+    
     
     public BlockList copy() {
         return new BlockList(this);

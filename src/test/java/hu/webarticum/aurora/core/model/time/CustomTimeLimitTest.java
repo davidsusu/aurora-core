@@ -1,12 +1,13 @@
 package hu.webarticum.aurora.core.model.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
 
 public class CustomTimeLimitTest {
@@ -39,11 +40,9 @@ public class CustomTimeLimitTest {
 
     @Test
     public void testThrowInvalidTimeOrder() {
-        try {
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new CustomTimeLimit(false, new Time(10), new Time(7), new Time(14));
-            fail();
-        } catch (CustomTimeLimit.InvalidTimeOrderException e) {
-        }
+        }}).isInstanceOf(CustomTimeLimit.InvalidTimeOrderException.class);
     }
     
     @Test

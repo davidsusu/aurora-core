@@ -11,6 +11,9 @@ public class Resource extends Aspect {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type { CLASS, PERSON, LOCALE, OBJECT, OTHER }
+
+    
     private Type type = Type.OTHER;
     
     private String email = "";
@@ -19,10 +22,7 @@ public class Resource extends Aspect {
     
     private SplittingManager splittingManager = this.new SplittingManager();
     
-    public enum Type {
-        CLASS, PERSON, LOCALE, OBJECT, OTHER
-    }
-
+    
     public Resource() {
         super();
     }
@@ -51,6 +51,7 @@ public class Resource extends Aspect {
         this.type = type;
     }
 
+    
     public void setType(Type type) {
         this.type = type;
     }
@@ -88,15 +89,19 @@ public class Resource extends Aspect {
         return "Resource: '" + getLabel() + "'";
     }
 
+    
     public class SplittingManager implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final List<Splitting> splittings = new ArrayList<Splitting>();
+        
         
         public Resource getResource() {
             return Resource.this;
         }
+        
         
         public List<Splitting> getSplittings() {
             return splittings;
@@ -151,14 +156,17 @@ public class Resource extends Aspect {
         
     }
     
+    
     public class Splitting implements Labeled {
 
         private static final long serialVersionUID = 1L;
 
+        
         private String label = "";
         
         private List<Part> parts = new ArrayList<Part>();
 
+        
         public Splitting() {
         }
         
@@ -179,6 +187,7 @@ public class Resource extends Aspect {
                 parts.add(this.new Part(partlabel));
             }
         }
+        
         
         public Resource getResource() {
             return Resource.this;
@@ -225,11 +234,14 @@ public class Resource extends Aspect {
             return resultBuilder.toString();
         }
         
+        
         public class Part implements Labeled {
 
             private static final long serialVersionUID = 1L;
 
+            
             private String label;
+            
             
             public Part(String label) {
                 this.label = label;
@@ -238,6 +250,7 @@ public class Resource extends Aspect {
             public Resource getResource() {
                 return Resource.this;
             }
+            
             
             public SplittingManager getSplittingManager() {
                 return getResource().getSplittingManager();

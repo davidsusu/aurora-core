@@ -24,16 +24,16 @@ public class MultiComparatorTest {
             
         }, true));
         
-        String reference1 = new String("text1");
-        String reference2 = new String("text2");
+        String reference1 = new String("text1"); // NOSONAR unique reference required
+        String reference2 = new String("text2"); // NOSONAR unique reference required
         strings.add(reference1);
         strings.add(reference2);
-        strings.add(new String("text2"));
+        strings.add(new String("text2")); // NOSONAR unique reference required
         strings.add(reference1);
-        strings.add(new String("text3"));
-        strings.add(new String("text4"));
-        strings.add(new String("asdf"));
-        strings.add(new String("zzzz"));
+        strings.add(new String("text3")); // NOSONAR unique reference required
+        strings.add(new String("text4")); // NOSONAR unique reference required
+        strings.add(new String("asdf")); // NOSONAR unique reference required
+        strings.add(new String("zzzz")); // NOSONAR unique reference required
         
         List<String> resultList = new ArrayList<String>(strings);
         List<String> expectedList = Arrays.asList("asdf", "text1", "text2", "text3", "text4", "zzzz");
@@ -52,16 +52,16 @@ public class MultiComparatorTest {
             
         }, false));
 
-        String reference1 = new String("text1");
-        String reference2 = new String("text2");
+        String reference1 = new String("text1"); // NOSONAR unique reference required
+        String reference2 = new String("text2"); // NOSONAR unique reference required
         strings.add(reference1);
         strings.add(reference2);
-        strings.add(new String("text2"));
+        strings.add(new String("text2")); // NOSONAR unique reference required
         strings.add(reference1);
-        strings.add(new String("text3"));
-        strings.add(new String("text4"));
-        strings.add(new String("asdf"));
-        strings.add(new String("zzzz"));
+        strings.add(new String("text3")); // NOSONAR unique reference required
+        strings.add(new String("text4")); // NOSONAR unique reference required
+        strings.add(new String("asdf")); // NOSONAR unique reference required
+        strings.add(new String("zzzz")); // NOSONAR unique reference required
         
         List<String> resultList = new ArrayList<String>(strings);
         List<String> expectedList = Arrays.asList("asdf", "text1", "text2", "text2", "text3", "text4", "zzzz");

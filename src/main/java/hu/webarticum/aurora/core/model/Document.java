@@ -7,6 +7,7 @@ public class Document implements Labeled {
 
     private static final long serialVersionUID = 1L;
 
+    
     private String label = "";
 
     private final PeriodStore periodStore = new PeriodStore();
@@ -23,12 +24,14 @@ public class Document implements Labeled {
     
     private final Value extraData = new Value();
     
+    
     public Document() {
     }
     
     public Document(String label) {
         this.label = label;
     }
+    
     
     public void setLabel(String label) {
         this.label = label;
@@ -72,6 +75,7 @@ public class Document implements Labeled {
         return "Document: '" + getLabel() + "'";
     }
 
+    
     public class PeriodStore extends Labeled.LabeledStore<Period> {
 
         private static final long serialVersionUID = 1L;
@@ -91,11 +95,13 @@ public class Document implements Labeled {
         }
 
     }
+    
 
     public class TagStore extends Labeled.LabeledStore<Tag> {
 
         private static final long serialVersionUID = 1L;
 
+        
         public TagStore() {
             super(new Tag.TagComparator());
         }
@@ -121,6 +127,7 @@ public class Document implements Labeled {
         }
 
     }
+    
 
     public class ResourceStore extends Labeled.LabeledStore<Resource> {
 
@@ -141,6 +148,7 @@ public class Document implements Labeled {
         }
 
     }
+    
 
     public class BlockStore extends Labeled.LabeledStore<Block> {
 
@@ -160,12 +168,14 @@ public class Document implements Labeled {
         }
 
     }
+    
 
     public class BoardStore extends Labeled.LabeledStore<Board> {
 
         private static final long serialVersionUID = 1L;
 
     }
+    
 
     public class TimingSetStore extends Labeled.LabeledStore<TimingSet> {
 

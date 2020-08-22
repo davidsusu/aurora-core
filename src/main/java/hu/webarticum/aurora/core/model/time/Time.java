@@ -10,7 +10,16 @@ import hu.webarticum.aurora.core.text.CoreText;
 public class Time implements Comparable<Time>, Serializable {
 
     private static final long serialVersionUID = 1L;
+
     
+    public enum PART {
+        SECONDS, MINUTES, HOURS, DAYS, WEEKS,
+        FULLSECONDS, FULLMINUTES, FULLHOURS, FULLDAYS,
+        SECONDS_OF_HOUR, SECONDS_OF_DAY, SECONDS_OF_WEEK,
+        MINUTES_OF_DAY, MINUTES_OF_WEEK,
+        HOURS_OF_WEEK,
+    }
+
     
     public static final long SECOND = 1L;
     public static final long MINUTE = 60L;
@@ -33,15 +42,6 @@ public class Time implements Comparable<Time>, Serializable {
     public static final long SATURDAY = 5 * DAY;
     public static final long SUNDAY = 6 * DAY;
     
-    public enum PART {
-        SECONDS, MINUTES, HOURS, DAYS, WEEKS,
-        FULLSECONDS, FULLMINUTES, FULLHOURS, FULLDAYS,
-        SECONDS_OF_HOUR, SECONDS_OF_DAY, SECONDS_OF_WEEK,
-        MINUTES_OF_DAY, MINUTES_OF_WEEK,
-        HOURS_OF_WEEK,
-    }
-
-    
     private static final Pattern TIME_STRING_PATTERN =
         Pattern.compile("^(((((W\\.(\\-?\\d+) )?D\\.(\\d+) )?(\\d+):)?(\\d+):)?)?(\\d+)$")
     ;
@@ -62,6 +62,7 @@ public class Time implements Comparable<Time>, Serializable {
         this.seconds = seconds;
     }
 
+    
     public long getSeconds() {
         return seconds;
     }
@@ -271,6 +272,7 @@ public class Time implements Comparable<Time>, Serializable {
             try {
                 digit = Integer.parseInt(token);
             } catch (Exception e) {
+                // fallback is zero
             }
             long value = digit * multiplier;
             result += value;

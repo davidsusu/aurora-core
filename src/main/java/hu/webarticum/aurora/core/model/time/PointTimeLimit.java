@@ -8,7 +8,9 @@ public class PointTimeLimit implements TimeLimit, Comparable<PointTimeLimit> {
 
     private static final long serialVersionUID = 1L;
 
+    
     private final Time time;
+    
     
     public PointTimeLimit(Time time) {
         this.time = time;
@@ -18,6 +20,7 @@ public class PointTimeLimit implements TimeLimit, Comparable<PointTimeLimit> {
         this(new Time(seconds));
     }
 
+    
     public Time getTime() {
         return time;
     }

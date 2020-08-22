@@ -7,6 +7,7 @@ public interface ActivityFilter extends Serializable {
 
     public boolean validate(Activity activity);
     
+    
     public static class TrueActivityFilter implements ActivityFilter {
 
         private static final long serialVersionUID = 1L;
@@ -18,6 +19,7 @@ public interface ActivityFilter extends Serializable {
         
     }
 
+    
     public static class FalseActivityFilter implements ActivityFilter {
 
         private static final long serialVersionUID = 1L;
@@ -29,16 +31,20 @@ public interface ActivityFilter extends Serializable {
         
     }
     
+    
     public static class HasTag implements ActivityFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Tag tag;
+        
         
         public HasTag(Tag tag) {
             this.tag = tag;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             return activity.getTagManager().has(tag);
@@ -46,16 +52,20 @@ public interface ActivityFilter extends Serializable {
         
     }
 
+    
     public static class HasTagType implements ActivityFilter {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Tag.Type tagType;
+        
         
         public HasTagType(Tag.Type tagType) {
             this.tagType = tagType;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             return activity.getTagManager().hasType(tagType);
@@ -67,12 +77,15 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Resource resource;
+        
         
         public HasResource(Resource resource) {
             this.resource = resource;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             return activity.getResourceManager().hasResource(resource);
@@ -84,12 +97,15 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Resource.Type resourceType;
+        
         
         public HasResourceType(Resource.Type resourceType) {
             this.resourceType = resourceType;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             return activity.getResourceManager().hasResourceType(resourceType);
@@ -101,12 +117,15 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Resource.Splitting.Part splittingPart;
+        
         
         public IntersectsResourceSplittingPart(Resource.Splitting.Part splittingPart) {
             this.splittingPart = splittingPart;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             return activity.getResourceManager().intersectsResourceSplittingPart(splittingPart);
@@ -118,12 +137,15 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Aspect aspect;
 
+        
         public HasAspect(Aspect aspect) {
             this.aspect = aspect;
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             if (aspect instanceof Resource) {
@@ -141,8 +163,10 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ActivityFilter[] filters;
 
+        
         public And(ActivityFilter... filters) {
             this.filters = filters;
         }
@@ -150,6 +174,7 @@ public interface ActivityFilter extends Serializable {
         public And(Collection<ActivityFilter> filters) {
             this(filters.toArray(new ActivityFilter[filters.size()]));
         }
+        
 
         @Override
         public boolean validate(Activity activity) {
@@ -167,7 +192,9 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ActivityFilter[] filters;
+        
         
         public Or(ActivityFilter... filters) {
             this.filters = filters;
@@ -177,6 +204,7 @@ public interface ActivityFilter extends Serializable {
             this(filters.toArray(new ActivityFilter[filters.size()]));
         }
 
+        
         @Override
         public boolean validate(Activity activity) {
             for (ActivityFilter filter : filters) {
@@ -193,11 +221,14 @@ public interface ActivityFilter extends Serializable {
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ActivityFilter filter;
 
+        
         public Not(ActivityFilter filter) {
             this.filter = filter;
         }
+        
 
         @Override
         public boolean validate(Activity activity) {

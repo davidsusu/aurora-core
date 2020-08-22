@@ -10,12 +10,18 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    private final Map<Integer, LinkedHashSet<T>> problematicItemsMap = new HashMap<Integer, LinkedHashSet<T>>();
-    
-    private final Comparator<? super T> innerComparator;
+
+    /** @serial */
+    private final Map<Integer, LinkedHashSet<T>> problematicItemsMap = // NOSONAR serial
+        new HashMap<Integer, LinkedHashSet<T>>()
+    ;
+
+    /** @serial */
+    private final Comparator<? super T> innerComparator; // NOSONAR serial
     
     private final boolean useEquals;
 
+    
     public MultiComparator(Comparator<? super T> innerComparator) {
         this(innerComparator, true);
     }
@@ -24,6 +30,7 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
         this.innerComparator = innerComparator;
         this.useEquals = useEquals;
     }
+    
     
     @Override
     public int compare(T item1, T item2) {

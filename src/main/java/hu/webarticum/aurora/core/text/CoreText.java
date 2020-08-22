@@ -2,6 +2,11 @@ package hu.webarticum.aurora.core.text;
 
 public class CoreText {
     
+    private CoreText() {
+        // static class
+    }
+    
+    
     private static CoreTextSupplier textSupplier = new NullCoreTextSupplier();
     
     public static void setTextSupplier(CoreTextSupplier textSupplier) {

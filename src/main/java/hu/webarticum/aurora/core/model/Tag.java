@@ -6,12 +6,12 @@ public class Tag extends Aspect {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type { SUBJECT, LANGUAGE, OTHER }
+
+    
     private Type type = Type.OTHER;
     
-    public enum Type {
-        SUBJECT, LANGUAGE, OTHER
-    }
-
+    
     public Tag() {
         super();
     }
@@ -40,6 +40,7 @@ public class Tag extends Aspect {
         this.type = type;
     }
 
+    
     public void setType(Type type) {
         this.type = type;
     }

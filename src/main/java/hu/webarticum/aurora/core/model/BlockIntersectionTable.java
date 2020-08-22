@@ -17,7 +17,9 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
 
     private static final long serialVersionUID = 1L;
     
+    
     private List<Entry> entries = new ArrayList<Entry>();
+    
     
     public BlockIntersectionTable() {
     }
@@ -28,11 +30,13 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
         }
     }
     
+    
     @Override
     public Iterator<Entry> iterator() {
         return entries.iterator();
     }
     
+    @SuppressWarnings("unchecked")
     public void merge(Block block, Time time) {
         List<Entry> otherEntries = new ArrayList<Entry>(1);
         List<Block> blocks = new ArrayList<Block>();
@@ -41,6 +45,7 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
         this.entries = mergeEntryLists(Arrays.asList(this.entries, otherEntries));
     }
 
+    @SuppressWarnings("unchecked")
     public void merge(BlockIntersectionTable other) {
         this.entries = mergeEntryLists(Arrays.asList(this.entries, other.entries));
     }
@@ -54,6 +59,7 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
         this.entries = mergeEntryLists(moreEntries);
     }
 
+    
     public static BlockIntersectionTable fromEntries(Collection<Entry> entryCollection) {
         return fromEntries(entryCollection.toArray(new Entry[entryCollection.size()]));
     }
@@ -132,13 +138,16 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
         return blocks;
     }
 
+    
     public static class Entry implements Serializable {
 
         private static final long serialVersionUID = 1L;
         
+        
         private final Interval interval;
         
         private final Set<Block> blocks = new HashSet<Block>();
+        
         
         public Entry(Entry other) {
             this(other.getBlocks(), other.getInterval());
@@ -148,6 +157,7 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
             this.interval = interval;
             this.blocks.addAll(blocks);
         }
+        
         
         public Interval getInterval() {
             return interval;
@@ -163,13 +173,16 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
         
     }
     
+    
     private static class EntryIteratorProgress {
         
         final Iterator<Entry> iterator;
         
+        
         Time time = null;
         
         Entry loadedEntry = null;
+        
         
         EntryIteratorProgress(Collection<Entry> entries) {
             this(entries.iterator());
@@ -181,6 +194,7 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
                 loadedEntry = iterator.next();
             }
         }
+        
 
         Time getNextTime() {
             if (loadedEntry == null) {

@@ -26,6 +26,7 @@ public interface DocumentIo extends Labeled {
 
     public Document load(InputStream inputStream) throws IOException, ParseException;
 
+    
     public static class DocumentIoQueue extends ArrayList<DocumentIo> {
         
         private static final long serialVersionUID = 1L;
@@ -40,6 +41,7 @@ public interface DocumentIo extends Labeled {
         }
         
     }
+    
     
     public static class ParseException extends Exception {
 

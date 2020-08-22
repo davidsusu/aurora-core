@@ -14,46 +14,12 @@ public class CustomTimeLimit implements TimeLimit {
 
     private static final long serialVersionUID = 1L;
 
+    
     private final boolean startState;
+    
     private final ArrayList<Time> switches;
 
-    protected CustomTimeLimit(boolean startState, ArrayList<Time> switches, boolean copy, boolean check) {
-        if (check) {
-            Time prevTime = null;
-            boolean first = true;
-            for (Time time: switches) {
-                if (first) {
-                    first = false;
-                } else {
-                    if (time.compareTo(prevTime) < 0) {
-                        throw new InvalidTimeOrderException();
-                    }
-                }
-                prevTime = time;
-            }
-        }
-        this.startState = startState;
-        if (copy) {
-            this.switches = new ArrayList<Time>(switches);
-        } else {
-            this.switches = switches;
-        }
-    }
 
-    public CustomTimeLimit(boolean startState, Collection<Time> switches) {
-        this(startState, new ArrayList<Time>(switches), false, true);
-    }
-
-    public CustomTimeLimit(boolean startState, Time... switches) {
-        this(startState, new ArrayList<Time>(Arrays.<Time>asList(switches)));
-    }
-
-    public CustomTimeLimit(Time start, Time end) {
-        this.startState = false;
-        this.switches = new ArrayList<Time>();
-        this.switches.add(start);
-        this.switches.add(end);
-    }
     
     public CustomTimeLimit(TimeLimit limit) {
         boolean startStateToSet;
@@ -91,6 +57,44 @@ public class CustomTimeLimit implements TimeLimit {
         this.startState = startStateToSet;
     }
 
+    public CustomTimeLimit(Time start, Time end) {
+        this.startState = false;
+        this.switches = new ArrayList<Time>();
+        this.switches.add(start);
+        this.switches.add(end);
+    }
+    public CustomTimeLimit(boolean startState, Time... switches) {
+        this(startState, new ArrayList<Time>(Arrays.<Time>asList(switches)));
+    }
+
+    public CustomTimeLimit(boolean startState, Collection<Time> switches) {
+        this(startState, new ArrayList<Time>(switches), false, true);
+    }
+
+    protected CustomTimeLimit(boolean startState, ArrayList<Time> switches, boolean copy, boolean check) {
+        if (check) {
+            Time prevTime = null;
+            boolean first = true;
+            for (Time time: switches) {
+                if (first) {
+                    first = false;
+                } else {
+                    if (time.compareTo(prevTime) < 0) {
+                        throw new InvalidTimeOrderException();
+                    }
+                }
+                prevTime = time;
+            }
+        }
+        this.startState = startState;
+        if (copy) {
+            this.switches = new ArrayList<Time>(switches);
+        } else {
+            this.switches = switches;
+        }
+    }
+
+    
     @Override
     public boolean contains(Time time) {
         boolean currentState = startState;
@@ -497,72 +501,7 @@ public class CustomTimeLimit implements TimeLimit {
             return this;
         }
     }
-    
-    public static CustomTimeLimit from(TimeLimit timeLimit) {
-        if (timeLimit instanceof CustomTimeLimit) {
-            return (CustomTimeLimit)timeLimit;
-        } else {
-            return new CustomTimeLimit(timeLimit);
-        }
-    }
-    
-    private static List<CustomTimeLimit.MergeEntry> getMerge(CustomTimeLimit custom1, CustomTimeLimit custom2) {
-        List<CustomTimeLimit.MergeEntry> merge = new ArrayList<CustomTimeLimit.MergeEntry>();
-        boolean state1 = custom1.startState;
-        boolean state2 = custom2.startState;
-        merge.add(new MergeEntry(null, state1, state2));
-        ListIterator<Time> iterator2 = custom2.switches.listIterator();
-        for (Time time1: custom1.switches) {
-            while (iterator2.hasNext()) {
-                Time time2 = iterator2.next();
-                int comp = time1.compareTo(time2);
-                if (comp > 0) {
-                    state2 = !state2;
-                    merge.add(new MergeEntry(time2, state1, state2));
-                } else if (comp == 0) {
-                    state2 = !state2;
-                } else {
-                    iterator2.previous();
-                    break;
-                }
-            }
-            state1 = !state1;
-            merge.add(new MergeEntry(time1, state1, state2));
-        }
-        while (iterator2.hasNext()) {
-            Time time2 = iterator2.next();
-            state2 = !state2;
-            merge.add(new MergeEntry(time2, state1, state2));
-        }
-        return merge;
-    }
-    
-    private static class MergeEntry implements Comparable<CustomTimeLimit.MergeEntry> {
-        
-        public final Time time;
-        
-        public final boolean state1;
-        
-        public final boolean state2;
-        
-        public MergeEntry(Time time, boolean state1, boolean state2) {
-            this.time = time;
-            this.state1 = state1;
-            this.state2 = state2;
-        }
 
-        @Override
-        public int compareTo(CustomTimeLimit.MergeEntry other) {
-            return this.time.compareTo(other.time);
-        }
-
-        @Override
-        public String toString() {
-            return time + ": " + state1 + ", " + state2;
-        }
-        
-    }
-    
     @Override
     public String toString() {
         StringBuilder resultBuilder = new StringBuilder();
@@ -597,6 +536,77 @@ public class CustomTimeLimit implements TimeLimit {
         return resultBuilder.toString();
     }
     
+    
+    public static CustomTimeLimit from(TimeLimit timeLimit) {
+        if (timeLimit instanceof CustomTimeLimit) {
+            return (CustomTimeLimit)timeLimit;
+        } else {
+            return new CustomTimeLimit(timeLimit);
+        }
+    }
+    
+    
+    private static List<CustomTimeLimit.MergeEntry> getMerge(CustomTimeLimit custom1, CustomTimeLimit custom2) {
+        List<CustomTimeLimit.MergeEntry> merge = new ArrayList<CustomTimeLimit.MergeEntry>();
+        boolean state1 = custom1.startState;
+        boolean state2 = custom2.startState;
+        merge.add(new MergeEntry(null, state1, state2));
+        ListIterator<Time> iterator2 = custom2.switches.listIterator();
+        for (Time time1: custom1.switches) {
+            while (iterator2.hasNext()) {
+                Time time2 = iterator2.next();
+                int comp = time1.compareTo(time2);
+                if (comp > 0) {
+                    state2 = !state2;
+                    merge.add(new MergeEntry(time2, state1, state2));
+                } else if (comp == 0) {
+                    state2 = !state2;
+                } else {
+                    iterator2.previous();
+                    break;
+                }
+            }
+            state1 = !state1;
+            merge.add(new MergeEntry(time1, state1, state2));
+        }
+        while (iterator2.hasNext()) {
+            Time time2 = iterator2.next();
+            state2 = !state2;
+            merge.add(new MergeEntry(time2, state1, state2));
+        }
+        return merge;
+    }
+    
+    
+    private static class MergeEntry implements Comparable<CustomTimeLimit.MergeEntry> {
+        
+        public final Time time;
+        
+        public final boolean state1;
+        
+        public final boolean state2;
+        
+        
+        public MergeEntry(Time time, boolean state1, boolean state2) {
+            this.time = time;
+            this.state1 = state1;
+            this.state2 = state2;
+        }
+
+        
+        @Override
+        public int compareTo(CustomTimeLimit.MergeEntry other) { // NOSONAR no need for equals()
+            return this.time.compareTo(other.time);
+        }
+
+        @Override
+        public String toString() {
+            return time + ": " + state1 + ", " + state2;
+        }
+        
+    }
+    
+    
     private static class BackableIterator<T> implements Iterator<T> {
 
         Iterator<T> innerIterator;
@@ -607,9 +617,11 @@ public class CustomTimeLimit implements TimeLimit {
         
         T previous = null;
         
+        
         BackableIterator(Iterator<T> innerIterator) {
             this.innerIterator = innerIterator;
         }
+        
         
         @Override
         public boolean hasNext() {
@@ -642,6 +654,7 @@ public class CustomTimeLimit implements TimeLimit {
         
     }
 
+    
     public static class InvalidTimeOrderException extends RuntimeException {
 
         private static final long serialVersionUID = 1L;

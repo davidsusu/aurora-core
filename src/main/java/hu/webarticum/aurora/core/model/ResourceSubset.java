@@ -21,6 +21,7 @@ public interface ResourceSubset extends Serializable {
     
     public ResourceSubsetIntersectionTree getResourceSubsetIntersectionTree();
     
+    
     public abstract static class AbstractResourceSubset implements ResourceSubset {
         
         private static final long serialVersionUID = 1L;
@@ -83,16 +84,20 @@ public interface ResourceSubset extends Serializable {
         
     }
     
-    public static class Whole extends AbstractResourceSubset {
+    
+    public static class Whole extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private final Resource resource;
+        
         
         public Whole(Resource resource) {
             this.resource = resource;
         }
 
+        
         @Override
         public Resource getResource() {
             return resource;
@@ -130,16 +135,20 @@ public interface ResourceSubset extends Serializable {
 
     }
     
-    public static class SplittingPart extends AbstractResourceSubset {
+    
+    public static class SplittingPart extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
-        private final Resource.Splitting.Part splittingPart;
+        
+        private final Resource.Splitting.Part splittingPart; // NOSONAR this is the Part
 
+        
         public SplittingPart(Resource.Splitting.Part splittingPart) {
             this.splittingPart = splittingPart;
         }
 
+        
         public Resource.Splitting.Part getSplittingPart() {
             return splittingPart;
         }
@@ -171,12 +180,15 @@ public interface ResourceSubset extends Serializable {
 
     }
     
-    public static class Union extends AbstractResourceSubset {
+    
+    public static class Union extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ResourceSubset[] subsets;
 
+        
         public Union(ResourceSubset... subsets) {
             if (subsets.length == 0) {
                 throw new IllegalArgumentException("At least one argument required");
@@ -201,6 +213,7 @@ public interface ResourceSubset extends Serializable {
         public Union(Collection<ResourceSubset> subsets) {
             this(subsets.toArray(new ResourceSubset[subsets.size()]));
         }
+        
 
         @Override
         public Resource getResource() {
@@ -238,12 +251,15 @@ public interface ResourceSubset extends Serializable {
 
     }
 
-    public static class Intersection extends AbstractResourceSubset {
+    
+    public static class Intersection extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ResourceSubset[] subsets;
 
+        
         public Intersection(ResourceSubset... subsets) {
             if (subsets.length == 0) {
                 throw new IllegalArgumentException("At least one argument required");
@@ -266,6 +282,7 @@ public interface ResourceSubset extends Serializable {
         public Intersection(Collection<ResourceSubset> subsets) {
             this(subsets.toArray(new ResourceSubset[subsets.size()]));
         }
+        
 
         @Override
         public Resource getResource() {
@@ -293,12 +310,15 @@ public interface ResourceSubset extends Serializable {
 
     }
 
-    public static class Difference extends AbstractResourceSubset {
+    
+    public static class Difference extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ResourceSubset[] subsets;
 
+        
         public Difference(ResourceSubset... subsets) {
             if (subsets.length == 0) {
                 throw new IllegalArgumentException("At least one argument required");
@@ -322,6 +342,7 @@ public interface ResourceSubset extends Serializable {
             this(subsets.toArray(new ResourceSubset[subsets.size()]));
         }
 
+        
         @Override
         public Resource getResource() {
             return subsets[0].getResource();
@@ -348,12 +369,15 @@ public interface ResourceSubset extends Serializable {
 
     }
 
-    public static class SymmetricDifference extends AbstractResourceSubset {
+    
+    public static class SymmetricDifference extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private final ResourceSubset[] subsets;
 
+        
         public SymmetricDifference(ResourceSubset... subsets) {
             if (subsets.length == 0) {
                 throw new IllegalArgumentException("At least one argument required");
@@ -377,6 +401,7 @@ public interface ResourceSubset extends Serializable {
             this(subsets.toArray(new ResourceSubset[subsets.size()]));
         }
 
+        
         @Override
         public Resource getResource() {
             return subsets[0].getResource();
@@ -402,17 +427,21 @@ public interface ResourceSubset extends Serializable {
         }
 
     }
+    
 
-    public static class Inverse extends AbstractResourceSubset {
+    public static class Inverse extends AbstractResourceSubset { // NOSONAR super.equals() is OK
 
         private static final long serialVersionUID = 1L;
 
+        
         private ResourceSubset subset;
 
+        
         public Inverse(ResourceSubset subset) {
             this.subset = subset;
         }
 
+        
         @Override
         public Resource getResource() {
             return subset.getResource();
@@ -431,6 +460,7 @@ public interface ResourceSubset extends Serializable {
         }
 
     }
+    
     
     public static class ResourceSubsetComparator implements Comparator<ResourceSubset> {
 

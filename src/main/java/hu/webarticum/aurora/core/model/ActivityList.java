@@ -13,6 +13,7 @@ public class ActivityList extends ArrayList<Activity> {
 
     private static final long serialVersionUID = 1L;
 
+    
     public ActivityList() {
         super();
     }
@@ -24,6 +25,7 @@ public class ActivityList extends ArrayList<Activity> {
     public ActivityList(Collection<Activity> activities) {
         super(activities);
     }
+    
     
     public ActivityList copy() {
         return new ActivityList(this);

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -47,7 +48,9 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
     private static final long serialVersionUID = 1L;
 
+    
     public static final String NAMESPACE = "https://orarend-program.hu/xml/schema/document";
+    
     public static final String SCHEMA_LOCATION = "https://orarend-program.hu/xml/schema/document/document.xsd";
     
 
@@ -76,26 +79,24 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
     @Override
     public Document load(InputStream inputStream) throws IOException, ParseException {
-        DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance(); // NOSONAR protected below
+        xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         org.w3c.dom.Document xmlDocument;
         try {
             xmlDocument = xmlFactory.newDocumentBuilder().parse(inputStream);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
-        
-        XmlProcessor xmlParser = new XmlProcessor(xmlDocument);
-        
-        Document document = xmlParser.process();
-        
-        return document;
+        return new XmlProcessor(xmlDocument).process();
     }
     
-    protected class XmlBuilder {
+    
+    private class XmlBuilder {
         
-        protected org.w3c.dom.Document xmlDocument;
+        org.w3c.dom.Document xmlDocument;
         
-        protected final Document document;
+        final Document document;
         
         Labeled.LabeledStore<Period> periodStore;
 
@@ -111,9 +112,11 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         Map<Resource, Map<Resource.Splitting.Part, String>> resourceSplittingPartNameMap;
         
+        
         public XmlBuilder(Document document) {
             this.document = document;
         }
+        
         
         public org.w3c.dom.Document build() throws IOException {
             periodStore = normalizeLabeledStore(document.getPeriodStore());
@@ -125,7 +128,9 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             
             resourceSplittingPartNameMap = new HashMap<Resource, Map<Resource.Splitting.Part, String>>();
             
-            DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance(); // NOSONAR protected below
+            xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             
             try {
                 xmlDocument = xmlFactory.newDocumentBuilder().newDocument();
@@ -643,13 +648,15 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
     }
     
-    protected class XmlProcessor {
+    
+    private class XmlProcessor {
         
-        protected final Element documentElement;
+        final Element documentElement;
         
-        protected Document document;
+        Document document;
         
         Map<Resource, Map<String, Resource.Splitting.Part>> resourceSplittingPartMap;
+        
         
         public XmlProcessor(org.w3c.dom.Document xmlDocument) throws ParseException {
             Element rootElement = xmlDocument.getDocumentElement();
@@ -658,6 +665,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
             documentElement = rootElement;
         }
+        
         
         public Document process() {
             document = new Document();

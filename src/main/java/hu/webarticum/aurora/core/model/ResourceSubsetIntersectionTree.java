@@ -14,6 +14,7 @@ public class ResourceSubsetIntersectionTree {
     
     private LeafIterable leafIterable = new LeafIterable();
     
+    
     public ResourceSubsetIntersectionTree() {
         this(true);
     }
@@ -35,6 +36,7 @@ public class ResourceSubsetIntersectionTree {
         this.rootNode.children.add(childNode);
     }
 
+    
     public Iterable<Set<Resource.Splitting.Part>> getLeafIterable() {
         return leafIterable;
     }
@@ -84,7 +86,7 @@ public class ResourceSubsetIntersectionTree {
     
     @Override
     public int hashCode() {
-        return 0; // would be too hard to compute
+        return 0; // FIXME would be too hard to compute
     }
     
     public boolean intersects(ResourceSubsetIntersectionTree other) {
@@ -350,11 +352,13 @@ public class ResourceSubsetIntersectionTree {
         return newNode;
     }
     
+    
     private class Node {
         
         Resource.Splitting.Part splittingPart = null;
         
         List<Node> children = null;
+        
         
         boolean isWhole() {
             return (children == null);
@@ -378,6 +382,7 @@ public class ResourceSubsetIntersectionTree {
         
     }
     
+    
     private class LeafIterable implements Iterable<Set<Resource.Splitting.Part>> {
 
         @Override
@@ -387,13 +392,17 @@ public class ResourceSubsetIntersectionTree {
         
     }
     
+    
     public class LeafIterator implements Iterator<Set<Resource.Splitting.Part>> {
 
         private boolean hasNext;
+        
         private Set<Resource.Splitting.Part> next;
         
         private LinkedList<Node> nodeStack = new LinkedList<Node>();
+        
         private LinkedList<Iterator<Node>> levelIterators = new LinkedList<Iterator<Node>>();
+        
         
         private LeafIterator() {
             List<Node> topLevelNodeList = new ArrayList<Node>();
@@ -402,6 +411,7 @@ public class ResourceSubsetIntersectionTree {
             levelIterators.add(topLevelNodeList.iterator());
             step();
         }
+        
         
         @Override
         public boolean hasNext() {

@@ -11,6 +11,7 @@ public abstract class Aspect implements Labeled {
     
     private static final long serialVersionUID = 1L;
     
+    
     private String label = "";
     
     private String acronym = "";
@@ -24,6 +25,7 @@ public abstract class Aspect implements Labeled {
     private final TimingSetManager timingSetManager = new TimingSetManager();
 
     private final TimeLimitManager timeLimitManager = new TimeLimitManager();
+    
     
     protected Aspect() {
     }
@@ -42,6 +44,7 @@ public abstract class Aspect implements Labeled {
         this.acronym = acronym;
         this.color = color;
     }
+    
     
     @Override
     public String getLabel() {
@@ -92,14 +95,17 @@ public abstract class Aspect implements Labeled {
         return timeLimitEnabled;
     }
     
+    
     public class TimingSetManager implements Serializable {
 
         private static final long serialVersionUID = 1L;
+        
         
         private TimingSet defaultTimingSet = null;
         
         private Map<Period, TimingSet> periodTimingSets = new HashMap<Period, TimingSet>();
 
+        
         public TimingSet getDefaultTimingSet() {
             return defaultTimingSet;
         }
@@ -146,13 +152,16 @@ public abstract class Aspect implements Labeled {
         
     }
 
+    
     public class TimeLimitManager implements Serializable {
 
         private static final long serialVersionUID = 1L;
         
+        
         private TimeLimit defaultTimeLimit = null;
 
         private Map<Period, TimeLimit> periodTimeLimits = new HashMap<Period, TimeLimit>();
+        
         
         public TimeLimit getDefaultTimeLimit() {
             return defaultTimeLimit;

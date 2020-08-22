@@ -8,12 +8,15 @@ public class InvertedTimeLimit implements TimeLimit {
 
     private static final long serialVersionUID = 1L;
 
+    
     private final TimeLimit base;
 
+    
     public InvertedTimeLimit(TimeLimit base) {
         this.base = base;
     }
 
+    
     public TimeLimit getBase() {
         return base;
     }

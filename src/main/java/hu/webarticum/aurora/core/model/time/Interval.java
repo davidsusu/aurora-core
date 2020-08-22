@@ -8,8 +8,11 @@ public class Interval implements Intervalable, TimeLimit, Comparable<Interval> {
 
     private static final long serialVersionUID = 1L;
 
+    
     private final Time start;
+    
     private final Time end;
+    
     
     public Interval(Time time1, Time time2) {
         if (time1.compareTo(time2) < 0) {
@@ -28,6 +31,7 @@ public class Interval implements Intervalable, TimeLimit, Comparable<Interval> {
     public Interval(Time start, long length) {
         this(start, new Time(start.getSeconds() + length));
     }
+    
     
     public Interval getInterval() {
         return this;

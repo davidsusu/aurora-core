@@ -16,6 +16,7 @@ public class ResourceSubsetList extends ArrayList<ResourceSubset> {
 
     private static final long serialVersionUID = 1L;
 
+    
     public ResourceSubsetList() {
         super();
     }
@@ -27,6 +28,7 @@ public class ResourceSubsetList extends ArrayList<ResourceSubset> {
     public ResourceSubsetList(ResourceSubset... resourceSubsets) {
         super(Arrays.<ResourceSubset>asList(resourceSubsets));
     }
+    
 
     public List<Resource> getResources() {
         Set<Resource> resourceSet = new LinkedHashSet<Resource>();
@@ -95,9 +97,11 @@ public class ResourceSubsetList extends ArrayList<ResourceSubset> {
         }
     }
     
-    private class IntersectionCounter {
+    
+    private static class IntersectionCounter {
 
         LinkedList<Entry> entries = new LinkedList<Entry>();
+        
         
         IntersectionCounter(Iterable<Set<Resource.Splitting.Part>> initialIntersections) {
             for (Set<Resource.Splitting.Part> splittingParts: initialIntersections) {
@@ -235,7 +239,8 @@ public class ResourceSubsetList extends ArrayList<ResourceSubset> {
             return entries.toString();
         }
         
-        class Entry {
+        
+        private static class Entry {
             
             Set<Resource.Splitting.Part> splittingParts;
             
@@ -253,7 +258,8 @@ public class ResourceSubsetList extends ArrayList<ResourceSubset> {
             
         }
         
-        class Merge {
+        
+        private static class Merge {
 
             List<Set<Resource.Splitting.Part>> diff1 = new ArrayList<Set<Resource.Splitting.Part>>();
 
