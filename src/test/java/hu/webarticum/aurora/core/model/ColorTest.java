@@ -1,45 +1,41 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
 
 public class ColorTest {
 
     @Test
     public void testNumericConstructors() {
-        assertEquals(Color.BLACK, new Color());
-        assertEquals(Color.RED, new Color(0xFF0000));
-        assertEquals(Color.GREEN, new Color(0x00FF00));
-        assertEquals(Color.BLUE, new Color(0x0000FF));
-        assertEquals(Color.YELLOW, new Color(0xFFFF00));
-        assertNotEquals(Color.RED, new Color(0xFFFF00));
-        assertEquals(0xFF, new Color(0xFFFF00).getRed());
-        assertEquals(0xFF, new Color(0xFFFF00).getGreen());
-        assertEquals(0, new Color(0xFFFF00).getBlue());
-        assertEquals(Color.BLUE, new Color(Color.Component.BLUE, 0xFF));
-        assertEquals(Color.PURPLE, new Color(0xFF, 0, 0xFF));
-        try {
+        assertThat(new Color()).isEqualTo(Color.BLACK);
+        assertThat(new Color(0xFF0000)).isEqualTo(Color.RED);
+        assertThat(new Color(0x00FF00)).isEqualTo(Color.GREEN);
+        assertThat(new Color(0x0000FF)).isEqualTo(Color.BLUE);
+        assertThat(new Color(0xFFFF00)).isEqualTo(Color.YELLOW);
+        assertThat(new Color(0xFFFF00)).isNotEqualTo(Color.RED);
+        assertThat(new Color(0xFFFF00).getRed()).isEqualTo(0xFF);
+        assertThat(new Color(0xFFFF00).getGreen()).isEqualTo(0xFF);
+        assertThat(new Color(0xFFFF00).getBlue()).isEqualTo(0);
+        assertThat(new Color(Color.Component.BLUE, 0xFF)).isEqualTo(Color.BLUE);
+        assertThat(new Color(0xFF, 0, 0xFF)).isEqualTo(Color.PURPLE);
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new Color(Color.Component.BLUE, 0x123);
-            fail();
-        } catch (IllegalArgumentException e) {
-        }
-        try {
+        }}).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new Color(0x111, 0, 0xFF);
-            fail();
-        } catch (IllegalArgumentException e) {
-        }
+        }}).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void testStringConstructor() {
-        assertEquals(Color.BLACK, new Color("foo-bar"));
-        assertEquals(Color.BLACK, new Color("#1234567"));
-        assertEquals(0xC730B2, new Color("#C730B2").toInt());
-        assertEquals("#C130B2", new Color("#C130B2").getHexa());
-        assertEquals(0x55FF33, new Color("#5F3").toInt());
+        assertThat(new Color("foo-bar")).isEqualTo(Color.BLACK);
+        assertThat(new Color("#1234567")).isEqualTo(Color.BLACK);
+        assertThat(new Color("#C730B2").toInt()).isEqualTo(0xC730B2);
+        assertThat(new Color("#C130B2").getHexa()).isEqualTo("#C130B2");
+        assertThat(new Color("#5F3").toInt()).isEqualTo(0x55FF33);
     }
 
     @Test
@@ -53,35 +49,35 @@ public class ColorTest {
     }
     
     private void testBlackWhiteProperties(boolean expectedDark, Color color) {
-        assertEquals(expectedDark, color.isDark());
-        assertEquals(expectedDark ? Color.BLACK : Color.WHITE, color.getBlackWhiteColor());
-        assertEquals(expectedDark ? Color.WHITE : Color.BLACK, color.getBlackWhiteContrastColor());
+        assertThat(color.isDark()).isEqualTo(expectedDark);
+        assertThat(color.getBlackWhiteColor()).isEqualTo(expectedDark ? Color.BLACK : Color.WHITE);
+        assertThat(color.getBlackWhiteContrastColor()).isEqualTo(expectedDark ? Color.WHITE : Color.BLACK);
     }
 
     @Test
     public void testGetContrastColor() {
-        assertEquals(Color.BLACK, Color.WHITE.getContrastColor());
-        assertEquals(Color.WHITE, Color.BLACK.getContrastColor());
-        assertEquals(Color.WHITE, Color.GREY.getContrastColor());
-        assertEquals(Color.CYAN, Color.RED.getContrastColor());
-        assertEquals(Color.PURPLE, Color.GREEN.getContrastColor());
-        assertEquals(Color.YELLOW, Color.BLUE.getContrastColor());
-        assertEquals(Color.BLUE, Color.YELLOW.getContrastColor());
-        assertEquals(Color.GREEN, Color.PURPLE.getContrastColor());
-        assertEquals(Color.RED, Color.CYAN.getContrastColor());
-        assertEquals(Color.RED, new Color(0x32F3C9).getContrastColor());
-        assertEquals(Color.BLACK, new Color(0xC5B9EC).getContrastColor());
+        assertThat(Color.WHITE.getContrastColor()).isEqualTo(Color.BLACK);
+        assertThat(Color.BLACK.getContrastColor()).isEqualTo(Color.WHITE);
+        assertThat(Color.GREY.getContrastColor()).isEqualTo(Color.WHITE);
+        assertThat(Color.RED.getContrastColor()).isEqualTo(Color.CYAN);
+        assertThat(Color.GREEN.getContrastColor()).isEqualTo(Color.PURPLE);
+        assertThat(Color.BLUE.getContrastColor()).isEqualTo(Color.YELLOW);
+        assertThat(Color.YELLOW.getContrastColor()).isEqualTo(Color.BLUE);
+        assertThat(Color.PURPLE.getContrastColor()).isEqualTo(Color.GREEN);
+        assertThat(Color.CYAN.getContrastColor()).isEqualTo(Color.RED);
+        assertThat(new Color(0x32F3C9).getContrastColor()).isEqualTo(Color.RED);
+        assertThat(new Color(0xC5B9EC).getContrastColor()).isEqualTo(Color.BLACK);
     }
 
     @Test
     public void testAvg() {
-        assertEquals(Color.BLACK, Color.avg());
-        assertEquals(new Color(0x123456), Color.avg(
+        assertThat(Color.avg()).isEqualTo(Color.BLACK);
+        assertThat(Color.avg(
             new Color(0x100111), new Color(0x1176C7), new Color(0x15252A)
-        ));
-        assertEquals(new Color(0xC50097), Color.avg(
+        )).isEqualTo(new Color(0x123456));
+        assertThat(Color.avg(
             new Color(0xA2002E), new Color(0xFF00C5), new Color(0xAE00D2)
-        ));
+        )).isEqualTo(new Color(0xC50097));
     }
     
 }

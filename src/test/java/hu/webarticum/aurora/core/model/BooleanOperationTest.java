@@ -1,7 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -9,130 +8,130 @@ public class BooleanOperationTest {
 
     @Test
     public void testFalse() {
-        assertFalse(BooleanOperation.FALSE.operate(false, false));
-        assertFalse(BooleanOperation.FALSE.operate(false, true));
-        assertFalse(BooleanOperation.FALSE.operate(true, false));
-        assertFalse(BooleanOperation.FALSE.operate(true, true));
+        assertThat(BooleanOperation.FALSE.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.FALSE.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.FALSE.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.FALSE.operate(true, true)).isFalse();
     }
 
     @Test
     public void testNor() {
-        assertTrue(BooleanOperation.NOR.operate(false, false));
-        assertFalse(BooleanOperation.NOR.operate(false, true));
-        assertFalse(BooleanOperation.NOR.operate(true, false));
-        assertFalse(BooleanOperation.NOR.operate(true, true));
+        assertThat(BooleanOperation.NOR.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NOR.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.NOR.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.NOR.operate(true, true)).isFalse();
     }
 
     @Test
     public void testXright() {
-        assertFalse(BooleanOperation.XRIGHT.operate(false, false));
-        assertTrue(BooleanOperation.XRIGHT.operate(false, true));
-        assertFalse(BooleanOperation.XRIGHT.operate(true, false));
-        assertFalse(BooleanOperation.XRIGHT.operate(true, true));
+        assertThat(BooleanOperation.XRIGHT.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.XRIGHT.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.XRIGHT.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.XRIGHT.operate(true, true)).isFalse();
     }
 
     @Test
     public void testXleft() {
-        assertFalse(BooleanOperation.XLEFT.operate(false, false));
-        assertFalse(BooleanOperation.XLEFT.operate(false, true));
-        assertTrue(BooleanOperation.XLEFT.operate(true, false));
-        assertFalse(BooleanOperation.XLEFT.operate(true, true));
+        assertThat(BooleanOperation.XLEFT.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.XLEFT.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.XLEFT.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.XLEFT.operate(true, true)).isFalse();
     }
 
     @Test
     public void testAnd() {
-        assertFalse(BooleanOperation.AND.operate(false, false));
-        assertFalse(BooleanOperation.AND.operate(false, true));
-        assertFalse(BooleanOperation.AND.operate(true, false));
-        assertTrue(BooleanOperation.AND.operate(true, true));
+        assertThat(BooleanOperation.AND.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.AND.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.AND.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.AND.operate(true, true)).isTrue();
     }
 
     @Test
     public void testNLeft() {
-        assertTrue(BooleanOperation.NLEFT.operate(false, false));
-        assertTrue(BooleanOperation.NLEFT.operate(false, true));
-        assertFalse(BooleanOperation.NLEFT.operate(true, false));
-        assertFalse(BooleanOperation.NLEFT.operate(true, true));
+        assertThat(BooleanOperation.NLEFT.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NLEFT.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.NLEFT.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.NLEFT.operate(true, true)).isFalse();
     }
 
     @Test
     public void testNright() {
-        assertTrue(BooleanOperation.NRIGHT.operate(false, false));
-        assertFalse(BooleanOperation.NRIGHT.operate(false, true));
-        assertTrue(BooleanOperation.NRIGHT.operate(true, false));
-        assertFalse(BooleanOperation.NRIGHT.operate(true, true));
+        assertThat(BooleanOperation.NRIGHT.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NRIGHT.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.NRIGHT.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.NRIGHT.operate(true, true)).isFalse();
     }
 
     @Test
     public void testNxor() {
-        assertTrue(BooleanOperation.NXOR.operate(false, false));
-        assertFalse(BooleanOperation.NXOR.operate(false, true));
-        assertFalse(BooleanOperation.NXOR.operate(true, false));
-        assertTrue(BooleanOperation.NXOR.operate(true, true));
+        assertThat(BooleanOperation.NXOR.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NXOR.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.NXOR.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.NXOR.operate(true, true)).isTrue();
     }
 
     @Test
     public void testXor() {
-        assertFalse(BooleanOperation.XOR.operate(false, false));
-        assertTrue(BooleanOperation.XOR.operate(false, true));
-        assertTrue(BooleanOperation.XOR.operate(true, false));
-        assertFalse(BooleanOperation.XOR.operate(true, true));
+        assertThat(BooleanOperation.XOR.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.XOR.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.XOR.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.XOR.operate(true, true)).isFalse();
     }
 
     @Test
     public void testRight() {
-        assertFalse(BooleanOperation.RIGHT.operate(false, false));
-        assertTrue(BooleanOperation.RIGHT.operate(false, true));
-        assertFalse(BooleanOperation.RIGHT.operate(true, false));
-        assertTrue(BooleanOperation.RIGHT.operate(true, true));
+        assertThat(BooleanOperation.RIGHT.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.RIGHT.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.RIGHT.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.RIGHT.operate(true, true)).isTrue();
     }
 
     @Test
     public void testLeft() {
-        assertFalse(BooleanOperation.LEFT.operate(false, false));
-        assertFalse(BooleanOperation.LEFT.operate(false, true));
-        assertTrue(BooleanOperation.LEFT.operate(true, false));
-        assertTrue(BooleanOperation.LEFT.operate(true, true));
+        assertThat(BooleanOperation.LEFT.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.LEFT.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.LEFT.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.LEFT.operate(true, true)).isTrue();
     }
 
     @Test
     public void testNand() {
-        assertTrue(BooleanOperation.NAND.operate(false, false));
-        assertTrue(BooleanOperation.NAND.operate(false, true));
-        assertTrue(BooleanOperation.NAND.operate(true, false));
-        assertFalse(BooleanOperation.NAND.operate(true, true));
+        assertThat(BooleanOperation.NAND.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NAND.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.NAND.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.NAND.operate(true, true)).isFalse();
     }
 
     @Test
     public void testNxleft() {
-        assertTrue(BooleanOperation.NXLEFT.operate(false, false));
-        assertTrue(BooleanOperation.NXLEFT.operate(false, true));
-        assertFalse(BooleanOperation.NXLEFT.operate(true, false));
-        assertTrue(BooleanOperation.NXLEFT.operate(true, true));
+        assertThat(BooleanOperation.NXLEFT.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NXLEFT.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.NXLEFT.operate(true, false)).isFalse();
+        assertThat(BooleanOperation.NXLEFT.operate(true, true)).isTrue();
     }
 
     @Test
     public void testNxright() {
-        assertTrue(BooleanOperation.NXRIGHT.operate(false, false));
-        assertFalse(BooleanOperation.NXRIGHT.operate(false, true));
-        assertTrue(BooleanOperation.NXRIGHT.operate(true, false));
-        assertTrue(BooleanOperation.NXRIGHT.operate(true, true));
+        assertThat(BooleanOperation.NXRIGHT.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.NXRIGHT.operate(false, true)).isFalse();
+        assertThat(BooleanOperation.NXRIGHT.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.NXRIGHT.operate(true, true)).isTrue();
     }
 
     @Test
     public void testOr() {
-        assertFalse(BooleanOperation.OR.operate(false, false));
-        assertTrue(BooleanOperation.OR.operate(false, true));
-        assertTrue(BooleanOperation.OR.operate(true, false));
-        assertTrue(BooleanOperation.OR.operate(true, true));
+        assertThat(BooleanOperation.OR.operate(false, false)).isFalse();
+        assertThat(BooleanOperation.OR.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.OR.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.OR.operate(true, true)).isTrue();
     }
 
     @Test
     public void testTrue() {
-        assertTrue(BooleanOperation.TRUE.operate(false, false));
-        assertTrue(BooleanOperation.TRUE.operate(false, true));
-        assertTrue(BooleanOperation.TRUE.operate(true, false));
-        assertTrue(BooleanOperation.TRUE.operate(true, true));
+        assertThat(BooleanOperation.TRUE.operate(false, false)).isTrue();
+        assertThat(BooleanOperation.TRUE.operate(false, true)).isTrue();
+        assertThat(BooleanOperation.TRUE.operate(true, false)).isTrue();
+        assertThat(BooleanOperation.TRUE.operate(true, true)).isTrue();
     }
 
 }

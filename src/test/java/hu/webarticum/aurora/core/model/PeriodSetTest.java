@@ -1,6 +1,8 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +24,13 @@ public class PeriodSetTest {
     
     @Test
     public void test() {
-        assertEquals(new PeriodSet(period00, period01, period02), allPeriods.getAllByTerm(0));
-        assertEquals(new PeriodSet(period10, period11, period12), allPeriods.getAllByTerm(1));
-        assertEquals(new PeriodSet(period20, period21, period22), allPeriods.getAllByTerm(2));
-        assertEquals(new PeriodSet(period01, period11, period21), allPeriods.getAllByPosition(1));
-        assertEquals(new PeriodSet(period02, period12, period22), allPeriods.getAllByPosition(2));
-        assertEquals(new PeriodSet(period11), allPeriods.getAllByTermAndPosition(1, 1));
-        assertEquals(new PeriodSet(period21), allPeriods.getAllByTermAndPosition(2, 1));
+        assertThat((Set<Period>) allPeriods.getAllByTerm(0)).containsExactly(period00, period01, period02);
+        assertThat((Set<Period>) allPeriods.getAllByTerm(1)).containsExactly(period10, period11, period12);
+        assertThat((Set<Period>) allPeriods.getAllByTerm(2)).containsExactly(period20, period21, period22);
+        assertThat((Set<Period>) allPeriods.getAllByPosition(1)).containsExactly(period01, period11, period21);
+        assertThat((Set<Period>) allPeriods.getAllByPosition(2)).containsExactly(period02, period12, period22);
+        assertThat((Set<Period>) allPeriods.getAllByTermAndPosition(1, 1)).containsExactly(period11);
+        assertThat((Set<Period>) allPeriods.getAllByTermAndPosition(2, 1)).containsExactly(period21);
     }
 
 

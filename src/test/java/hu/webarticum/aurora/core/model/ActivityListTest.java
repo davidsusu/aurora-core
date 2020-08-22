@@ -1,9 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,163 +26,163 @@ public class ActivityListTest {
     
     @Test
     public void testCopy() {
-        assertNotSame(emptyActivityList, emptyActivityList.copy());
-        assertEquals(emptyActivityList, emptyActivityList.copy());
+        assertThat(emptyActivityList.copy()).isNotSameAs(emptyActivityList);
+        assertThat(emptyActivityList.copy()).isEqualTo(emptyActivityList);
 
-        assertNotSame(normalActivityList1, normalActivityList1.copy());
-        assertEquals(normalActivityList1, normalActivityList1.copy());
+        assertThat(normalActivityList1.copy()).isNotSameAs(normalActivityList1);
+        assertThat(normalActivityList1.copy()).isEqualTo(normalActivityList1);
 
-        assertNotSame(normalActivityList2, normalActivityList2.copy());
-        assertEquals(normalActivityList2, normalActivityList2.copy());
+        assertThat(normalActivityList2.copy()).isNotSameAs(normalActivityList2);
+        assertThat(normalActivityList2.copy()).isEqualTo(normalActivityList2);
 
-        assertNotSame(normalActivityList3, normalActivityList3.copy());
-        assertEquals(normalActivityList3, normalActivityList3.copy());
+        assertThat(normalActivityList3.copy()).isNotSameAs(normalActivityList3);
+        assertThat(normalActivityList3.copy()).isEqualTo(normalActivityList3);
 
-        assertNotSame(conflictingActivityList1, conflictingActivityList1.copy());
-        assertEquals(conflictingActivityList1, conflictingActivityList1.copy());
+        assertThat(conflictingActivityList1.copy()).isNotSameAs(conflictingActivityList1);
+        assertThat(conflictingActivityList1.copy()).isEqualTo(conflictingActivityList1);
 
-        assertNotSame(conflictingActivityList2, conflictingActivityList2.copy());
-        assertEquals(conflictingActivityList2, conflictingActivityList2.copy());
+        assertThat(conflictingActivityList2.copy()).isNotSameAs(conflictingActivityList2);
+        assertThat(conflictingActivityList2.copy()).isEqualTo(conflictingActivityList2);
     }
     
     @Test
     public void testTags() {
-        assertEquals(0, emptyActivityList.getTags().size());
-        assertEquals(0, emptyActivityList.getTags(Tag.Type.SUBJECT).size());
+        assertThat(emptyActivityList.getTags()).hasSize(0);
+        assertThat(emptyActivityList.getTags(Tag.Type.SUBJECT)).hasSize(0);
 
-        assertEquals(1, normalActivityList1.getTags().size());
-        assertEquals(1, normalActivityList1.getTags(Tag.Type.SUBJECT).size());
+        assertThat(normalActivityList1.getTags()).hasSize(1);
+        assertThat(normalActivityList1.getTags(Tag.Type.SUBJECT)).hasSize(1);
 
-        assertEquals(2, normalActivityList2.getTags().size());
-        assertEquals(1, normalActivityList2.getTags(Tag.Type.SUBJECT).size());
+        assertThat(normalActivityList2.getTags()).hasSize(2);
+        assertThat(normalActivityList2.getTags(Tag.Type.SUBJECT)).hasSize(1);
 
-        assertEquals(1, normalActivityList3.getTags().size());
-        assertEquals(1, normalActivityList3.getTags(Tag.Type.SUBJECT).size());
+        assertThat(normalActivityList3.getTags()).hasSize(1);
+        assertThat(normalActivityList3.getTags(Tag.Type.SUBJECT)).hasSize(1);
 
-        assertEquals(1, conflictingActivityList1.getTags().size());
-        assertEquals(1, conflictingActivityList1.getTags(Tag.Type.SUBJECT).size());
+        assertThat(conflictingActivityList1.getTags()).hasSize(1);
+        assertThat(conflictingActivityList1.getTags(Tag.Type.SUBJECT)).hasSize(1);
 
-        assertEquals(3, conflictingActivityList2.getTags().size());
-        assertEquals(2, conflictingActivityList2.getTags(Tag.Type.SUBJECT).size());
+        assertThat(conflictingActivityList2.getTags()).hasSize(3);
+        assertThat(conflictingActivityList2.getTags(Tag.Type.SUBJECT)).hasSize(2);
     }
     
     @Test
     public void testResources() {
-        assertEquals(0, emptyActivityList.getResources().size());
-        assertEquals(0, emptyActivityList.getResources(Resource.Type.CLASS).size());
-        assertEquals(0, emptyActivityList.getResources(Resource.Type.PERSON).size());
-        assertEquals(0, emptyActivityList.getResources(Resource.Type.OBJECT).size());
-        assertEquals(0, emptyActivityList.getResourceSubsets().size());
-        assertEquals(0, emptyActivityList.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(0, emptyActivityList.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(0, emptyActivityList.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(emptyActivityList.getResources()).hasSize(0);
+        assertThat(emptyActivityList.getResources(Resource.Type.CLASS)).hasSize(0);
+        assertThat(emptyActivityList.getResources(Resource.Type.PERSON)).hasSize(0);
+        assertThat(emptyActivityList.getResources(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(emptyActivityList.getResourceSubsets()).hasSize(0);
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.CLASS)).hasSize(0);
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.PERSON)).hasSize(0);
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
 
-        assertEquals(4, normalActivityList1.getResources().size());
-        assertEquals(2, normalActivityList1.getResources(Resource.Type.CLASS).size());
-        assertEquals(2, normalActivityList1.getResources(Resource.Type.PERSON).size());
-        assertEquals(0, normalActivityList1.getResources(Resource.Type.OBJECT).size());
-        assertEquals(4, normalActivityList1.getResourceSubsets().size());
-        assertEquals(2, normalActivityList1.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(2, normalActivityList1.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(0, normalActivityList1.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(normalActivityList1.getResources()).hasSize(4);
+        assertThat(normalActivityList1.getResources(Resource.Type.CLASS)).hasSize(2);
+        assertThat(normalActivityList1.getResources(Resource.Type.PERSON)).hasSize(2);
+        assertThat(normalActivityList1.getResources(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(normalActivityList1.getResourceSubsets()).hasSize(4);
+        assertThat(normalActivityList1.getResourceSubsets(Resource.Type.CLASS)).hasSize(2);
+        assertThat(normalActivityList1.getResourceSubsets(Resource.Type.PERSON)).hasSize(2);
+        assertThat(normalActivityList1.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
 
-        assertEquals(3, normalActivityList2.getResources().size());
-        assertEquals(1, normalActivityList2.getResources(Resource.Type.CLASS).size());
-        assertEquals(1, normalActivityList2.getResources(Resource.Type.PERSON).size());
-        assertEquals(1, normalActivityList2.getResources(Resource.Type.OBJECT).size());
-        assertEquals(3, normalActivityList2.getResourceSubsets().size());
-        assertEquals(1, normalActivityList2.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(1, normalActivityList2.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(1, normalActivityList2.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(normalActivityList2.getResources()).hasSize(3);
+        assertThat(normalActivityList2.getResources(Resource.Type.CLASS)).hasSize(1);
+        assertThat(normalActivityList2.getResources(Resource.Type.PERSON)).hasSize(1);
+        assertThat(normalActivityList2.getResources(Resource.Type.OBJECT)).hasSize(1);
+        assertThat(normalActivityList2.getResourceSubsets()).hasSize(3);
+        assertThat(normalActivityList2.getResourceSubsets(Resource.Type.CLASS)).hasSize(1);
+        assertThat(normalActivityList2.getResourceSubsets(Resource.Type.PERSON)).hasSize(1);
+        assertThat(normalActivityList2.getResourceSubsets(Resource.Type.OBJECT)).hasSize(1);
 
-        assertEquals(3, normalActivityList3.getResources().size());
-        assertEquals(1, normalActivityList3.getResources(Resource.Type.CLASS).size());
-        assertEquals(1, normalActivityList3.getResources(Resource.Type.PERSON).size());
-        assertEquals(1, normalActivityList3.getResources(Resource.Type.OBJECT).size());
-        assertEquals(4, normalActivityList3.getResourceSubsets().size());
-        assertEquals(2, normalActivityList3.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(1, normalActivityList3.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(1, normalActivityList3.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(normalActivityList3.getResources()).hasSize(3);
+        assertThat(normalActivityList3.getResources(Resource.Type.CLASS)).hasSize(1);
+        assertThat(normalActivityList3.getResources(Resource.Type.PERSON)).hasSize(1);
+        assertThat(normalActivityList3.getResources(Resource.Type.OBJECT)).hasSize(1);
+        assertThat(normalActivityList3.getResourceSubsets()).hasSize(4);
+        assertThat(normalActivityList3.getResourceSubsets(Resource.Type.CLASS)).hasSize(2);
+        assertThat(normalActivityList3.getResourceSubsets(Resource.Type.PERSON)).hasSize(1);
+        assertThat(normalActivityList3.getResourceSubsets(Resource.Type.OBJECT)).hasSize(1);
 
-        assertEquals(1, conflictingActivityList1.getResources().size());
-        assertEquals(0, conflictingActivityList1.getResources(Resource.Type.CLASS).size());
-        assertEquals(1, conflictingActivityList1.getResources(Resource.Type.PERSON).size());
-        assertEquals(0, conflictingActivityList1.getResources(Resource.Type.OBJECT).size());
-        assertEquals(2, conflictingActivityList1.getResourceSubsets().size());
-        assertEquals(0, conflictingActivityList1.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(2, conflictingActivityList1.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(0, conflictingActivityList1.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(conflictingActivityList1.getResources()).hasSize(1);
+        assertThat(conflictingActivityList1.getResources(Resource.Type.CLASS)).hasSize(0);
+        assertThat(conflictingActivityList1.getResources(Resource.Type.PERSON)).hasSize(1);
+        assertThat(conflictingActivityList1.getResources(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(conflictingActivityList1.getResourceSubsets()).hasSize(2);
+        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.CLASS)).hasSize(0);
+        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.PERSON)).hasSize(2);
+        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
 
-        assertEquals(4, conflictingActivityList2.getResources().size());
-        assertEquals(2, conflictingActivityList2.getResources(Resource.Type.CLASS).size());
-        assertEquals(1, conflictingActivityList2.getResources(Resource.Type.PERSON).size());
-        assertEquals(1, conflictingActivityList2.getResources(Resource.Type.OBJECT).size());
-        assertEquals(5, conflictingActivityList2.getResourceSubsets().size());
-        assertEquals(2, conflictingActivityList2.getResourceSubsets(Resource.Type.CLASS).size());
-        assertEquals(2, conflictingActivityList2.getResourceSubsets(Resource.Type.PERSON).size());
-        assertEquals(1, conflictingActivityList2.getResourceSubsets(Resource.Type.OBJECT).size());
+        assertThat(conflictingActivityList2.getResources()).hasSize(4);
+        assertThat(conflictingActivityList2.getResources(Resource.Type.CLASS)).hasSize(2);
+        assertThat(conflictingActivityList2.getResources(Resource.Type.PERSON)).hasSize(1);
+        assertThat(conflictingActivityList2.getResources(Resource.Type.OBJECT)).hasSize(1);
+        assertThat(conflictingActivityList2.getResourceSubsets()).hasSize(5);
+        assertThat(conflictingActivityList2.getResourceSubsets(Resource.Type.CLASS)).hasSize(2);
+        assertThat(conflictingActivityList2.getResourceSubsets(Resource.Type.PERSON)).hasSize(2);
+        assertThat(conflictingActivityList2.getResourceSubsets(Resource.Type.OBJECT)).hasSize(1);
     }
     
     @Test
     public void testHasConflicts() {
-        assertFalse(emptyActivityList.hasConflicts());
-        assertFalse(normalActivityList1.hasConflicts());
-        assertFalse(normalActivityList2.hasConflicts());
-        assertFalse(normalActivityList3.hasConflicts());
-        assertTrue(conflictingActivityList1.hasConflicts());
-        assertTrue(conflictingActivityList2.hasConflicts());
+        assertThat(emptyActivityList.hasConflicts()).isFalse();
+        assertThat(normalActivityList1.hasConflicts()).isFalse();
+        assertThat(normalActivityList2.hasConflicts()).isFalse();
+        assertThat(normalActivityList3.hasConflicts()).isFalse();
+        assertThat(conflictingActivityList1.hasConflicts()).isTrue();
+        assertThat(conflictingActivityList2.hasConflicts()).isTrue();
     }
     
     @Test
     public void testConflictsWith() {
-        assertFalse(emptyActivityList.conflictsWith(emptyActivityList));
-        assertFalse(emptyActivityList.conflictsWith(normalActivityList1));
-        assertFalse(emptyActivityList.conflictsWith(normalActivityList2));
-        assertFalse(emptyActivityList.conflictsWith(normalActivityList3));
-        assertFalse(emptyActivityList.conflictsWith(conflictingActivityList1));
-        assertFalse(emptyActivityList.conflictsWith(conflictingActivityList2));
+        assertThat(emptyActivityList.conflictsWith(emptyActivityList)).isFalse(); // NOSONAR
+        assertThat(emptyActivityList.conflictsWith(normalActivityList1)).isFalse();
+        assertThat(emptyActivityList.conflictsWith(normalActivityList2)).isFalse();
+        assertThat(emptyActivityList.conflictsWith(normalActivityList3)).isFalse();
+        assertThat(emptyActivityList.conflictsWith(conflictingActivityList1)).isFalse();
+        assertThat(emptyActivityList.conflictsWith(conflictingActivityList2)).isFalse();
 
-        assertFalse(normalActivityList1.conflictsWith(emptyActivityList));
-        assertTrue(normalActivityList1.conflictsWith(normalActivityList1));
-        assertTrue(normalActivityList1.conflictsWith(normalActivityList2));
-        assertTrue(normalActivityList1.conflictsWith(normalActivityList3));
-        assertTrue(normalActivityList1.conflictsWith(conflictingActivityList1));
-        assertTrue(normalActivityList1.conflictsWith(conflictingActivityList2));
+        assertThat(normalActivityList1.conflictsWith(emptyActivityList)).isFalse();
+        assertThat(normalActivityList1.conflictsWith(normalActivityList1)).isTrue(); // NOSONAR
+        assertThat(normalActivityList1.conflictsWith(normalActivityList2)).isTrue();
+        assertThat(normalActivityList1.conflictsWith(normalActivityList3)).isTrue();
+        assertThat(normalActivityList1.conflictsWith(conflictingActivityList1)).isTrue();
+        assertThat(normalActivityList1.conflictsWith(conflictingActivityList2)).isTrue();
 
-        assertFalse(normalActivityList2.conflictsWith(emptyActivityList));
-        assertTrue(normalActivityList2.conflictsWith(normalActivityList1));
-        assertTrue(normalActivityList2.conflictsWith(normalActivityList2));
-        assertFalse(normalActivityList2.conflictsWith(normalActivityList3));
-        assertFalse(normalActivityList2.conflictsWith(conflictingActivityList1));
-        assertTrue(normalActivityList2.conflictsWith(conflictingActivityList2));
+        assertThat(normalActivityList2.conflictsWith(emptyActivityList)).isFalse();
+        assertThat(normalActivityList2.conflictsWith(normalActivityList1)).isTrue();
+        assertThat(normalActivityList2.conflictsWith(normalActivityList2)).isTrue(); // NOSONAR
+        assertThat(normalActivityList2.conflictsWith(normalActivityList3)).isFalse();
+        assertThat(normalActivityList2.conflictsWith(conflictingActivityList1)).isFalse();
+        assertThat(normalActivityList2.conflictsWith(conflictingActivityList2)).isTrue();
 
-        assertFalse(normalActivityList3.conflictsWith(emptyActivityList));
-        assertTrue(normalActivityList3.conflictsWith(normalActivityList1));
-        assertFalse(normalActivityList3.conflictsWith(normalActivityList2));
-        assertTrue(normalActivityList3.conflictsWith(normalActivityList3));
-        assertTrue(normalActivityList3.conflictsWith(conflictingActivityList1));
-        assertTrue(normalActivityList3.conflictsWith(conflictingActivityList2));
+        assertThat(normalActivityList3.conflictsWith(emptyActivityList)).isFalse();
+        assertThat(normalActivityList3.conflictsWith(normalActivityList1)).isTrue();
+        assertThat(normalActivityList3.conflictsWith(normalActivityList2)).isFalse();
+        assertThat(normalActivityList3.conflictsWith(normalActivityList3)).isTrue(); // NOSONAR
+        assertThat(normalActivityList3.conflictsWith(conflictingActivityList1)).isTrue();
+        assertThat(normalActivityList3.conflictsWith(conflictingActivityList2)).isTrue();
 
-        assertFalse(conflictingActivityList1.conflictsWith(emptyActivityList));
-        assertTrue(conflictingActivityList1.conflictsWith(normalActivityList1));
-        assertFalse(conflictingActivityList1.conflictsWith(normalActivityList2));
-        assertTrue(conflictingActivityList1.conflictsWith(normalActivityList3));
-        assertTrue(conflictingActivityList1.conflictsWith(conflictingActivityList1));
-        assertFalse(conflictingActivityList1.conflictsWith(conflictingActivityList2));
+        assertThat(conflictingActivityList1.conflictsWith(emptyActivityList)).isFalse();
+        assertThat(conflictingActivityList1.conflictsWith(normalActivityList1)).isTrue();
+        assertThat(conflictingActivityList1.conflictsWith(normalActivityList2)).isFalse();
+        assertThat(conflictingActivityList1.conflictsWith(normalActivityList3)).isTrue();
+        assertThat(conflictingActivityList1.conflictsWith(conflictingActivityList1)).isTrue(); // NOSONAR
+        assertThat(conflictingActivityList1.conflictsWith(conflictingActivityList2)).isFalse();
 
-        assertFalse(conflictingActivityList2.conflictsWith(emptyActivityList));
-        assertTrue(conflictingActivityList2.conflictsWith(normalActivityList1));
-        assertTrue(conflictingActivityList2.conflictsWith(normalActivityList2));
-        assertTrue(conflictingActivityList2.conflictsWith(normalActivityList3));
-        assertFalse(conflictingActivityList2.conflictsWith(conflictingActivityList1));
-        assertTrue(conflictingActivityList2.conflictsWith(conflictingActivityList2));
+        assertThat(conflictingActivityList2.conflictsWith(emptyActivityList)).isFalse();
+        assertThat(conflictingActivityList2.conflictsWith(normalActivityList1)).isTrue();
+        assertThat(conflictingActivityList2.conflictsWith(normalActivityList2)).isTrue();
+        assertThat(conflictingActivityList2.conflictsWith(normalActivityList3)).isTrue();
+        assertThat(conflictingActivityList2.conflictsWith(conflictingActivityList1)).isFalse();
+        assertThat(conflictingActivityList2.conflictsWith(conflictingActivityList2)).isTrue(); // NOSONAR
     }
     
     @Test
     public void testFilter() {
         ActivityList actual = normalActivityList3.filter(new ActivityFilter.HasResource(teacher2));
         ActivityList expected = new ActivityList(normalActivityList3.get(0));
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Before

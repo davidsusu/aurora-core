@@ -1,8 +1,6 @@
 package hu.webarticum.aurora.core.model.time;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -52,62 +50,68 @@ public class CustomTimeLimitTest {
     public void testCopyStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit copiedLimit = new CustomTimeLimit(limit);
-        assertEquals(limit, copiedLimit);
+        
+        assertThat(copiedLimit).isEqualTo(limit);
     }
 
     @Test
     public void testCopyStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         CustomTimeLimit copiedLimit = new CustomTimeLimit(limit);
-        assertEquals(limit, copiedLimit);
+        
+        assertThat(copiedLimit).isEqualTo(limit);
     }
 
     @Test
     public void testBasicsNever() {
         CustomTimeLimit limit = new CustomTimeLimit(false);
-        assertFalse(limit.isAlways());
-        assertTrue(limit.isNever());
-        assertFalse(limit.getStartState());
-        assertFalse(limit.getEndState());
-        assertEquals(Arrays.<Time>asList(), limit.getTimes());
-        assertEquals(Arrays.<Time>asList(), limit.getTimes(false));
-        assertEquals(Arrays.<Time>asList(), limit.getTimes(true));
+        
+        assertThat(limit.isAlways()).isFalse();
+        assertThat(limit.isNever()).isTrue();
+        assertThat(limit.getStartState()).isFalse();
+        assertThat(limit.getEndState()).isFalse();
+        assertThat(limit.getTimes()).isEmpty();
+        assertThat(limit.getTimes(false)).isEmpty();
+        assertThat(limit.getTimes(true)).isEmpty();
     }
 
     @Test
     public void testBasicsAlways() {
         CustomTimeLimit limit = new CustomTimeLimit(true);
-        assertTrue(limit.isAlways());
-        assertFalse(limit.isNever());
-        assertTrue(limit.getStartState());
-        assertTrue(limit.getEndState());
-        assertEquals(Arrays.<Time>asList(), limit.getTimes());
-        assertEquals(Arrays.<Time>asList(), limit.getTimes(false));
-        assertEquals(Arrays.<Time>asList(), limit.getTimes(true));
+        
+        assertThat(limit.isAlways()).isTrue();
+        assertThat(limit.isNever()).isFalse();
+        assertThat(limit.getStartState()).isTrue();
+        assertThat(limit.getEndState()).isTrue();
+        assertThat(limit.getTimes()).isEmpty();
+        assertThat(limit.getTimes(false)).isEmpty();
+        assertThat(limit.getTimes(true)).isEmpty();
     }
 
     @Test
     public void testBasicsStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        assertFalse(limit.isAlways());
-        assertFalse(limit.isNever());
-        assertFalse(limit.getStartState());
-        assertFalse(limit.getEndState());
-        assertEquals(Arrays.asList(switches), limit.getTimes());
-        assertEquals(getOdds(Arrays.asList(switches)), limit.getTimes(false));
-        assertEquals(getEvens(Arrays.asList(switches)), limit.getTimes(true));
+        
+        assertThat(limit.isAlways()).isFalse();
+        assertThat(limit.isNever()).isFalse();
+        assertThat(limit.getStartState()).isFalse();
+        assertThat(limit.getEndState()).isFalse();
+        assertThat(limit.getTimes()).containsExactly(switches);
+        assertThat(limit.getTimes(false)).containsExactly(odds(switches));
+        assertThat(limit.getTimes(true)).containsExactly(evens(switches));
     }
 
     @Test
     public void testBasicsStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
-        assertFalse(limit.isAlways());
-        assertFalse(limit.isNever());
-        assertTrue(limit.getStartState());
-        assertTrue(limit.getEndState());
-        assertEquals(Arrays.asList(switches), limit.getTimes());
-        assertEquals(getEvens(Arrays.asList(switches)), limit.getTimes(false));
-        assertEquals(getOdds(Arrays.asList(switches)), limit.getTimes(true));
+        
+        assertThat(limit.isAlways()).isFalse();
+        assertThat(limit.isNever()).isFalse();
+        assertThat(limit.getStartState()).isTrue();
+        assertThat(limit.getEndState()).isTrue();
+        assertThat(limit.getTimes()).containsExactly(switches);
+        assertThat(limit.getTimes(false)).containsExactly(evens(switches));
+        assertThat(limit.getTimes(true)).containsExactly(odds(switches));
     }
     
     @Test
@@ -115,14 +119,14 @@ public class CustomTimeLimitTest {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         List<Interval> actual = limit.limitSortedIntervals(Arrays.asList(intervals));
         
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(10, 10),
             new Interval(10, 15),
             new Interval(15, 20),
             new Interval(50, 50),
         });
         
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -130,7 +134,7 @@ public class CustomTimeLimitTest {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         List<Interval> actual = limit.limitSortedIntervals(Arrays.asList(intervals));
         
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(0, 10),
             new Interval(5, 10),
             new Interval(10, 10),
@@ -138,8 +142,8 @@ public class CustomTimeLimitTest {
             new Interval(50, 50),
             new Interval(100, 150),
         });
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -147,7 +151,7 @@ public class CustomTimeLimitTest {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         List<Interval> actual = limit.limitIntersectingSortedIntervals(Arrays.asList(intervals));
         
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(0, 15),
             new Interval(5, 15),
             new Interval(10, 15),
@@ -157,8 +161,8 @@ public class CustomTimeLimitTest {
             new Interval(25, 80),
             new Interval(45, 60),
         });
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -166,7 +170,7 @@ public class CustomTimeLimitTest {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         List<Interval> actual = limit.limitIntersectingSortedIntervals(Arrays.asList(intervals));
 
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(0, 10),
             new Interval(0, 15),
             new Interval(5, 10),
@@ -178,8 +182,8 @@ public class CustomTimeLimitTest {
             new Interval(45, 60),
             new Interval(100, 150),
         });
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -195,7 +199,7 @@ public class CustomTimeLimitTest {
         
         List<Interval> expecteds = limit.limitSortedIntervals(Arrays.asList(intervals));
         
-        assertEquals(expecteds, actuals);
+        assertThat(actuals).isEqualTo(expecteds);
     }
 
     @Test
@@ -210,8 +214,8 @@ public class CustomTimeLimitTest {
         }
         
         List<Interval> expecteds = limit.limitSortedIntervals(Arrays.asList(intervals));
-        
-        assertEquals(expecteds, actuals);
+
+        assertThat(actuals).isEqualTo(expecteds);
     }
     
     @Test
@@ -228,8 +232,8 @@ public class CustomTimeLimitTest {
         List<Interval> expecteds = limit.limitIntersectingSortedIntervals(
             Arrays.asList(intervals)
         );
-        
-        assertEquals(expecteds, actuals);
+
+        assertThat(actuals).isEqualTo(expecteds);
     }
 
     @Test
@@ -244,190 +248,185 @@ public class CustomTimeLimitTest {
         }
         
         List<Interval> expecteds = limit.limitIntersectingSortedIntervals(Arrays.asList(intervals));
-        
-        assertEquals(expecteds, actuals);
+
+        assertThat(actuals).isEqualTo(expecteds);
     }
 
     @Test
     public void testContainsTimeStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        assertFalse(limit.contains(new Time(0)));
-        assertTrue(limit.contains(new Time(10)));
-        assertTrue(limit.contains(new Time(15)));
-        assertTrue(limit.contains(new Time(45)));
-        assertFalse(limit.contains(new Time(300)));
+        assertThat(limit.contains(new Time(0))).isFalse();
+        assertThat(limit.contains(new Time(10))).isTrue();
+        assertThat(limit.contains(new Time(15))).isTrue();
+        assertThat(limit.contains(new Time(45))).isTrue();
+        assertThat(limit.contains(new Time(300))).isFalse();
     }
 
     @Test
     public void testContainsTimeInclusionStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
 
-        assertFalse(limit.contains(new Time(0), true, true));
-        assertFalse(limit.contains(new Time(0), true, false));
-        assertFalse(limit.contains(new Time(0), false, true));
-        assertFalse(limit.contains(new Time(0), false, false));
+        assertThat(limit.contains(new Time(0), true, true)).isFalse();
+        assertThat(limit.contains(new Time(0), true, false)).isFalse();
+        assertThat(limit.contains(new Time(0), false, true)).isFalse();
+        assertThat(limit.contains(new Time(0), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(10), true, true));
-        assertTrue(limit.contains(new Time(10), true, false));
-        assertFalse(limit.contains(new Time(10), false, true));
-        assertFalse(limit.contains(new Time(10), false, false));
+        assertThat(limit.contains(new Time(10), true, true)).isTrue();
+        assertThat(limit.contains(new Time(10), true, false)).isTrue();
+        assertThat(limit.contains(new Time(10), false, true)).isFalse();
+        assertThat(limit.contains(new Time(10), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(15), true, true));
-        assertTrue(limit.contains(new Time(15), true, false));
-        assertTrue(limit.contains(new Time(15), false, true));
-        assertTrue(limit.contains(new Time(15), false, false));
+        assertThat(limit.contains(new Time(15), true, true)).isTrue();
+        assertThat(limit.contains(new Time(15), true, false)).isTrue();
+        assertThat(limit.contains(new Time(15), false, true)).isTrue();
+        assertThat(limit.contains(new Time(15), false, false)).isTrue();
 
-        assertTrue(limit.contains(new Time(20), true, true));
-        assertFalse(limit.contains(new Time(20), true, false));
-        assertTrue(limit.contains(new Time(20), false, true));
-        assertFalse(limit.contains(new Time(20), false, false));
+        assertThat(limit.contains(new Time(20), true, true)).isTrue();
+        assertThat(limit.contains(new Time(20), true, false)).isFalse();
+        assertThat(limit.contains(new Time(20), false, true)).isTrue();
+        assertThat(limit.contains(new Time(20), false, false)).isFalse();
 
-        assertFalse(limit.contains(new Time(25), true, true));
-        assertFalse(limit.contains(new Time(25), true, false));
-        assertFalse(limit.contains(new Time(25), false, true));
-        assertFalse(limit.contains(new Time(25), false, false));
+        assertThat(limit.contains(new Time(25), true, true)).isFalse();
+        assertThat(limit.contains(new Time(25), true, false)).isFalse();
+        assertThat(limit.contains(new Time(25), false, true)).isFalse();
+        assertThat(limit.contains(new Time(25), false, false)).isFalse();
 
-        assertFalse(limit.contains(new Time(100), true, true));
-        assertFalse(limit.contains(new Time(100), true, false));
-        assertFalse(limit.contains(new Time(100), false, true));
-        assertFalse(limit.contains(new Time(100), false, false));
+        assertThat(limit.contains(new Time(100), true, true)).isFalse();
+        assertThat(limit.contains(new Time(100), true, false)).isFalse();
+        assertThat(limit.contains(new Time(100), false, true)).isFalse();
+        assertThat(limit.contains(new Time(100), false, false)).isFalse();
     }
     
     @Test
     public void testContainsTimeStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
-        assertTrue(limit.contains(new Time(0)));
-        assertTrue(limit.contains(new Time(10)));
-        assertFalse(limit.contains(new Time(15)));
-        assertFalse(limit.contains(new Time(45)));
-        assertTrue(limit.contains(new Time(300)));
+        
+        assertThat(limit.contains(new Time(0))).isTrue();
+        assertThat(limit.contains(new Time(10))).isTrue();
+        assertThat(limit.contains(new Time(15))).isFalse();
+        assertThat(limit.contains(new Time(45))).isFalse();
+        assertThat(limit.contains(new Time(300))).isTrue();
     }
 
     @Test
     public void testContainsTimeInclusionStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
 
-        assertTrue(limit.contains(new Time(0), true, true));
-        assertTrue(limit.contains(new Time(0), true, false));
-        assertTrue(limit.contains(new Time(0), false, true));
-        assertTrue(limit.contains(new Time(0), false, false));
+        assertThat(limit.contains(new Time(0), true, true)).isTrue();
+        assertThat(limit.contains(new Time(0), true, false)).isTrue();
+        assertThat(limit.contains(new Time(0), false, true)).isTrue();
+        assertThat(limit.contains(new Time(0), false, false)).isTrue();
 
-        assertTrue(limit.contains(new Time(10), true, true));
-        assertFalse(limit.contains(new Time(10), true, false));
-        assertTrue(limit.contains(new Time(10), false, true));
-        assertFalse(limit.contains(new Time(10), false, false));
+        assertThat(limit.contains(new Time(10), true, true)).isTrue();
+        assertThat(limit.contains(new Time(10), true, false)).isFalse();
+        assertThat(limit.contains(new Time(10), false, true)).isTrue();
+        assertThat(limit.contains(new Time(10), false, false)).isFalse();
 
-        assertFalse(limit.contains(new Time(15), true, true));
-        assertFalse(limit.contains(new Time(15), true, false));
-        assertFalse(limit.contains(new Time(15), false, true));
-        assertFalse(limit.contains(new Time(15), false, false));
+        assertThat(limit.contains(new Time(15), true, true)).isFalse();
+        assertThat(limit.contains(new Time(15), true, false)).isFalse();
+        assertThat(limit.contains(new Time(15), false, true)).isFalse();
+        assertThat(limit.contains(new Time(15), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(20), true, true));
-        assertTrue(limit.contains(new Time(20), true, false));
-        assertFalse(limit.contains(new Time(20), false, true));
-        assertFalse(limit.contains(new Time(20), false, false));
+        assertThat(limit.contains(new Time(20), true, true)).isTrue();
+        assertThat(limit.contains(new Time(20), true, false)).isTrue();
+        assertThat(limit.contains(new Time(20), false, true)).isFalse();
+        assertThat(limit.contains(new Time(20), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(25), true, true));
-        assertTrue(limit.contains(new Time(25), true, false));
-        assertTrue(limit.contains(new Time(25), false, true));
-        assertTrue(limit.contains(new Time(25), false, false));
+        assertThat(limit.contains(new Time(25), true, true)).isTrue();
+        assertThat(limit.contains(new Time(25), true, false)).isTrue();
+        assertThat(limit.contains(new Time(25), false, true)).isTrue();
+        assertThat(limit.contains(new Time(25), false, false)).isTrue();
 
-        assertTrue(limit.contains(new Time(100), true, true));
-        assertTrue(limit.contains(new Time(100), true, false));
-        assertTrue(limit.contains(new Time(100), false, true));
-        assertTrue(limit.contains(new Time(100), false, false));
+        assertThat(limit.contains(new Time(100), true, true)).isTrue();
+        assertThat(limit.contains(new Time(100), true, false)).isTrue();
+        assertThat(limit.contains(new Time(100), false, true)).isTrue();
+        assertThat(limit.contains(new Time(100), false, false)).isTrue();
     }
 
     @Test
     public void testContainsOther() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(15),
             new Time(42), new Time(50),
         });
-        assertTrue(limit.contains(otherLimit1));
+        assertThat(limit.contains(otherLimit1)).isTrue();
 
-        CustomTimeLimit otherLimit2 = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit otherLimit2 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(25),
             new Time(42), new Time(50),
         });
-        assertFalse(limit.contains(otherLimit2));
+        
+        assertThat(limit.contains(otherLimit2)).isFalse();
     }
 
     @Test
     public void testIntersectsOther() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(15),
             new Time(42), new Time(50),
         });
-        assertTrue(limit.intersects(otherLimit1));
+        assertThat(limit.intersects(otherLimit1)).isTrue();
 
-        CustomTimeLimit otherLimit2 = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit otherLimit2 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(5), new Time(10),
             new Time(52), new Time(55),
         });
-        assertFalse(limit.intersects(otherLimit2));
+        
+        assertThat(limit.intersects(otherLimit2)).isFalse();
     }
 
     @Test
     public void testUnionWith() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        CustomTimeLimit otherLimit = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit otherLimit = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(5), new Time(15),
             new Time(50), new Time(52),
             new Time(54), new Time(100),
             new Time(120),
         });
         
-        CustomTimeLimit expected = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit expected = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(5), new Time(20),
             new Time(40), new Time(52),
             new Time(54), new Time(100),
             new Time(120),
         });
         
-        assertEquals(expected, limit.unionWith(otherLimit));
+        assertThat(limit.unionWith(otherLimit)).isEqualTo(expected);
     }
 
     @Test
     public void testIntersectionWith() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
-        CustomTimeLimit otherLimit = new CustomTimeLimit(true, new Time[] {
+        CustomTimeLimit otherLimit = new CustomTimeLimit(true, new Time[] { // NOSONAR comma
             new Time(15),
             new Time(50), new Time(52),
             new Time(54), new Time(100),
             new Time(120),
         });
         
-        CustomTimeLimit expected = new CustomTimeLimit(false, new Time[] {
+        CustomTimeLimit expected = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(15),
             new Time(55), new Time(70),
         });
         
-        assertEquals(expected, limit.intersectionWith(otherLimit));
+        assertThat(limit.intersectionWith(otherLimit)).isEqualTo(expected);
     }
     
-    private <T> List<T> getEvens(List<T> list) {
-        List<T> result = new ArrayList<T>();
-        boolean even = false;
-        for (T item : list) {
-            if (even) {
-                result.add(item);
-            }
-            even = !even;
+    private Time[] evens(Time[] times) {
+        Time[] result = new Time[times.length / 2];
+        for (int i = 1, j = 0; i < times.length; i += 2, j++) {
+            result[j] = times[i];
         }
         return result;
     }
 
-    private <T> List<T> getOdds(List<T> list) {
-        List<T> result = new ArrayList<T>();
-        boolean odd = true;
-        for (T item : list) {
-            if (odd) {
-                result.add(item);
-            }
-            odd = !odd;
+    private Time[] odds(Time[] times) {
+        Time[] result = new Time[times.length - (times.length / 2)];
+        for (int i = 0, j = 0; i < times.length; i += 2, j++) {
+            result[j] = times[i];
         }
         return result;
     }

@@ -1,8 +1,6 @@
 package hu.webarticum.aurora.core.model.time;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,31 +30,33 @@ public class IntervalTest {
     @Test
     public void testBasics() {
         Interval interval = new Interval(10, 20);
-        assertFalse(interval.isAlways());
-        assertFalse(interval.isNever());
-        assertEquals(10L, interval.getLength());
-        assertEquals(Arrays.asList(new Time(10), new Time(20)), interval.getTimes());
-        assertEquals(Arrays.asList(new Time(10)), interval.getTimes(false));
-        assertEquals(Arrays.asList(new Time(20)), interval.getTimes(true));
+        
+        assertThat(interval.isAlways()).isFalse();
+        assertThat(interval.isNever()).isFalse();
+        assertThat(interval.getLength()).isEqualTo(10L);
+        assertThat(interval.getTimes()).containsExactly(new Time(10), new Time(20));
+        assertThat(interval.getTimes(false)).containsExactly(new Time(10));
+        assertThat(interval.getTimes(true)).containsExactly(new Time(20));
     }
 
     @Test
     public void testLimitSortedIntervals() {
         Interval interval = new Interval(10, 20);
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(10, 10),
             new Interval(10, 15),
             new Interval(15, 20),
             new Interval(20, 20),
         });
         List<Interval> actual = interval.limitSortedIntervals(Arrays.asList(intervals));
-        assertEquals(expected, actual);
+        
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     public void testLimitIntersectingSortedIntervals() {
         Interval interval = new Interval(10, 20);
-        List<Interval> expected = Arrays.asList(new Interval[] {
+        List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(0, 15),
             new Interval(5, 15),
             new Interval(10, 15),
@@ -67,7 +67,7 @@ public class IntervalTest {
         List<Interval> actual = interval.limitIntersectingSortedIntervals(
             Arrays.asList(intervals)
         );
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -82,8 +82,8 @@ public class IntervalTest {
         }
         
         List<Interval> expecteds = limit.limitSortedIntervals(Arrays.asList(intervals));
-        
-        assertEquals(expecteds, actuals);
+
+        assertThat(actuals).isEqualTo(expecteds);
     }
 
     @Test
@@ -101,47 +101,48 @@ public class IntervalTest {
             Arrays.asList(intervals)
         );
         
-        assertEquals(expecteds, actuals);
+        assertThat(actuals).isEqualTo(expecteds);
     }
 
     @Test
     public void testContainsTime() {
         Interval limit = new Interval(10, 20);
-        assertFalse(limit.contains(new Time(5)));
-        assertTrue(limit.contains(new Time(10)));
-        assertTrue(limit.contains(new Time(15)));
-        assertTrue(limit.contains(new Time(20)));
-        assertFalse(limit.contains(new Time(25)));
+        
+        assertThat(limit.contains(new Time(5))).isFalse();
+        assertThat(limit.contains(new Time(10))).isTrue();
+        assertThat(limit.contains(new Time(15))).isTrue();
+        assertThat(limit.contains(new Time(20))).isTrue();
+        assertThat(limit.contains(new Time(25))).isFalse();
     }
 
     @Test
     public void testContainsTimeInclusion() {
         Interval limit = new Interval(10, 20);
 
-        assertFalse(limit.contains(new Time(5), true, true));
-        assertFalse(limit.contains(new Time(5), true, false));
-        assertFalse(limit.contains(new Time(5), false, true));
-        assertFalse(limit.contains(new Time(5), false, false));
+        assertThat(limit.contains(new Time(5), true, true)).isFalse();
+        assertThat(limit.contains(new Time(5), true, false)).isFalse();
+        assertThat(limit.contains(new Time(5), false, true)).isFalse();
+        assertThat(limit.contains(new Time(5), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(10), true, true));
-        assertTrue(limit.contains(new Time(10), true, false));
-        assertFalse(limit.contains(new Time(10), false, true));
-        assertFalse(limit.contains(new Time(10), false, false));
+        assertThat(limit.contains(new Time(10), true, true)).isTrue();
+        assertThat(limit.contains(new Time(10), true, false)).isTrue();
+        assertThat(limit.contains(new Time(10), false, true)).isFalse();
+        assertThat(limit.contains(new Time(10), false, false)).isFalse();
 
-        assertTrue(limit.contains(new Time(15), true, true));
-        assertTrue(limit.contains(new Time(15), true, false));
-        assertTrue(limit.contains(new Time(15), false, true));
-        assertTrue(limit.contains(new Time(15), false, false));
+        assertThat(limit.contains(new Time(15), true, true)).isTrue();
+        assertThat(limit.contains(new Time(15), true, false)).isTrue();
+        assertThat(limit.contains(new Time(15), false, true)).isTrue();
+        assertThat(limit.contains(new Time(15), false, false)).isTrue();
 
-        assertTrue(limit.contains(new Time(20), true, true));
-        assertFalse(limit.contains(new Time(20), true, false));
-        assertTrue(limit.contains(new Time(20), false, true));
-        assertFalse(limit.contains(new Time(20), false, false));
+        assertThat(limit.contains(new Time(20), true, true)).isTrue();
+        assertThat(limit.contains(new Time(20), true, false)).isFalse();
+        assertThat(limit.contains(new Time(20), false, true)).isTrue();
+        assertThat(limit.contains(new Time(20), false, false)).isFalse();
 
-        assertFalse(limit.contains(new Time(25), true, true));
-        assertFalse(limit.contains(new Time(25), true, false));
-        assertFalse(limit.contains(new Time(25), false, true));
-        assertFalse(limit.contains(new Time(25), false, false));
+        assertThat(limit.contains(new Time(25), true, true)).isFalse();
+        assertThat(limit.contains(new Time(25), true, false)).isFalse();
+        assertThat(limit.contains(new Time(25), false, true)).isFalse();
+        assertThat(limit.contains(new Time(25), false, false)).isFalse();
     }
     
 }

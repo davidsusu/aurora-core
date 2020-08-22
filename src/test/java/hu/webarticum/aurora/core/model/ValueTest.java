@@ -1,11 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,88 +20,77 @@ public class ValueTest {
     
     @Test
     public void testAccess() {
-        assertEquals("x", rootValue.getAccess("apple").get().get());
-        assertEquals(4, rootValue.getAccess("pear").get().getAsSet().size());
-        assertEquals("n", rootValue.getAccess("pear[].a{0}", resource1).get().get());
-        assertEquals("m", rootValue.getAccess("pear[].a{0}", resource2).get().get());
-        assertTrue(Arrays.asList("$", "%").contains(rootValue.getAccess("pear[].b").get().get()));
-        assertEquals("o", rootValue.getAccess("pear[].a{0}", resource3).get().get());
-        assertEquals("p", rootValue.getAccess("pear[].a{0}", resource4).get().get());
-        assertEquals(
-            Arrays.asList(new Value("w"), new Value("xxx")),
-            rootValue.getAccess("cherry{0}[0]", resource5).get().get()
+        assertThat(rootValue.getAccess("apple").get().get()).isEqualTo("x");
+        assertThat(rootValue.getAccess("pear").get().getAsSet()).hasSize(4);
+        assertThat(rootValue.getAccess("pear[].a{0}", resource1).get().get()).isEqualTo("n");
+        assertThat(rootValue.getAccess("pear[].a{0}", resource2).get().get()).isEqualTo("m");
+        assertThat(rootValue.getAccess("pear[].b").get().get()).isIn("$", "%");
+        assertThat(rootValue.getAccess("pear[].a{0}", resource3).get().get()).isEqualTo("o");
+        assertThat(rootValue.getAccess("pear[].a{0}", resource4).get().get()).isEqualTo("p");
+        assertThat(rootValue.getAccess("cherry{0}[0]", resource5).get().getAsList()).containsExactly(
+            new Value("w"), new Value("xxx")
         );
-        assertEquals("w", rootValue.getAccess("cherry{0}[0][0]", resource5).get().get());
-        assertEquals(
-            resource8,
-            rootValue.getAccess("cherry{0}[1]{1}", resource5, resource7).get().get()
-        );
-        assertTrue(rootValue.getAccess("cherry{0}.fake", resource5).get().isNull());
-        assertFalse(rootValue.getAccess("pear[2]{0}", resource2).exists());
+        assertThat(rootValue.getAccess("cherry{0}[0][0]", resource5).get().get()).isEqualTo("w");
+        assertThat(rootValue.getAccess("cherry{0}[1]{1}", resource5, resource7).get().get()).isEqualTo(resource8);
+        assertThat(rootValue.getAccess("cherry{0}.fake", resource5).get().isNull()).isTrue();
+        assertThat(rootValue.getAccess("pear[2]{0}", resource2).exists()).isFalse();
     }
 
     @Test
     public void testIncompatibleConversion() {
         rootValue.getAccess("apple").get().getAsList().add(new Value(3));
-        assertEquals(Value.Type.STRING, rootValue.getAccess("apple").get().getType());
+        assertThat(rootValue.getAccess("apple").get().getType()).isEqualTo(Value.Type.STRING);
         
         rootValue.getAccess("apple[0]").set(3);
-        assertEquals(Value.Type.LIST, rootValue.getAccess("apple").get().getType());
-        assertEquals(Integer.valueOf(3), rootValue.getAccess("apple").get().getAsList().get(0).get());
-        assertEquals(Integer.valueOf(3), rootValue.getAccess("apple[0]").get().get());
+        assertThat(rootValue.getAccess("apple").get().getType()).isEqualTo(Value.Type.LIST);
+        assertThat(rootValue.getAccess("apple").get().getAsList().get(0).getAsInt()).isEqualTo(3);
+        assertThat(rootValue.getAccess("apple[0]").get().getAsInt()).isEqualTo(3);
         
         rootValue.getAccess("cherry{0}[1]{1}.sub", resource5, resource6).set("SUBVAL");
-        assertEquals(
-            Value.Type.MAP,
+        assertThat(
             rootValue.getAccess("cherry{0}[1]{1}", resource5, resource6).get().getType()
-        );
-        assertEquals(
-            1,
-            rootValue.getAccess("cherry{0}[1]{1}", resource5, resource6).get().getAsMap().size()
-        );
-        assertEquals(
-            "SUBVAL",
-            rootValue.getAccess("cherry{0}[1]{1}", resource5, resource6).get().getAsMap()
-                .get(new Value("sub")).get()
-        );
-        assertEquals(
-            "SUBVAL",
+        ).isEqualTo(Value.Type.MAP);
+        assertThat(rootValue.getAccess("cherry{0}[1]{1}", resource5, resource6).get().getAsMap()).hasSize(1);
+        assertThat(
+            rootValue.getAccess("cherry{0}[1]{1}", resource5, resource6).get().getAsMap().get(new Value("sub")).get()
+        ).isEqualTo("SUBVAL");
+        assertThat(
             rootValue.getAccess("cherry{0}[1]{1}.sub", resource5, resource6).get().get()
-        );
+        ).isEqualTo("SUBVAL");
     }
     
     @Test
     public void testListToMapAutoConversion() {
         Value value = rootValue.getAccess("orange").get();
         
-        assertEquals(2, value.getAccess("[1]").get().get());
+        assertThat(value.getAccess("[1]").get().get()).isEqualTo(2);
         
         value.getAccess("[1]").set(111);
         
-        assertEquals(111, value.getAccess("[1]").get().get());
-        assertEquals(Value.Type.LIST, value.getType());
+        assertThat(value.getAccess("[1]").get().get()).isEqualTo(111);
+        assertThat(value.getType()).isEqualTo(Value.Type.LIST);
 
         value.getAccess("[4]").set(777);
         
-        assertEquals(777, value.getAccess("[4]").get().get());
-        assertEquals(Value.Type.LIST, value.getType());
+        assertThat(value.getAccess("[4]").get().get()).isEqualTo(777);
+        assertThat(value.getType()).isEqualTo(Value.Type.LIST);
 
         value.getAccess("[-1]").set(999);
         
-        assertEquals(999, value.getAccess("[-1]").get().get());
-        assertEquals(Value.Type.MAP, value.getType());
+        assertThat(value.getAccess("[-1]").get().get()).isEqualTo(999);
+        assertThat(value.getType()).isEqualTo(Value.Type.MAP);
     }
 
     @Test
     public void testSetToListAutoConversion() {
         Value value = rootValue.getAccess("orange").get();
 
-        assertEquals(2, value.getAccess("[1]").get().get());
+        assertThat(value.getAccess("[1]").get().get()).isEqualTo(2);
         
         value.getAccess("[1]").set(111);
         
-        assertEquals(111, value.getAccess("[1]").get().get());
-        assertEquals(Value.Type.LIST, value.getType());
+        assertThat(value.getAccess("[1]").get().get()).isEqualTo(111);
+        assertThat(value.getType()).isEqualTo(Value.Type.LIST);
     }
     
     @Test
@@ -116,22 +100,24 @@ public class ValueTest {
         value.getAccess("[]").set(2);
         value.getAccess("[]").set(3);
         
-        assertEquals(2, value.getAccess("[1]").get().get());
+        assertThat(value.getAccess("[1]").get().get()).isEqualTo(2);
         
         value.getAccess("[4]").set(111);
 
-        assertEquals(111, value.getAccess("[4]").get().get());
-        assertEquals(Value.Type.MAP, value.getType());
+        assertThat(value.getAccess("[4]").get().get()).isEqualTo(111);
+        assertThat(value.getType()).isEqualTo(Value.Type.MAP);
     }
 
     @Test
     public void testRemove() {
-        assertTrue(rootValue.getAccess("cherry").exists());
+        assertThat(rootValue.getAccess("cherry").exists()).isTrue();
+        
         rootValue.getAsMap().remove(new Value("cherry"));
-        assertFalse(rootValue.getAccess("cherry").exists());
-        assertTrue(rootValue.getAccess("cherry").get().isNull());
-        assertNull(rootValue.getAccess("cherry").get().get());
-        assertNull(rootValue.getAsMap().get(new Value("cherry")));
+        
+        assertThat(rootValue.getAccess("cherry").exists()).isFalse();
+        assertThat(rootValue.getAccess("cherry").get().isNull()).isTrue();
+        assertThat(rootValue.getAccess("cherry").get().get()).isNull();;
+        assertThat(rootValue.getAsMap().get(new Value("cherry"))).isNull();
     }
 
     @Test
@@ -144,7 +130,8 @@ public class ValueTest {
         set2.addRaw(3);
         set2.addRaw(4);
         set2.addRaw(1);
-        assertEquals(set1, set2);
+        
+        assertThat(set2).isEqualTo(set1);
     }
     
     @Before

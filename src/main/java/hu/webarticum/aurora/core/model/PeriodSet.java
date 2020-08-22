@@ -65,7 +65,7 @@ public class PeriodSet extends TreeSet<Period> implements Comparable<PeriodSet> 
     }
 
     @Override
-    public int compareTo(PeriodSet other) {
+    public int compareTo(PeriodSet other) { // NOSONAR
         Iterator<Period> selfIterator = iterator();
         Iterator<Period> otherIterator = other.iterator();
         while (selfIterator.hasNext() && otherIterator.hasNext()) {

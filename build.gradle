@@ -31,9 +31,7 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    
-    // XXX
-    implementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:3.16.1'
 }
 
 task buildFullSource(type: Exec) {

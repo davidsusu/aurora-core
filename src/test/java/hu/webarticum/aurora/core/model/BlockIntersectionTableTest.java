@@ -1,6 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,8 +18,7 @@ public class BlockIntersectionTableTest {
     @Test
     public void testEmpty() {
         BlockIntersectionTable intersectionTable = new BlockIntersectionTable();
-        Map<Interval, Set<Block>> actual = toMap(intersectionTable);
-        assertEquals(new HashMap<Interval, Set<Block>>(), actual);
+        assertThat(toMap(intersectionTable)).isEmpty();
     }
     
     @Test
@@ -36,7 +35,7 @@ public class BlockIntersectionTableTest {
         expected.put(new Interval(20, 30), setOf(block1));
         expected.put(new Interval(60, 70), setOf(block2));
         
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
     
     @Test
@@ -53,8 +52,8 @@ public class BlockIntersectionTableTest {
         expected.put(new Interval(20, 25), setOf(block1));
         expected.put(new Interval(25, 30), setOf(block1, block2));
         expected.put(new Interval(30, 35), setOf(block2));
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
     
     @Test
@@ -94,8 +93,8 @@ public class BlockIntersectionTableTest {
         expected.put(new Interval(85, 90), setOf(block8));
         expected.put(new Interval(90, 100), setOf(block8, block9));
         expected.put(new Interval(100, 120), setOf(block8));
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -141,8 +140,8 @@ public class BlockIntersectionTableTest {
         expected.put(new Interval(85, 90), setOf(block8));
         expected.put(new Interval(90, 100), setOf(block8, block9));
         expected.put(new Interval(100, 123), setOf(block8));
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -191,8 +190,8 @@ public class BlockIntersectionTableTest {
         expected.put(new Interval(85, 90), setOf(block8));
         expected.put(new Interval(90, 105), setOf(block8, block9));
         expected.put(new Interval(105, 123), setOf(block8));
-        
-        assertEquals(expected, actual);
+
+        assertThat(actual).isEqualTo(expected);
     }
     
     @Test
@@ -213,8 +212,8 @@ public class BlockIntersectionTableTest {
         intersectionTable.merge(block6, new Time(55));
         
         BlockIntersectionTable copiedIntersectionTable = new BlockIntersectionTable(intersectionTable);
-        
-        assertEquals(toMap(intersectionTable), toMap(copiedIntersectionTable));
+
+        assertThat(toMap(copiedIntersectionTable)).isEqualTo(toMap(intersectionTable));
     }
 
     private Map<Interval, Set<Block>> toMap(BlockIntersectionTable intersectionTable) {

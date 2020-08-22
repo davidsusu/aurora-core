@@ -1,13 +1,9 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -42,112 +38,112 @@ public class BlockListTest {
     @Test
     public void testCopy() {
         BlockList copyOfAllBlocks = allBlocks.copy();
-        assertNotSame(allBlocks, copyOfAllBlocks);
-        assertEquals(allBlocks, copyOfAllBlocks);
+        assertThat(copyOfAllBlocks).isNotSameAs(allBlocks);
+        assertThat(copyOfAllBlocks).isEqualTo(allBlocks);
     }
 
     @Test
     public void testGetShortestAndLongest() {
-        assertSame(block5, allBlocks.getShortest());
-        assertSame(block6, allBlocks.getLongest());
+        assertThat(allBlocks.getShortest()).isSameAs(block5);
+        assertThat(allBlocks.getLongest()).isSameAs(block6);
     }
 
     @Test
     public void testGetPeriods() {
-        assertEquals(new PeriodSet(), new BlockList().getPeriods());
-        assertEquals(setOf(week1), new BlockList(block4).getPeriods());
-        assertEquals(setOf(week1, week2), allBlocks.getPeriods());
+        assertThat((Set<Period>) new BlockList().getPeriods()).isEmpty();
+        assertThat((Set<Period>) new BlockList(block4).getPeriods()).containsExactly(week1);
+        assertThat((Set<Period>) allBlocks.getPeriods()).containsExactly(week1, week2);
     }
 
     @Test
     public void testGetActivities() {
-        assertEquals(0, new BlockList().getActivities().size());
-        assertEquals(5, new BlockList(block2, block6).getActivities().size());
-        assertEquals(9, allBlocks.getActivities().size());
+        assertThat((List<Activity>) new BlockList().getActivities()).isEmpty();
+        assertThat((List<Activity>) new BlockList(block2, block6).getActivities()).hasSize(5);
+        assertThat((List<Activity>) allBlocks.getActivities()).hasSize(9);
     }
 
     @Test
     public void testGetActivitiesByPeriod() {
-        assertEquals(0, new BlockList().getActivities(week1).size());
-        assertEquals(4, new BlockList(block2, block6).getActivities(week1).size());
-        assertEquals(7, allBlocks.getActivities(week1).size());
+        assertThat((List<Activity>) new BlockList().getActivities(week1)).isEmpty();
+        assertThat((List<Activity>) new BlockList(block2, block6).getActivities(week1)).hasSize(4);
+        assertThat((List<Activity>) allBlocks.getActivities(week1)).hasSize(7);
 
-        assertEquals(0, new BlockList().getActivities(week2).size());
-        assertEquals(4, new BlockList(block2, block6).getActivities(week2).size());
-        assertEquals(7, allBlocks.getActivities(week2).size());
+        assertThat((List<Activity>) new BlockList().getActivities(week2)).isEmpty();
+        assertThat((List<Activity>) new BlockList(block2, block6).getActivities(week2)).hasSize(4);
+        assertThat((List<Activity>) allBlocks.getActivities(week2)).hasSize(7);
     }
     
     @Test
     public void testGetActivitiesByPeriods() {
-        assertEquals(0, new BlockList().getActivities(Arrays.asList(week1, week2)).size());
-        assertEquals(5, new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2)).size());
-        assertEquals(9, allBlocks.getActivities(Arrays.asList(week1, week2)).size());
+        assertThat((List<Activity>) new BlockList().getActivities(Arrays.asList(week1, week2))).isEmpty();
+        assertThat((List<Activity>) new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2))).hasSize(5);
+        assertThat((List<Activity>) allBlocks.getActivities(Arrays.asList(week1, week2))).hasSize(9);
     }
 
     @Test
     public void testGetActivitiesByPeriodsRequireAll() {
-        assertEquals(0, new BlockList().getActivities(Arrays.asList(week1, week2), true).size());
-        assertEquals(3, new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2), true).size());
-        assertEquals(5, allBlocks.getActivities(Arrays.asList(week1, week2), true).size());
+        assertThat((List<Activity>) new BlockList().getActivities(Arrays.asList(week1, week2), true)).isEmpty();
+        assertThat((List<Activity>) new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2), true)).hasSize(3);
+        assertThat((List<Activity>) allBlocks.getActivities(Arrays.asList(week1, week2), true)).hasSize(5);
     }
     
     @Test
     public void testHasConflicts() {
-        assertFalse(new BlockList().hasConflicts());
-        assertTrue(new BlockList(block1, block2, block3).hasConflicts());
-        assertFalse(new BlockList(block2, block3).hasConflicts());
-        assertTrue(new BlockList(block3, block4).hasConflicts());
-        assertFalse(new BlockList(block4, block5).hasConflicts());
+        assertThat(new BlockList().hasConflicts()).isFalse();
+        assertThat(new BlockList(block1, block2, block3).hasConflicts()).isTrue();
+        assertThat(new BlockList(block2, block3).hasConflicts()).isFalse();
+        assertThat(new BlockList(block3, block4).hasConflicts()).isTrue();
+        assertThat(new BlockList(block4, block5).hasConflicts()).isFalse();
     }
 
     @Test
     public void testHasConflictsInPeriod() {
-        assertFalse(new BlockList().hasConflicts(week1));
-        assertTrue(new BlockList(block1, block2, block3).hasConflicts(week1));
-        assertFalse(new BlockList(block2, block3).hasConflicts(week1));
-        assertTrue(new BlockList(block3, block4).hasConflicts(week1));
-        assertFalse(new BlockList(block4, block5).hasConflicts(week1));
+        assertThat(new BlockList().hasConflicts(week1)).isFalse();
+        assertThat(new BlockList(block1, block2, block3).hasConflicts(week1)).isTrue();
+        assertThat(new BlockList(block2, block3).hasConflicts(week1)).isFalse();
+        assertThat(new BlockList(block3, block4).hasConflicts(week1)).isTrue();
+        assertThat(new BlockList(block4, block5).hasConflicts(week1)).isFalse();
 
-        assertFalse(new BlockList().hasConflicts(week2));
-        assertTrue(new BlockList(block1, block2, block3).hasConflicts(week2));
-        assertFalse(new BlockList(block2, block3).hasConflicts(week2));
-        assertFalse(new BlockList(block3, block4).hasConflicts(week2));
-        assertFalse(new BlockList(block4, block5).hasConflicts(week2));
+        assertThat(new BlockList().hasConflicts(week2)).isFalse();
+        assertThat(new BlockList(block1, block2, block3).hasConflicts(week2)).isTrue();
+        assertThat(new BlockList(block2, block3).hasConflicts(week2)).isFalse();
+        assertThat(new BlockList(block3, block4).hasConflicts(week2)).isFalse();
+        assertThat(new BlockList(block4, block5).hasConflicts(week2)).isFalse();
     }
 
     @Test
     public void testConflictsWith() {
-        assertFalse(new BlockList().conflictsWith(new BlockList()));
-        assertFalse(new BlockList().conflictsWith(new BlockList(block3, block4)));
-        assertFalse(new BlockList(block3, block4).conflictsWith(new BlockList()));
-        assertTrue(new BlockList(block3).conflictsWith(new BlockList(block4)));
-        assertTrue(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4)));
+        assertThat(new BlockList().conflictsWith(new BlockList())).isFalse();
+        assertThat(new BlockList().conflictsWith(new BlockList(block3, block4))).isFalse();
+        assertThat(new BlockList(block3, block4).conflictsWith(new BlockList())).isFalse();
+        assertThat(new BlockList(block3).conflictsWith(new BlockList(block4))).isTrue();
+        assertThat(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4))).isTrue();
     }
 
     @Test
     public void testConflictsWithInPeriod() {
-        assertFalse(new BlockList().conflictsWith(new BlockList(), week1));
-        assertTrue(new BlockList().conflictsWith(new BlockList(block3, block4), week1));
-        assertTrue(new BlockList(block3, block4).conflictsWith(new BlockList(), week1));
-        assertTrue(new BlockList(block3).conflictsWith(new BlockList(block4), week1));
-        assertTrue(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4), week1));
-        assertTrue(new BlockList(block3).conflictsWith(new BlockList(block4), week1));
+        assertThat(new BlockList().conflictsWith(new BlockList(), week1)).isFalse();
+        assertThat(new BlockList().conflictsWith(new BlockList(block3, block4), week1)).isTrue();
+        assertThat(new BlockList(block3, block4).conflictsWith(new BlockList(), week1)).isTrue();
+        assertThat(new BlockList(block3).conflictsWith(new BlockList(block4), week1)).isTrue();
+        assertThat(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4), week1)).isTrue();
+        assertThat(new BlockList(block3).conflictsWith(new BlockList(block4), week1)).isTrue();
 
-        assertFalse(new BlockList().conflictsWith(new BlockList(), week2));
-        assertFalse(new BlockList().conflictsWith(new BlockList(block3, block4), week2));
-        assertFalse(new BlockList(block3, block4).conflictsWith(new BlockList(), week2));
-        assertFalse(new BlockList(block3).conflictsWith(new BlockList(block4), week2));
-        assertTrue(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4), week2));
-        assertFalse(new BlockList(block3).conflictsWith(new BlockList(block4), week2));
+        assertThat(new BlockList().conflictsWith(new BlockList(), week2)).isFalse();
+        assertThat(new BlockList().conflictsWith(new BlockList(block3, block4), week2)).isFalse();
+        assertThat(new BlockList(block3, block4).conflictsWith(new BlockList(), week2)).isFalse();
+        assertThat(new BlockList(block3).conflictsWith(new BlockList(block4), week2)).isFalse();
+        assertThat(new BlockList(block1, block2).conflictsWith(new BlockList(block3, block4), week2)).isTrue();
+        assertThat(new BlockList(block3).conflictsWith(new BlockList(block4), week2)).isFalse();
     }
 
     @Test
     public void testFilter() {
         BlockFilter teacher2Filter = new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasResource(teacher2));
-        assertEquals(new BlockList(block6), allBlocks.filter(teacher2Filter));
+        assertThat(allBlocks.filter(teacher2Filter)).containsExactly(block6);
         
         BlockFilter subject2Filter = new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasTag(subject2));
-        assertEquals(new BlockList(block2, block3, block4, block6), allBlocks.filter(subject2Filter));
+        assertThat(allBlocks.filter(subject2Filter)).containsExactly(block2, block3, block4, block6);
     }
 
     
@@ -276,9 +272,4 @@ public class BlockListTest {
         block6.getActivityManager().add(activity4, week2);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Set<T> setOf(T... items) {
-        return new HashSet<T>(Arrays.asList(items));
-    }
-    
 }

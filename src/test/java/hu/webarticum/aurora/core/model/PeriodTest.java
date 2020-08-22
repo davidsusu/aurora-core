@@ -1,6 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +38,8 @@ public class PeriodTest {
         expected.add(period2);
         expected.add(period7);
         expected.add(period6);
-        assertEquals(expected, periods);
+        
+        assertThat(periods).isEqualTo(expected);
     }
 
 }

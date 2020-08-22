@@ -1,14 +1,8 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,98 +17,95 @@ public class StoreTest {
     @Test
     public void testSimpleRegister() {
         Store<String> store = new Store<String>();
-        assertFalse(store.isSorted());
+        assertThat(store.isSorted()).isFalse();
         
-        assertEquals(0, store.size());
-        assertTrue(store.isEmpty());
-        assertEquals(new ArrayList<String>(), store.getAll());
+        assertThat(store.size()).isEqualTo(0);
+        assertThat(store.isEmpty()).isTrue();
+        assertThat(store.getAll()).isEmpty();;
         
         store.register("Apple");
-        assertTrue(store.contains("Apple"));
-        assertEquals(1, store.size());
-        assertFalse(store.isEmpty());
-        assertEquals(Arrays.asList("Apple"), store.getAll());
+        assertThat(store.contains("Apple")).isTrue();
+        assertThat(store.size()).isEqualTo(1);
+        assertThat(store.isEmpty()).isFalse();
+        assertThat(store.getAll()).containsExactly("Apple");
     }
     
     @Test
     public void testRegisterModes() {
         Store<String> store = new Store<String>();
-        assertEquals(0, store.size());
+        assertThat(store.size()).isEqualTo(0);
         
         String appleId = store.register("Apple", "apple");
-        assertEquals("apple", appleId);
-        assertEquals("apple", store.getId("Apple"));
-        assertEquals(1, store.size());
-        assertEquals(Arrays.asList("Apple"), store.getAll());
-        assertEquals("Apple", store.get("apple"));
+        assertThat(appleId).isEqualTo("apple");
+        assertThat(store.getId("Apple")).isEqualTo("apple");
+        assertThat(store.size()).isEqualTo(1);
+        assertThat(store.getAll()).containsExactly("Apple");
+        assertThat(store.get("apple")).isEqualTo("Apple");
         
         store.register("Banana", "banana", Store.REGISTER_MODE.INSERT_STRICT);
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple", "Banana"), sorted(store.getAll()));
-        assertEquals("Apple", store.get("apple"));
-        assertEquals("Banana", store.get("banana"));
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple", "Banana");
+        assertThat(store.get("apple")).isEqualTo("Apple");
+        assertThat(store.get("banana")).isEqualTo("Banana");
         
         String apple2Id = store.register("Apple2", "apple", Store.REGISTER_MODE.INSERT_STRICT);
-        assertNull(apple2Id);
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple", "Banana"), sorted(store.getAll()));
-        assertEquals("Apple", store.get("apple"));
-        assertEquals("Banana", store.get("banana"));
+        assertThat(apple2Id).isNull();
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple", "Banana");
+        assertThat(store.get("apple")).isEqualTo("Apple");
+        assertThat(store.get("banana")).isEqualTo("Banana");
         
         String apple3Id = store.register("Apple3", "apple", Store.REGISTER_MODE.INSERT_OR_UPDATE);
-        assertEquals("apple", apple3Id);
-        assertEquals("apple", store.getId("Apple3"));
-        assertNull(store.getId("Apple"));
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple3", "Banana"), sorted(store.getAll()));
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana", store.get("banana"));
+        assertThat(apple3Id).isEqualTo("apple");
+        assertThat(store.getId("Apple3")).isEqualTo("apple");
+        assertThat(store.getId("Apple")).isNull();
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana");
         
         String orangeId = store.register("Orange", "orange", Store.REGISTER_MODE.UPDATE);
-        assertNull(orangeId);
-        assertNull(store.getId("Orange"));
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple3", "Banana"), sorted(store.getAll()));
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana", store.get("banana"));
-        assertNull(store.get("orange"));
+        assertThat(orangeId).isNull();
+        assertThat(store.getId("Orange")).isNull();
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana");
+        assertThat(store.get("orange")).isNull();
         
         store.register("Banana2", "banana", Store.REGISTER_MODE.UPDATE);
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple3", "Banana2"), sorted(store.getAll()));
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana2", store.get("banana"));
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana2");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana2");
 
         Map<String, String> expectedItemIdMap = new HashMap<String, String>();
         expectedItemIdMap.put("Apple3", "apple");
         expectedItemIdMap.put("Banana2", "banana");
-        assertEquals(expectedItemIdMap, store.getItemIdMap());
+        assertThat(store.getItemIdMap()).isEqualTo(expectedItemIdMap);
         
         String banana3Id = store.register("Banana3", "banana", Store.REGISTER_MODE.INSERT_AUTO);
-        assertNotEquals("banana", banana3Id);
-        assertEquals(3, store.size());
-        assertEquals(Arrays.asList("Apple3", "Banana2", "Banana3"), sorted(store.getAll()));
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana2", store.get("banana"));
+        assertThat(banana3Id).isNotEqualTo("banana");
+        assertThat(store.size()).isEqualTo(3);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana2", "Banana3");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana2");
         
         String banana4Id = store.register("Banana4", "banana", Store.REGISTER_MODE.INSERT_PUSH_ASIDE);
-        assertNotNull(banana4Id);
-        assertEquals("banana", store.getId("Banana4"));
-        assertNotEquals("banana", store.getId("Banana2"));
-        assertEquals(4, store.size());
-        assertEquals(Arrays.asList("Apple3", "Banana2", "Banana3", "Banana4"), sorted(store.getAll()));
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana4", store.get("banana"));
+        assertThat(banana4Id).isNotNull();
+        assertThat(store.getId("Banana4")).isEqualTo("banana");
+        assertThat(store.getId("Banana2")).isNotEqualTo("banana");
+        assertThat(store.size()).isEqualTo(4);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana2", "Banana3", "Banana4");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana4");
         
         store.register("Orange2", "orange", Store.REGISTER_MODE.INSERT_PUSH_ASIDE);
-        assertEquals(5, store.size());
-        assertEquals(
-            Arrays.asList("Apple3", "Banana2", "Banana3", "Banana4", "Orange2"),
-            sorted(store.getAll())
-        );
-        assertEquals("Apple3", store.get("apple"));
-        assertEquals("Banana4", store.get("banana"));
-        assertEquals("Orange2", store.get("orange"));
+        assertThat(store.size()).isEqualTo(5);
+        assertThat(sorted(store.getAll())).containsExactly("Apple3", "Banana2", "Banana3", "Banana4", "Orange2");
+        assertThat(store.get("apple")).isEqualTo("Apple3");
+        assertThat(store.get("banana")).isEqualTo("Banana4");
+        assertThat(store.get("orange")).isEqualTo("Orange2");
         
     }
 
@@ -124,28 +115,28 @@ public class StoreTest {
         store.register("Apple", "apple");
         store.register("Banana", "banana");
         store.register("Orange", "orange");
-        assertEquals(3, store.size());
-        assertEquals(Arrays.asList("Apple", "Banana", "Orange"), sorted(store.getAll()));
+        assertThat(store.size()).isEqualTo(3);
+        assertThat(sorted(store.getAll())).containsExactly("Apple", "Banana", "Orange");
         
         boolean bananaRemoved = store.remove("Banana");
-        assertTrue(bananaRemoved);
-        assertEquals(2, store.size());
-        assertEquals(Arrays.asList("Apple", "Orange"), sorted(store.getAll()));
+        assertThat(bananaRemoved).isTrue();
+        assertThat(store.size()).isEqualTo(2);
+        assertThat(sorted(store.getAll())).containsExactly("Apple", "Orange");
         
         boolean appleRemoved = store.removeId("apple");
-        assertTrue(appleRemoved);
-        assertEquals(1, store.size());
-        assertEquals(Arrays.asList("Orange"), store.getAll());
+        assertThat(appleRemoved).isTrue();
+        assertThat(store.size()).isEqualTo(1);
+        assertThat(store.getAll()).containsExactly("Orange");
 
         boolean appleRemovedAgain = store.removeId("apple");
-        assertFalse(appleRemovedAgain);
-        assertEquals(1, store.size());
-        assertEquals(Arrays.asList("Orange"), store.getAll());
+        assertThat(appleRemovedAgain).isFalse();
+        assertThat(store.size()).isEqualTo(1);
+        assertThat(store.getAll()).containsExactly("Orange");
 
         boolean orangeRemoved = store.removeId("orange");
-        assertTrue(orangeRemoved);
-        assertEquals(0, store.size());
-        assertTrue(store.isEmpty());
+        assertThat(orangeRemoved).isTrue();
+        assertThat(store.size()).isEqualTo(0);
+        assertThat(store.isEmpty()).isTrue();
     }
 
     @Test
@@ -164,13 +155,11 @@ public class StoreTest {
         sortedStore.register("Apple", "apple");
         sortedStore.register("Kiwi", "aaa-kiwi");
 
-        assertTrue(sortedStore.isSorted());
+        assertThat(sortedStore.isSorted()).isTrue();
         
-        assertEquals("Apple", sortedStore.get("apple"));
+        assertThat(sortedStore.get("apple")).isEqualTo("Apple");
 
-        assertEquals(Arrays.asList(
-            "Apple", "Banana", "Kiwi", "Orange", "Watermelon"
-        ), sortedStore.getAll());
+        assertThat(sortedStore.getAll()).containsExactly("Apple", "Banana", "Kiwi", "Orange", "Watermelon");
     }
 
     @Test
@@ -214,7 +203,8 @@ public class StoreTest {
         store.remove("Orange");
         
         String expectedEventString = "AIDAASSDD";
-        assertEquals(expectedEventString, eventStringBuilder.toString());
+        
+        assertThat(eventStringBuilder.toString()).isEqualTo(expectedEventString);
         
         store.removeStoreListener(storeListener);
         
@@ -222,7 +212,7 @@ public class StoreTest {
         store.refresh(true);
         store.remove("Kiwi");
 
-        assertEquals(expectedEventString, eventStringBuilder.toString());
+        assertThat(eventStringBuilder.toString()).isEqualTo(expectedEventString);
     }
     
     private <T extends Comparable<T>> List<T> sorted(Collection<T> list) {

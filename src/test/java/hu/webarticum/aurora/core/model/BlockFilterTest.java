@@ -1,7 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,41 +25,45 @@ public class BlockFilterTest {
     @Test
     public void testTrue() {
         BlockFilter filter = new BlockFilter.TrueBlockFilter();
-        assertTrue(filter.validate(emptyBlock));
-        assertTrue(filter.validate(simpleBlock));
-        assertTrue(filter.validate(period1Block));
-        assertTrue(filter.validate(period2Block));
-        assertTrue(filter.validate(complexBlock));
+        
+        assertThat(filter.validate(emptyBlock)).isTrue();
+        assertThat(filter.validate(simpleBlock)).isTrue();
+        assertThat(filter.validate(period1Block)).isTrue();
+        assertThat(filter.validate(period2Block)).isTrue();
+        assertThat(filter.validate(complexBlock)).isTrue();
     }
 
     @Test
     public void testFalse() {
         BlockFilter filter = new BlockFilter.FalseBlockFilter();
-        assertFalse(filter.validate(emptyBlock));
-        assertFalse(filter.validate(simpleBlock));
-        assertFalse(filter.validate(period1Block));
-        assertFalse(filter.validate(period2Block));
-        assertFalse(filter.validate(complexBlock));
+        
+        assertThat(filter.validate(emptyBlock)).isFalse();
+        assertThat(filter.validate(simpleBlock)).isFalse();
+        assertThat(filter.validate(period1Block)).isFalse();
+        assertThat(filter.validate(period2Block)).isFalse();
+        assertThat(filter.validate(complexBlock)).isFalse();
     }
 
     @Test
     public void testActivity() {
         BlockFilter filter = new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasResource(class2));
-        assertFalse(filter.validate(emptyBlock));
-        assertFalse(filter.validate(simpleBlock));
-        assertFalse(filter.validate(period1Block));
-        assertTrue(filter.validate(period2Block));
-        assertTrue(filter.validate(complexBlock));
+        
+        assertThat(filter.validate(emptyBlock)).isFalse();
+        assertThat(filter.validate(simpleBlock)).isFalse();
+        assertThat(filter.validate(period1Block)).isFalse();
+        assertThat(filter.validate(period2Block)).isTrue();
+        assertThat(filter.validate(complexBlock)).isTrue();
     }
 
     @Test
     public void testPeriod() {
         BlockFilter filter = new BlockFilter.PeriodBlockFilter(period1);
-        assertFalse(filter.validate(emptyBlock));
-        assertTrue(filter.validate(simpleBlock));
-        assertTrue(filter.validate(period1Block));
-        assertFalse(filter.validate(period2Block));
-        assertTrue(filter.validate(complexBlock));
+        
+        assertThat(filter.validate(emptyBlock)).isFalse();
+        assertThat(filter.validate(simpleBlock)).isTrue();
+        assertThat(filter.validate(period1Block)).isTrue();
+        assertThat(filter.validate(period2Block)).isFalse();
+        assertThat(filter.validate(complexBlock)).isTrue();
     }
 
     @Test
@@ -69,21 +72,23 @@ public class BlockFilterTest {
             new ActivityFilter.HasResource(object),
             period1
         );
-        assertFalse(filter1.validate(emptyBlock));
-        assertTrue(filter1.validate(simpleBlock));
-        assertFalse(filter1.validate(period1Block));
-        assertFalse(filter1.validate(period2Block));
-        assertTrue(filter1.validate(complexBlock));
+        
+        assertThat(filter1.validate(emptyBlock)).isFalse();
+        assertThat(filter1.validate(simpleBlock)).isTrue();
+        assertThat(filter1.validate(period1Block)).isFalse();
+        assertThat(filter1.validate(period2Block)).isFalse();
+        assertThat(filter1.validate(complexBlock)).isTrue();
         
         BlockFilter filter2 = new BlockFilter.PeriodActivityBlockFilter(
             new ActivityFilter.HasResource(object),
             period2
         );
-        assertFalse(filter2.validate(emptyBlock));
-        assertTrue(filter2.validate(simpleBlock));
-        assertFalse(filter2.validate(period1Block));
-        assertFalse(filter2.validate(period2Block));
-        assertFalse(filter2.validate(complexBlock));
+        
+        assertThat(filter2.validate(emptyBlock)).isFalse();
+        assertThat(filter2.validate(simpleBlock)).isTrue();
+        assertThat(filter2.validate(period1Block)).isFalse();
+        assertThat(filter2.validate(period2Block)).isFalse();
+        assertThat(filter2.validate(complexBlock)).isFalse();
     }
 
     @Test
@@ -97,11 +102,12 @@ public class BlockFilterTest {
                 new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasResource(object))
             )
         );
-        assertFalse(filter.validate(emptyBlock));
-        assertFalse(filter.validate(simpleBlock));
-        assertFalse(filter.validate(period1Block));
-        assertTrue(filter.validate(period2Block));
-        assertFalse(filter.validate(complexBlock));
+        
+        assertThat(filter.validate(emptyBlock)).isFalse();
+        assertThat(filter.validate(simpleBlock)).isFalse();
+        assertThat(filter.validate(period1Block)).isFalse();
+        assertThat(filter.validate(period2Block)).isTrue();
+        assertThat(filter.validate(complexBlock)).isFalse();
     }
     
     @Before

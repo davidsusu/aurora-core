@@ -1,8 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,126 +25,126 @@ public class ActivityTest {
     
     @Test
     public void testTags() {
-        assertFalse(emptyActivity.getTagManager().has(subject1));
-        assertFalse(emptyActivity.getTagManager().has(subject2));
-        assertFalse(emptyActivity.getTagManager().hasType(Tag.Type.SUBJECT));
-        assertFalse(emptyActivity.getTagManager().hasType(Tag.Type.LANGUAGE));
+        assertThat(emptyActivity.getTagManager().has(subject1)).isFalse();
+        assertThat(emptyActivity.getTagManager().has(subject2)).isFalse();
+        assertThat(emptyActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isFalse();
+        assertThat(emptyActivity.getTagManager().hasType(Tag.Type.LANGUAGE)).isFalse();
 
-        assertTrue(simpleActivity.getTagManager().has(subject1));
-        assertFalse(simpleActivity.getTagManager().has(subject2));
-        assertTrue(simpleActivity.getTagManager().hasType(Tag.Type.SUBJECT));
-        assertFalse(simpleActivity.getTagManager().hasType(Tag.Type.LANGUAGE));
+        assertThat(simpleActivity.getTagManager().has(subject1)).isTrue();
+        assertThat(simpleActivity.getTagManager().has(subject2)).isFalse();
+        assertThat(simpleActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isTrue();
+        assertThat(simpleActivity.getTagManager().hasType(Tag.Type.LANGUAGE)).isFalse();
 
-        assertTrue(multiActivity.getTagManager().has(subject1));
-        assertFalse(multiActivity.getTagManager().has(subject2));
-        assertTrue(multiActivity.getTagManager().hasType(Tag.Type.SUBJECT));
-        assertFalse(multiActivity.getTagManager().hasType(Tag.Type.LANGUAGE));
+        assertThat(multiActivity.getTagManager().has(subject1)).isTrue();
+        assertThat(multiActivity.getTagManager().has(subject2)).isFalse();
+        assertThat(multiActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isTrue();
+        assertThat(multiActivity.getTagManager().hasType(Tag.Type.LANGUAGE)).isFalse();
 
-        assertFalse(groupedActivity.getTagManager().has(subject1));
-        assertTrue(groupedActivity.getTagManager().has(subject2));
-        assertTrue(groupedActivity.getTagManager().hasType(Tag.Type.SUBJECT));
-        assertFalse(groupedActivity.getTagManager().hasType(Tag.Type.LANGUAGE));
+        assertThat(groupedActivity.getTagManager().has(subject1)).isFalse();
+        assertThat(groupedActivity.getTagManager().has(subject2)).isTrue();
+        assertThat(groupedActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isTrue();
+        assertThat(groupedActivity.getTagManager().hasType(Tag.Type.LANGUAGE)).isFalse();
 
-        assertFalse(groupedMultiActivity.getTagManager().has(subject1));
-        assertTrue(groupedMultiActivity.getTagManager().has(subject2));
-        assertTrue(groupedMultiActivity.getTagManager().hasType(Tag.Type.SUBJECT));
-        assertFalse(groupedMultiActivity.getTagManager().hasType(Tag.Type.LANGUAGE));
+        assertThat(groupedMultiActivity.getTagManager().has(subject1)).isFalse();
+        assertThat(groupedMultiActivity.getTagManager().has(subject2)).isTrue();
+        assertThat(groupedMultiActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isTrue();
+        assertThat(groupedMultiActivity.getTagManager().hasType(Tag.Type.LANGUAGE)).isFalse();
     }
 
     @Test
     public void testResources() {
-        assertFalse(emptyActivity.getResourceManager().hasResource(class1));
-        assertFalse(emptyActivity.getResourceManager().hasResource(class2));
-        assertFalse(emptyActivity.getResourceManager().hasResource(teacher1));
-        assertFalse(emptyActivity.getResourceManager().hasResource(teacher2));
-        assertFalse(emptyActivity.getResourceManager().hasResource(multiResource));
-        assertFalse(emptyActivity.getResourceManager().hasResourceType(Resource.Type.CLASS));
-        assertFalse(emptyActivity.getResourceManager().hasResourceType(Resource.Type.PERSON));
-        assertFalse(emptyActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT));
-        assertFalse(emptyActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE));
-        assertEquals(0, emptyActivity.getResourceManager().getResources().size());
-        assertEquals(0, emptyActivity.getResourceManager().getResourceSubsets().size());
+        assertThat(emptyActivity.getResourceManager().hasResource(class1)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResource(class2)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResource(teacher1)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResource(teacher2)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResource(multiResource)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.CLASS)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isFalse();
+        assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
+        assertThat(emptyActivity.getResourceManager().getResources()).hasSize(0);
+        assertThat(emptyActivity.getResourceManager().getResourceSubsets()).hasSize(0);
 
-        assertTrue(simpleActivity.getResourceManager().hasResource(class1));
-        assertFalse(simpleActivity.getResourceManager().hasResource(class2));
-        assertTrue(simpleActivity.getResourceManager().hasResource(teacher1));
-        assertFalse(simpleActivity.getResourceManager().hasResource(teacher2));
-        assertFalse(simpleActivity.getResourceManager().hasResource(multiResource));
-        assertTrue(simpleActivity.getResourceManager().hasResourceType(Resource.Type.CLASS));
-        assertTrue(simpleActivity.getResourceManager().hasResourceType(Resource.Type.PERSON));
-        assertFalse(simpleActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT));
-        assertFalse(simpleActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE));
-        assertEquals(2, simpleActivity.getResourceManager().getResources().size());
-        assertEquals(2, simpleActivity.getResourceManager().getResourceSubsets().size());
+        assertThat(simpleActivity.getResourceManager().hasResource(class1)).isTrue();
+        assertThat(simpleActivity.getResourceManager().hasResource(class2)).isFalse();
+        assertThat(simpleActivity.getResourceManager().hasResource(teacher1)).isTrue();
+        assertThat(simpleActivity.getResourceManager().hasResource(teacher2)).isFalse();
+        assertThat(simpleActivity.getResourceManager().hasResource(multiResource)).isFalse();
+        assertThat(simpleActivity.getResourceManager().hasResourceType(Resource.Type.CLASS)).isTrue();
+        assertThat(simpleActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isTrue();
+        assertThat(simpleActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isFalse();
+        assertThat(simpleActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
+        assertThat(simpleActivity.getResourceManager().getResources()).hasSize(2);
+        assertThat(simpleActivity.getResourceManager().getResourceSubsets()).hasSize(2);
 
-        assertTrue(multiActivity.getResourceManager().hasResource(class1));
-        assertFalse(multiActivity.getResourceManager().hasResource(class2));
-        assertTrue(multiActivity.getResourceManager().hasResource(teacher1));
-        assertFalse(multiActivity.getResourceManager().hasResource(teacher2));
-        assertTrue(multiActivity.getResourceManager().hasResource(multiResource));
-        assertTrue(multiActivity.getResourceManager().hasResourceType(Resource.Type.CLASS));
-        assertTrue(multiActivity.getResourceManager().hasResourceType(Resource.Type.PERSON));
-        assertTrue(multiActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT));
-        assertFalse(multiActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE));
-        assertEquals(3, multiActivity.getResourceManager().getResources().size());
-        assertEquals(3, multiActivity.getResourceManager().getResourceSubsets().size());
+        assertThat(multiActivity.getResourceManager().hasResource(class1)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResource(class2)).isFalse();
+        assertThat(multiActivity.getResourceManager().hasResource(teacher1)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResource(teacher2)).isFalse();
+        assertThat(multiActivity.getResourceManager().hasResource(multiResource)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResourceType(Resource.Type.CLASS)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isTrue();
+        assertThat(multiActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
+        assertThat(multiActivity.getResourceManager().getResources()).hasSize(3);
+        assertThat(multiActivity.getResourceManager().getResourceSubsets()).hasSize(3);
 
-        assertFalse(groupedActivity.getResourceManager().hasResource(class1));
-        assertTrue(groupedActivity.getResourceManager().hasResource(class2));
-        assertTrue(groupedActivity.getResourceManager().hasResource(teacher1));
-        assertFalse(groupedActivity.getResourceManager().hasResource(teacher2));
-        assertFalse(groupedActivity.getResourceManager().hasResource(multiResource));
-        assertTrue(groupedActivity.getResourceManager().hasResourceType(Resource.Type.CLASS));
-        assertTrue(groupedActivity.getResourceManager().hasResourceType(Resource.Type.PERSON));
-        assertFalse(groupedActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT));
-        assertFalse(groupedActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE));
-        assertEquals(2, groupedActivity.getResourceManager().getResources().size());
-        assertEquals(2, groupedActivity.getResourceManager().getResourceSubsets().size());
+        assertThat(groupedActivity.getResourceManager().hasResource(class1)).isFalse();
+        assertThat(groupedActivity.getResourceManager().hasResource(class2)).isTrue();
+        assertThat(groupedActivity.getResourceManager().hasResource(teacher1)).isTrue();
+        assertThat(groupedActivity.getResourceManager().hasResource(teacher2)).isFalse();
+        assertThat(groupedActivity.getResourceManager().hasResource(multiResource)).isFalse();
+        assertThat(groupedActivity.getResourceManager().hasResourceType(Resource.Type.CLASS)).isTrue();
+        assertThat(groupedActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isTrue();
+        assertThat(groupedActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isFalse();
+        assertThat(groupedActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
+        assertThat(groupedActivity.getResourceManager().getResources()).hasSize(2);
+        assertThat(groupedActivity.getResourceManager().getResourceSubsets()).hasSize(2);
 
-        assertFalse(groupedMultiActivity.getResourceManager().hasResource(class1));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResource(class2));
-        assertFalse(groupedMultiActivity.getResourceManager().hasResource(teacher1));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResource(teacher2));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResource(multiResource));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.CLASS));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.PERSON));
-        assertTrue(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT));
-        assertFalse(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE));
-        assertEquals(3, groupedMultiActivity.getResourceManager().getResources().size());
-        assertEquals(4, groupedMultiActivity.getResourceManager().getResourceSubsets().size());
+        assertThat(groupedMultiActivity.getResourceManager().hasResource(class1)).isFalse();
+        assertThat(groupedMultiActivity.getResourceManager().hasResource(class2)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResource(teacher1)).isFalse();
+        assertThat(groupedMultiActivity.getResourceManager().hasResource(teacher2)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResource(multiResource)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.CLASS)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isTrue();
+        assertThat(groupedMultiActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
+        assertThat(groupedMultiActivity.getResourceManager().getResources()).hasSize(3);
+        assertThat(groupedMultiActivity.getResourceManager().getResourceSubsets()).hasSize(4);
     }
     
     @Test
     public void testConflictsWith() {
-        assertFalse(emptyActivity.conflictsWith(emptyActivity));
-        assertFalse(emptyActivity.conflictsWith(simpleActivity));
-        assertFalse(emptyActivity.conflictsWith(multiActivity));
-        assertFalse(emptyActivity.conflictsWith(groupedActivity));
-        assertFalse(emptyActivity.conflictsWith(groupedMultiActivity));
+        assertThat(emptyActivity.conflictsWith(emptyActivity)).isFalse();
+        assertThat(emptyActivity.conflictsWith(simpleActivity)).isFalse();
+        assertThat(emptyActivity.conflictsWith(multiActivity)).isFalse();
+        assertThat(emptyActivity.conflictsWith(groupedActivity)).isFalse();
+        assertThat(emptyActivity.conflictsWith(groupedMultiActivity)).isFalse();
 
-        assertFalse(simpleActivity.conflictsWith(emptyActivity));
-        assertTrue(simpleActivity.conflictsWith(simpleActivity));
-        assertTrue(simpleActivity.conflictsWith(multiActivity));
-        assertTrue(simpleActivity.conflictsWith(groupedActivity));
-        assertFalse(simpleActivity.conflictsWith(groupedMultiActivity));
+        assertThat(simpleActivity.conflictsWith(emptyActivity)).isFalse();
+        assertThat(simpleActivity.conflictsWith(simpleActivity)).isTrue();
+        assertThat(simpleActivity.conflictsWith(multiActivity)).isTrue();
+        assertThat(simpleActivity.conflictsWith(groupedActivity)).isTrue();
+        assertThat(simpleActivity.conflictsWith(groupedMultiActivity)).isFalse();
 
-        assertFalse(multiActivity.conflictsWith(emptyActivity));
-        assertTrue(multiActivity.conflictsWith(simpleActivity));
-        assertTrue(multiActivity.conflictsWith(multiActivity));
-        assertTrue(multiActivity.conflictsWith(groupedActivity));
-        assertTrue(multiActivity.conflictsWith(groupedMultiActivity));
+        assertThat(multiActivity.conflictsWith(emptyActivity)).isFalse();
+        assertThat(multiActivity.conflictsWith(simpleActivity)).isTrue();
+        assertThat(multiActivity.conflictsWith(multiActivity)).isTrue();
+        assertThat(multiActivity.conflictsWith(groupedActivity)).isTrue();
+        assertThat(multiActivity.conflictsWith(groupedMultiActivity)).isTrue();
 
-        assertFalse(groupedActivity.conflictsWith(emptyActivity));
-        assertTrue(groupedActivity.conflictsWith(simpleActivity));
-        assertTrue(groupedActivity.conflictsWith(multiActivity));
-        assertTrue(groupedActivity.conflictsWith(groupedActivity));
-        assertFalse(groupedActivity.conflictsWith(groupedMultiActivity));
+        assertThat(groupedActivity.conflictsWith(emptyActivity)).isFalse();
+        assertThat(groupedActivity.conflictsWith(simpleActivity)).isTrue();
+        assertThat(groupedActivity.conflictsWith(multiActivity)).isTrue();
+        assertThat(groupedActivity.conflictsWith(groupedActivity)).isTrue();
+        assertThat(groupedActivity.conflictsWith(groupedMultiActivity)).isFalse();
 
-        assertFalse(groupedMultiActivity.conflictsWith(emptyActivity));
-        assertFalse(groupedMultiActivity.conflictsWith(simpleActivity));
-        assertTrue(groupedMultiActivity.conflictsWith(multiActivity));
-        assertFalse(groupedMultiActivity.conflictsWith(groupedActivity));
-        assertTrue(groupedMultiActivity.conflictsWith(groupedMultiActivity));
+        assertThat(groupedMultiActivity.conflictsWith(emptyActivity)).isFalse();
+        assertThat(groupedMultiActivity.conflictsWith(simpleActivity)).isFalse();
+        assertThat(groupedMultiActivity.conflictsWith(multiActivity)).isTrue();
+        assertThat(groupedMultiActivity.conflictsWith(groupedActivity)).isFalse();
+        assertThat(groupedMultiActivity.conflictsWith(groupedMultiActivity)).isTrue();
     }
     
     

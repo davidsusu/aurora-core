@@ -1,6 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,15 +18,15 @@ public class ResourceSubsetListTest {
     
     @Test
     public void testSetListIntersectionCount() {
-        assertEquals(1, new ResourceSubsetList(subsetX).getMaximumCount(resourceX));
-        assertEquals(2, new ResourceSubsetList(subsetXGroupA1, subsetXGroupB1).getMaximumCount(resourceX));
-        assertEquals(1, new ResourceSubsetList(subsetXGroupA1, subsetXGroupA2).getMaximumCount(resourceX));
-        assertEquals(3, new ResourceSubsetList(subsetX, subsetXGroupA1, subsetXGroupA2, subsetXGroupB2).getMaximumCount(resourceX));
-        assertEquals(2, new ResourceSubsetList(
+        assertThat(new ResourceSubsetList(subsetX).getMaximumCount(resourceX)).isEqualTo(1);
+        assertThat(new ResourceSubsetList(subsetXGroupA1, subsetXGroupB1).getMaximumCount(resourceX)).isEqualTo(2);
+        assertThat(new ResourceSubsetList(subsetXGroupA1, subsetXGroupA2).getMaximumCount(resourceX)).isEqualTo(1);
+        assertThat(new ResourceSubsetList(subsetX, subsetXGroupA1, subsetXGroupA2, subsetXGroupB2).getMaximumCount(resourceX)).isEqualTo(3);
+        assertThat(new ResourceSubsetList(
             subsetXGroupB1,
             new ResourceSubset.Difference(subsetXGroupA2, subsetXGroupB2),
             new ResourceSubset.Difference(subsetXGroupB2, subsetXGroupA2)
-        ).getMaximumCount(resourceX));
+        ).getMaximumCount(resourceX)).isEqualTo(2);
     }
     
     @Before

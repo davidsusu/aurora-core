@@ -133,6 +133,7 @@ public class ActivityList extends ArrayList<Activity> {
         return result;
     }
     
+    @SuppressWarnings("unchecked")
     private List<Map<Resource, ResourceSubsetList>> collectMaps() {
         Map<Resource, ResourceSubsetList> lightMap = new HashMap<Resource, ResourceSubsetList>();
         Map<Resource, ResourceSubsetList> heavyMap = new HashMap<Resource, ResourceSubsetList>();

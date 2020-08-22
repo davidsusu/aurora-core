@@ -1,15 +1,12 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,326 +42,310 @@ public class BlockTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(Block.DEFAULT_LENGTH, new Block().getLength());
-        try {
+        assertThat(new Block().getLength()).isEqualTo(Block.DEFAULT_LENGTH);
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new Block(-99);
-            fail();
-        } catch (IllegalArgumentException e) {
-        }
+        }}).isInstanceOf(IllegalArgumentException.class);
     }
     
     @Test
     public void testHasConflicts() {
-        assertFalse(emptyBlock.hasConflicts());
-        assertFalse(emptyBlock.hasConflicts(week1));
-        assertFalse(emptyBlock.hasConflicts(week2));
+        assertThat(emptyBlock.hasConflicts()).isFalse();
+        assertThat(emptyBlock.hasConflicts(week1)).isFalse();
+        assertThat(emptyBlock.hasConflicts(week2)).isFalse();
         
-        assertFalse(independentBlock.hasConflicts());
-        assertFalse(independentBlock.hasConflicts(week1));
-        assertFalse(independentBlock.hasConflicts(week2));
+        assertThat(independentBlock.hasConflicts()).isFalse();
+        assertThat(independentBlock.hasConflicts(week1)).isFalse();
+        assertThat(independentBlock.hasConflicts(week2)).isFalse();
         
-        assertFalse(normalBlock1.hasConflicts());
-        assertFalse(normalBlock1.hasConflicts(week1));
-        assertFalse(normalBlock1.hasConflicts(week2));
+        assertThat(normalBlock1.hasConflicts()).isFalse();
+        assertThat(normalBlock1.hasConflicts(week1)).isFalse();
+        assertThat(normalBlock1.hasConflicts(week2)).isFalse();
         
-        assertFalse(normalBlock2.hasConflicts());
-        assertFalse(normalBlock2.hasConflicts(week1));
-        assertFalse(normalBlock2.hasConflicts(week2));
+        assertThat(normalBlock2.hasConflicts()).isFalse();
+        assertThat(normalBlock2.hasConflicts(week1)).isFalse();
+        assertThat(normalBlock2.hasConflicts(week2)).isFalse();
         
-        assertFalse(normalBlock3.hasConflicts());
-        assertFalse(normalBlock3.hasConflicts(week1));
-        assertFalse(normalBlock3.hasConflicts(week2));
+        assertThat(normalBlock3.hasConflicts()).isFalse();
+        assertThat(normalBlock3.hasConflicts(week1)).isFalse();
+        assertThat(normalBlock3.hasConflicts(week2)).isFalse();
         
-        assertFalse(normalBlock4.hasConflicts());
-        assertFalse(normalBlock4.hasConflicts(week1));
-        assertFalse(normalBlock4.hasConflicts(week2));
+        assertThat(normalBlock4.hasConflicts()).isFalse();
+        assertThat(normalBlock4.hasConflicts(week1)).isFalse();
+        assertThat(normalBlock4.hasConflicts(week2)).isFalse();
         
-        assertTrue(conflictingBlock.hasConflicts());
-        assertFalse(conflictingBlock.hasConflicts(week1));
-        assertTrue(conflictingBlock.hasConflicts(week2));
+        assertThat(conflictingBlock.hasConflicts()).isTrue();
+        assertThat(conflictingBlock.hasConflicts(week1)).isFalse();
+        assertThat(conflictingBlock.hasConflicts(week2)).isTrue();
     }
 
     @Test
     public void testConflictsWith() {
-        assertFalse(emptyBlock.conflictsWith(emptyBlock));
-        assertFalse(emptyBlock.conflictsWith(independentBlock));
-        assertFalse(emptyBlock.conflictsWith(normalBlock1));
-        assertFalse(emptyBlock.conflictsWith(normalBlock2));
-        assertFalse(emptyBlock.conflictsWith(normalBlock3));
-        assertFalse(emptyBlock.conflictsWith(normalBlock4));
-        assertFalse(emptyBlock.conflictsWith(conflictingBlock));
+        assertThat(emptyBlock.conflictsWith(emptyBlock)).isFalse();
+        assertThat(emptyBlock.conflictsWith(independentBlock)).isFalse();
+        assertThat(emptyBlock.conflictsWith(normalBlock1)).isFalse();
+        assertThat(emptyBlock.conflictsWith(normalBlock2)).isFalse();
+        assertThat(emptyBlock.conflictsWith(normalBlock3)).isFalse();
+        assertThat(emptyBlock.conflictsWith(normalBlock4)).isFalse();
+        assertThat(emptyBlock.conflictsWith(conflictingBlock)).isFalse();
         
-        assertFalse(independentBlock.conflictsWith(emptyBlock));
-        assertFalse(independentBlock.conflictsWith(independentBlock));
-        assertFalse(independentBlock.conflictsWith(normalBlock1));
-        assertFalse(independentBlock.conflictsWith(normalBlock2));
-        assertFalse(independentBlock.conflictsWith(normalBlock3));
-        assertFalse(independentBlock.conflictsWith(normalBlock4));
-        assertFalse(independentBlock.conflictsWith(conflictingBlock));
+        assertThat(independentBlock.conflictsWith(emptyBlock)).isFalse();
+        assertThat(independentBlock.conflictsWith(independentBlock)).isFalse();
+        assertThat(independentBlock.conflictsWith(normalBlock1)).isFalse();
+        assertThat(independentBlock.conflictsWith(normalBlock2)).isFalse();
+        assertThat(independentBlock.conflictsWith(normalBlock3)).isFalse();
+        assertThat(independentBlock.conflictsWith(normalBlock4)).isFalse();
+        assertThat(independentBlock.conflictsWith(conflictingBlock)).isFalse();
 
-        assertFalse(normalBlock1.conflictsWith(emptyBlock));
-        assertFalse(normalBlock1.conflictsWith(independentBlock));
-        assertTrue(normalBlock1.conflictsWith(normalBlock1));
-        assertFalse(normalBlock1.conflictsWith(normalBlock2));
-        assertTrue(normalBlock1.conflictsWith(normalBlock3));
-        assertTrue(normalBlock1.conflictsWith(normalBlock4));
-        assertTrue(normalBlock1.conflictsWith(conflictingBlock));
+        assertThat(normalBlock1.conflictsWith(emptyBlock)).isFalse();
+        assertThat(normalBlock1.conflictsWith(independentBlock)).isFalse();
+        assertThat(normalBlock1.conflictsWith(normalBlock1)).isTrue();
+        assertThat(normalBlock1.conflictsWith(normalBlock2)).isFalse();
+        assertThat(normalBlock1.conflictsWith(normalBlock3)).isTrue();
+        assertThat(normalBlock1.conflictsWith(normalBlock4)).isTrue();
+        assertThat(normalBlock1.conflictsWith(conflictingBlock)).isTrue();
 
-        assertFalse(normalBlock2.conflictsWith(emptyBlock));
-        assertFalse(normalBlock2.conflictsWith(independentBlock));
-        assertFalse(normalBlock2.conflictsWith(normalBlock1));
-        assertTrue(normalBlock2.conflictsWith(normalBlock2));
-        assertTrue(normalBlock2.conflictsWith(normalBlock3));
-        assertTrue(normalBlock2.conflictsWith(normalBlock4));
-        assertTrue(normalBlock2.conflictsWith(conflictingBlock));
+        assertThat(normalBlock2.conflictsWith(emptyBlock)).isFalse();
+        assertThat(normalBlock2.conflictsWith(independentBlock)).isFalse();
+        assertThat(normalBlock2.conflictsWith(normalBlock1)).isFalse();
+        assertThat(normalBlock2.conflictsWith(normalBlock2)).isTrue();
+        assertThat(normalBlock2.conflictsWith(normalBlock3)).isTrue();
+        assertThat(normalBlock2.conflictsWith(normalBlock4)).isTrue();
+        assertThat(normalBlock2.conflictsWith(conflictingBlock)).isTrue();
 
-        assertFalse(normalBlock3.conflictsWith(emptyBlock));
-        assertFalse(normalBlock3.conflictsWith(independentBlock));
-        assertTrue(normalBlock3.conflictsWith(normalBlock1));
-        assertTrue(normalBlock3.conflictsWith(normalBlock2));
-        assertTrue(normalBlock3.conflictsWith(normalBlock3));
-        assertFalse(normalBlock3.conflictsWith(normalBlock4));
-        assertTrue(normalBlock3.conflictsWith(conflictingBlock));
+        assertThat(normalBlock3.conflictsWith(emptyBlock)).isFalse();
+        assertThat(normalBlock3.conflictsWith(independentBlock)).isFalse();
+        assertThat(normalBlock3.conflictsWith(normalBlock1)).isTrue();
+        assertThat(normalBlock3.conflictsWith(normalBlock2)).isTrue();
+        assertThat(normalBlock3.conflictsWith(normalBlock3)).isTrue();
+        assertThat(normalBlock3.conflictsWith(normalBlock4)).isFalse();
+        assertThat(normalBlock3.conflictsWith(conflictingBlock)).isTrue();
 
-        assertFalse(normalBlock4.conflictsWith(emptyBlock));
-        assertFalse(normalBlock4.conflictsWith(independentBlock));
-        assertTrue(normalBlock4.conflictsWith(normalBlock1));
-        assertTrue(normalBlock4.conflictsWith(normalBlock2));
-        assertFalse(normalBlock4.conflictsWith(normalBlock3));
-        assertTrue(normalBlock4.conflictsWith(normalBlock4));
-        assertTrue(normalBlock4.conflictsWith(conflictingBlock));
+        assertThat(normalBlock4.conflictsWith(emptyBlock)).isFalse();
+        assertThat(normalBlock4.conflictsWith(independentBlock)).isFalse();
+        assertThat(normalBlock4.conflictsWith(normalBlock1)).isTrue();
+        assertThat(normalBlock4.conflictsWith(normalBlock2)).isTrue();
+        assertThat(normalBlock4.conflictsWith(normalBlock3)).isFalse();
+        assertThat(normalBlock4.conflictsWith(normalBlock4)).isTrue();
+        assertThat(normalBlock4.conflictsWith(conflictingBlock)).isTrue();
 
-        assertFalse(conflictingBlock.conflictsWith(emptyBlock));
-        assertFalse(conflictingBlock.conflictsWith(independentBlock));
-        assertTrue(conflictingBlock.conflictsWith(normalBlock1));
-        assertTrue(conflictingBlock.conflictsWith(normalBlock2));
-        assertTrue(conflictingBlock.conflictsWith(normalBlock3));
-        assertTrue(conflictingBlock.conflictsWith(normalBlock4));
-        assertTrue(conflictingBlock.conflictsWith(conflictingBlock));
+        assertThat(conflictingBlock.conflictsWith(emptyBlock)).isFalse();
+        assertThat(conflictingBlock.conflictsWith(independentBlock)).isFalse();
+        assertThat(conflictingBlock.conflictsWith(normalBlock1)).isTrue();
+        assertThat(conflictingBlock.conflictsWith(normalBlock2)).isTrue();
+        assertThat(conflictingBlock.conflictsWith(normalBlock3)).isTrue();
+        assertThat(conflictingBlock.conflictsWith(normalBlock4)).isTrue();
+        assertThat(conflictingBlock.conflictsWith(conflictingBlock)).isTrue();
     }
 
     @Test
     public void testActivityManagerOfEmptyBlock() {
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getPeriods());
-        assertEquals(0, emptyBlock.getActivityManager().getActivities().size());
-        assertEquals(0, emptyBlock.getActivityManager().getActivities(week1).size());
-        assertEquals(0, emptyBlock.getActivityManager().getActivities(week2).size());
-        assertEquals(0, emptyBlock.getActivityManager().getActivities(
-            Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(0, emptyBlock.getActivityManager().getActivities(
-            Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getResourcePeriods(class1));
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getResourcePeriods(class2));
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getResourcePeriods(multiResource));
-        assertEquals(new PeriodSet(), emptyBlock.getActivityManager().getResourceSubsetPeriods(
-            new ResourceSubset.SplittingPart(
-                class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
-            )
-        ));
-        assertFalse(emptyBlock.getActivityManager().hasPeriod(week1));
-        assertFalse(emptyBlock.getActivityManager().hasPeriod(week2));
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getPeriods()).isEmpty();
+        assertThat(emptyBlock.getActivityManager().getActivities()).isEmpty();
+        assertThat(emptyBlock.getActivityManager().getActivities(week1)).isEmpty();
+        assertThat(emptyBlock.getActivityManager().getActivities(week2)).isEmpty();
+        assertThat(emptyBlock.getActivityManager().getActivities(Arrays.asList(week1, week2))).isEmpty();
+        assertThat(emptyBlock.getActivityManager().getActivities(Arrays.asList(week1, week2), true)).isEmpty();
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getResourcePeriods(class1)).isEmpty();
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getResourcePeriods(class2)).isEmpty();
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getResourcePeriods(teacher1)).isEmpty();
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getResourcePeriods(multiResource)).isEmpty();
+        assertThat((Set<Period>) emptyBlock.getActivityManager().getResourceSubsetPeriods(
+            new ResourceSubset.SplittingPart(class1.getSplittingManager().getSplittings().get(0).getParts().get(0))
+        )).isEmpty();
+        assertThat(emptyBlock.getActivityManager().hasPeriod(week1)).isFalse();
+        assertThat(emptyBlock.getActivityManager().hasPeriod(week2)).isFalse();
     }
 
     @Test
     public void testActivityManagerOfIndependentBlock() {
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getPeriods());
-        assertEquals(1, independentBlock.getActivityManager().getActivities().size());
-        assertEquals(0, independentBlock.getActivityManager().getActivities(week1).size());
-        assertEquals(0, independentBlock.getActivityManager().getActivities(week2).size());
-        assertEquals(0, independentBlock.getActivityManager().getActivities(
+        assertThat((Set<Period>) independentBlock.getActivityManager().getPeriods()).isEmpty();
+        assertThat(independentBlock.getActivityManager().getActivities()).hasSize(1);
+        assertThat(independentBlock.getActivityManager().getActivities(week1)).isEmpty();
+        assertThat(independentBlock.getActivityManager().getActivities(week2)).isEmpty();
+        assertThat(independentBlock.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(0, independentBlock.getActivityManager().getActivities(
+        )).isEmpty();
+        assertThat(independentBlock.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getResourcePeriods(class1));
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getResourcePeriods(class2));
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getResourcePeriods(multiResource));
-        assertEquals(new PeriodSet(), independentBlock.getActivityManager().getResourceSubsetPeriods(
+        )).isEmpty();;
+        assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(class1)).isEmpty();
+        assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(class2)).isEmpty();
+        assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(teacher1)).isEmpty();
+        assertThat((Set<Period>) independentBlock.getActivityManager().getResourcePeriods(multiResource)).isEmpty();
+        assertThat((Set<Period>) independentBlock.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertFalse(independentBlock.getActivityManager().hasPeriod(week1));
-        assertFalse(independentBlock.getActivityManager().hasPeriod(week2));
+        )).isEmpty();
+        assertThat(independentBlock.getActivityManager().hasPeriod(week1)).isFalse();
+        assertThat(independentBlock.getActivityManager().hasPeriod(week2)).isFalse();
     }
 
     @Test
     public void testActivityManagerOfNormalBlock1() {
-        assertEquals(setOf(week1, week2), normalBlock1.getActivityManager().getPeriods());
-        assertEquals(1, normalBlock1.getActivityManager().getActivities().size());
-        assertEquals(1, normalBlock1.getActivityManager().getActivities(week1).size());
-        assertEquals(1, normalBlock1.getActivityManager().getActivities(week2).size());
-        assertEquals(1, normalBlock1.getActivityManager().getActivities(
+        assertThat((Set<Period>) normalBlock1.getActivityManager().getPeriods()).containsExactly(week1, week2);
+        assertThat(normalBlock1.getActivityManager().getActivities()).hasSize(1);
+        assertThat(normalBlock1.getActivityManager().getActivities(week1)).hasSize(1);
+        assertThat(normalBlock1.getActivityManager().getActivities(week2)).hasSize(1);
+        assertThat(normalBlock1.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(1, normalBlock1.getActivityManager().getActivities(
+        )).hasSize(1);
+        assertThat(normalBlock1.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(setOf(week1, week2), normalBlock1.getActivityManager().getResourcePeriods(class1));
-        assertEquals(new PeriodSet(), normalBlock1.getActivityManager().getResourcePeriods(class2));
-        assertEquals(setOf(week1, week2), normalBlock1.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(setOf(week1, week2), normalBlock1.getActivityManager().getResourceSubsetPeriods(
+        )).hasSize(1);
+        assertThat((Set<Period>) normalBlock1.getActivityManager().getResourcePeriods(class1)).containsExactly(week1, week2);
+        assertThat((Set<Period>) normalBlock1.getActivityManager().getResourcePeriods(class2)).isEmpty();
+        assertThat((Set<Period>) normalBlock1.getActivityManager().getResourcePeriods(teacher1)).containsExactly(week1, week2);
+        assertThat((Set<Period>) normalBlock1.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertTrue(normalBlock1.getActivityManager().hasPeriod(week1));
-        assertTrue(normalBlock1.getActivityManager().hasPeriod(week2));
+        )).containsExactly(week1, week2);
+        assertThat(normalBlock1.getActivityManager().hasPeriod(week1)).isTrue();
+        assertThat(normalBlock1.getActivityManager().hasPeriod(week2)).isTrue();
     }
 
     @Test
     public void testActivityManagerOfNormalBlock2() {
-        assertEquals(setOf(week1, week2), normalBlock2.getActivityManager().getPeriods());
-        assertEquals(2, normalBlock2.getActivityManager().getActivities().size());
-        assertEquals(2, normalBlock2.getActivityManager().getActivities(week1).size());
-        assertEquals(2, normalBlock2.getActivityManager().getActivities(week2).size());
-        assertEquals(2, normalBlock2.getActivityManager().getActivities(
+        assertThat((Set<Period>) normalBlock2.getActivityManager().getPeriods()).containsExactly(week1, week2);
+        assertThat(normalBlock2.getActivityManager().getActivities()).hasSize(2);
+        assertThat(normalBlock2.getActivityManager().getActivities(week1)).hasSize(2);
+        assertThat(normalBlock2.getActivityManager().getActivities(week2)).hasSize(2);
+        assertThat(normalBlock2.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(2, normalBlock2.getActivityManager().getActivities(
+        )).hasSize(2);
+        assertThat(normalBlock2.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(new PeriodSet(), normalBlock2.getActivityManager().getResourcePeriods(class1));
-        assertEquals(setOf(week1, week2), normalBlock2.getActivityManager().getResourcePeriods(class2));
-        assertEquals(new PeriodSet(), normalBlock2.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(new PeriodSet(), normalBlock2.getActivityManager().getResourceSubsetPeriods(
+        )).hasSize(2);
+        assertThat((Set<Period>) normalBlock2.getActivityManager().getResourcePeriods(class1)).isEmpty();
+        assertThat((Set<Period>) normalBlock2.getActivityManager().getResourcePeriods(class2)).containsExactly(week1, week2);
+        assertThat((Set<Period>) normalBlock2.getActivityManager().getResourcePeriods(teacher1)).isEmpty();
+        assertThat((Set<Period>) normalBlock2.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertTrue(normalBlock2.getActivityManager().hasPeriod(week1));
-        assertTrue(normalBlock2.getActivityManager().hasPeriod(week2));
+        )).isEmpty();
+        assertThat(normalBlock2.getActivityManager().hasPeriod(week1)).isTrue();
+        assertThat(normalBlock2.getActivityManager().hasPeriod(week2)).isTrue();
     }
 
     @Test
     public void testActivityManagerOfNormalBlock3() {
-        assertEquals(setOf(week1), normalBlock3.getActivityManager().getPeriods());
-        assertEquals(2, normalBlock3.getActivityManager().getActivities().size());
-        assertEquals(2, normalBlock3.getActivityManager().getActivities(week1).size());
-        assertEquals(0, normalBlock3.getActivityManager().getActivities(week2).size());
-        assertEquals(2, normalBlock3.getActivityManager().getActivities(
+        assertThat((Set<Period>) normalBlock3.getActivityManager().getPeriods()).containsExactly(week1);
+        assertThat(normalBlock3.getActivityManager().getActivities()).hasSize(2);
+        assertThat(normalBlock3.getActivityManager().getActivities(week1)).hasSize(2);
+        assertThat(normalBlock3.getActivityManager().getActivities(week2)).isEmpty();
+        assertThat(normalBlock3.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(0, normalBlock3.getActivityManager().getActivities(
+        )).hasSize(2);
+        assertThat(normalBlock3.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(setOf(week1), normalBlock3.getActivityManager().getResourcePeriods(class1));
-        assertEquals(setOf(week1), normalBlock3.getActivityManager().getResourcePeriods(class2));
-        assertEquals(setOf(week1), normalBlock3.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(setOf(week1), normalBlock3.getActivityManager().getResourceSubsetPeriods(
+        )).isEmpty();
+        assertThat((Set<Period>) normalBlock3.getActivityManager().getResourcePeriods(class1)).containsExactly(week1);
+        assertThat((Set<Period>) normalBlock3.getActivityManager().getResourcePeriods(class2)).containsExactly(week1);
+        assertThat((Set<Period>) normalBlock3.getActivityManager().getResourcePeriods(teacher1)).containsExactly(week1);
+        assertThat((Set<Period>) normalBlock3.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertTrue(normalBlock3.getActivityManager().hasPeriod(week1));
-        assertFalse(normalBlock3.getActivityManager().hasPeriod(week2));
+        )).containsExactly(week1);
+        assertThat(normalBlock3.getActivityManager().hasPeriod(week1)).isTrue();
+        assertThat(normalBlock3.getActivityManager().hasPeriod(week2)).isFalse();
     }
 
     @Test
     public void testActivityManagerOfNormalBlock4() {
-        assertEquals(setOf(week2), normalBlock4.getActivityManager().getPeriods());
-        assertEquals(2, normalBlock4.getActivityManager().getActivities().size());
-        assertEquals(0, normalBlock4.getActivityManager().getActivities(week1).size());
-        assertEquals(2, normalBlock4.getActivityManager().getActivities(week2).size());
-        assertEquals(2, normalBlock4.getActivityManager().getActivities(
+        assertThat((Set<Period>) normalBlock4.getActivityManager().getPeriods()).containsExactly(week2);
+        assertThat(normalBlock4.getActivityManager().getActivities()).hasSize(2);
+        assertThat(normalBlock4.getActivityManager().getActivities(week1)).isEmpty();
+        assertThat(normalBlock4.getActivityManager().getActivities(week2)).hasSize(2);
+        assertThat(normalBlock4.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(0, normalBlock4.getActivityManager().getActivities(
+        )).hasSize(2);
+        assertThat(normalBlock4.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(setOf(week2), normalBlock4.getActivityManager().getResourcePeriods(class1));
-        assertEquals(setOf(week2), normalBlock4.getActivityManager().getResourcePeriods(class2));
-        assertEquals(setOf(week2), normalBlock4.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(setOf(week2), normalBlock4.getActivityManager().getResourceSubsetPeriods(
+        )).isEmpty();
+        assertThat((Set<Period>) normalBlock4.getActivityManager().getResourcePeriods(class1)).containsExactly(week2);
+        assertThat((Set<Period>) normalBlock4.getActivityManager().getResourcePeriods(class2)).containsExactly(week2);
+        assertThat((Set<Period>) normalBlock4.getActivityManager().getResourcePeriods(teacher1)).containsExactly(week2);
+        assertThat((Set<Period>) normalBlock4.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertFalse(normalBlock4.getActivityManager().hasPeriod(week1));
-        assertTrue(normalBlock4.getActivityManager().hasPeriod(week2));
+        )).containsExactly(week2);
+        assertThat(normalBlock4.getActivityManager().hasPeriod(week1)).isFalse();
+        assertThat(normalBlock4.getActivityManager().hasPeriod(week2)).isTrue();
     }
 
     @Test
     public void testActivityManagerOfConflictingBlock() {
-        assertEquals(setOf(week1, week2), conflictingBlock.getActivityManager().getPeriods());
-        assertEquals(2, conflictingBlock.getActivityManager().getActivities().size());
-        assertEquals(1, conflictingBlock.getActivityManager().getActivities(week1).size());
-        assertEquals(2, conflictingBlock.getActivityManager().getActivities(week2).size());
-        assertEquals(2, conflictingBlock.getActivityManager().getActivities(
+        assertThat((Set<Period>) conflictingBlock.getActivityManager().getPeriods()).containsExactly(week1, week2);
+        assertThat(conflictingBlock.getActivityManager().getActivities()).hasSize(2);
+        assertThat(conflictingBlock.getActivityManager().getActivities(week1)).hasSize(1);
+        assertThat(conflictingBlock.getActivityManager().getActivities(week2)).hasSize(2);
+        assertThat(conflictingBlock.getActivityManager().getActivities(
             Arrays.asList(week1, week2)
-        ).size());
-        assertEquals(1, conflictingBlock.getActivityManager().getActivities(
+        )).hasSize(2);
+        assertThat(conflictingBlock.getActivityManager().getActivities(
             Arrays.asList(week1, week2), true
-        ).size());
-        assertEquals(setOf(week2), conflictingBlock.getActivityManager().getResourcePeriods(class1));
-        assertEquals(setOf(week1, week2), conflictingBlock.getActivityManager().getResourcePeriods(class2));
-        assertEquals(new PeriodSet(), conflictingBlock.getActivityManager().getResourcePeriods(teacher1));
-        assertEquals(setOf(week2), conflictingBlock.getActivityManager().getResourceSubsetPeriods(
+        )).hasSize(1);
+        assertThat((Set<Period>) conflictingBlock.getActivityManager().getResourcePeriods(class1)).containsExactly(week2);
+        assertThat((Set<Period>) conflictingBlock.getActivityManager().getResourcePeriods(class2)).containsExactly(week1, week2);
+        assertThat((Set<Period>) conflictingBlock.getActivityManager().getResourcePeriods(teacher1)).isEmpty();
+        assertThat((Set<Period>) conflictingBlock.getActivityManager().getResourceSubsetPeriods(
             new ResourceSubset.SplittingPart(
                 class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
             )
-        ));
-        assertTrue(conflictingBlock.getActivityManager().hasPeriod(week1));
-        assertTrue(conflictingBlock.getActivityManager().hasPeriod(week2));
+        )).containsExactly(week2);
+        assertThat(conflictingBlock.getActivityManager().hasPeriod(week1)).isTrue();
+        assertThat(conflictingBlock.getActivityManager().hasPeriod(week2)).isTrue();
     }
     
     @Test
     public void testGetCalculatedTimeLimit() {
-        assertTrue(emptyBlock.getCalculatedTimeLimit().isAlways());
-        assertTrue(normalBlock1.getCalculatedTimeLimit().isAlways());
-        assertEquals(
-            new Interval(0, (Time.HOUR * 13) + Block.DEFAULT_LENGTH - 1),
-            normalBlock2.getCalculatedTimeLimit().getSimplified()
+        assertThat(emptyBlock.getCalculatedTimeLimit().isAlways()).isTrue();
+        assertThat(normalBlock1.getCalculatedTimeLimit().isAlways()).isTrue();
+        assertThat(normalBlock2.getCalculatedTimeLimit().getSimplified()).isEqualTo(
+            new Interval(0, (Time.HOUR * 13) + Block.DEFAULT_LENGTH - 1)
         );
-        assertTrue(normalBlock3.getCalculatedTimeLimit().isAlways());
-        assertTrue(normalBlock4.getCalculatedTimeLimit().isAlways());
-        assertEquals(
-            new Interval(0, (Time.HOUR * 13) + Block.DEFAULT_LENGTH - 1),
-            conflictingBlock.getCalculatedTimeLimit().getSimplified()
+        assertThat(normalBlock3.getCalculatedTimeLimit().isAlways()).isTrue();
+        assertThat(normalBlock4.getCalculatedTimeLimit().isAlways()).isTrue();
+        assertThat(conflictingBlock.getCalculatedTimeLimit().getSimplified()).isEqualTo(
+            new Interval(0, (Time.HOUR * 13) + Block.DEFAULT_LENGTH - 1)
         );
     }
 
     @Test
     public void testGetCalculatedTimingSetUnlimited() {
-        assertTrue(emptyBlock.getCalculatedTimingSet(false).isEmpty());
-        assertTrue(independentBlock.getCalculatedTimingSet(false).isEmpty());
-        assertEquals(defaultTimingSet.getTimes(), normalBlock1.getCalculatedTimingSet(false).getTimes());
-        assertEquals(secondaryTimingSet.getTimes(), normalBlock2.getCalculatedTimingSet(false).getTimes());
-        assertEquals(defaultTimingSet.getTimes(), normalBlock3.getCalculatedTimingSet(false).getTimes());
-        assertEquals(secondaryTimingSet.getTimes(), normalBlock4.getCalculatedTimingSet(false).getTimes());
-        assertEquals(secondaryTimingSet.getTimes(), conflictingBlock.getCalculatedTimingSet(false).getTimes());
+        assertThat(emptyBlock.getCalculatedTimingSet(false).isEmpty()).isTrue();
+        assertThat(independentBlock.getCalculatedTimingSet(false).isEmpty()).isTrue();
+        assertThat(normalBlock1.getCalculatedTimingSet(false).getTimes()).isEqualTo(defaultTimingSet.getTimes());
+        assertThat(normalBlock2.getCalculatedTimingSet(false).getTimes()).isEqualTo(secondaryTimingSet.getTimes());
+        assertThat(normalBlock3.getCalculatedTimingSet(false).getTimes()).isEqualTo(defaultTimingSet.getTimes());
+        assertThat(normalBlock4.getCalculatedTimingSet(false).getTimes()).isEqualTo(secondaryTimingSet.getTimes());
+        assertThat(conflictingBlock.getCalculatedTimingSet(false).getTimes()).isEqualTo(secondaryTimingSet.getTimes());
     }
 
     @Test
     public void testGetCalculatedTimingSet() {
-        assertTrue(emptyBlock.getCalculatedTimingSet().isEmpty());
-        assertTrue(independentBlock.getCalculatedTimingSet().isEmpty());
-        assertEquals(defaultTimingSet.getTimes(), normalBlock1.getCalculatedTimingSet().getTimes());
-        assertEquals(
-            Arrays.asList(
-                new Time(9 * Time.HOUR),
-                new Time(10 * Time.HOUR),
-                new Time(11 * Time.HOUR),
-                new Time(12 * Time.HOUR)
-            ),
-            new ArrayList<Time>(normalBlock2.getCalculatedTimingSet().getTimes())
-        );
-        assertEquals(defaultTimingSet.getTimes(), normalBlock3.getCalculatedTimingSet().getTimes());
-        assertEquals(secondaryTimingSet.getTimes(), normalBlock4.getCalculatedTimingSet().getTimes());
-        assertEquals(
-            Arrays.asList(
-                new Time(9 * Time.HOUR),
-                new Time(10 * Time.HOUR),
-                new Time(11 * Time.HOUR),
-                new Time(12 * Time.HOUR)
-            ),
-            new ArrayList<Time>(conflictingBlock.getCalculatedTimingSet().getTimes())
-        );
+        assertThat(emptyBlock.getCalculatedTimingSet().isEmpty()).isTrue();
+        assertThat(independentBlock.getCalculatedTimingSet().isEmpty()).isTrue();
+        assertThat(normalBlock1.getCalculatedTimingSet().getTimes()).isEqualTo(defaultTimingSet.getTimes());
+        assertThat(normalBlock2.getCalculatedTimingSet().getTimes()).containsExactly(new Time[] { // NOSONAR
+            new Time(9 * Time.HOUR),
+            new Time(10 * Time.HOUR),
+            new Time(11 * Time.HOUR),
+            new Time(12 * Time.HOUR),
+        });
+        assertThat(normalBlock3.getCalculatedTimingSet().getTimes()).isEqualTo(defaultTimingSet.getTimes());
+        assertThat(normalBlock4.getCalculatedTimingSet().getTimes()).isEqualTo(secondaryTimingSet.getTimes());
+        assertThat(conflictingBlock.getCalculatedTimingSet().getTimes()).containsExactly(new Time[] { // NOSONAR
+            new Time(9 * Time.HOUR),
+            new Time(10 * Time.HOUR),
+            new Time(11 * Time.HOUR),
+            new Time(12 * Time.HOUR),
+        });
     }
     
     @Before
@@ -533,11 +514,6 @@ public class BlockTest {
         activity2.getResourceManager().add(teacher3);
         activity2.getResourceManager().add(multiResource);
         conflictingBlock.getActivityManager().add(activity2, week1, week2);
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T> Set<T> setOf(T... items) {
-        return new HashSet<T>(Arrays.asList(items));
     }
     
 }

@@ -1,6 +1,6 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +37,8 @@ public class MultiComparatorTest {
         
         List<String> resultList = new ArrayList<String>(strings);
         List<String> expectedList = Arrays.asList("asdf", "text1", "text2", "text3", "text4", "zzzz");
-        assertEquals(expectedList, resultList);
+        
+        assertThat(resultList).isEqualTo(expectedList);
     }
 
     @Test
@@ -64,7 +65,8 @@ public class MultiComparatorTest {
         
         List<String> resultList = new ArrayList<String>(strings);
         List<String> expectedList = Arrays.asList("asdf", "text1", "text2", "text2", "text3", "text4", "zzzz");
-        assertEquals(expectedList, resultList);
+        
+        assertThat(resultList).isEqualTo(expectedList);
     }
 
 }

@@ -1,11 +1,9 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,165 +34,171 @@ public class ResourceSubsetTest {
     
     @Test
     public void testDifferentResources() {
-        try {
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             intersection(subsetXGroupA1, subsetYGroupA1);
-            fail();
-        } catch (IllegalArgumentException e) {
-        }
+        }}).isInstanceOf(IllegalArgumentException.class);
 
-        try {
+        assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             intersection(subsetYWhole, subsetZWhole);
-            fail();
-        } catch (IllegalArgumentException e) {
-        }
+        }}).isInstanceOf(IllegalArgumentException.class);
     }
     
     @Test
     public void testSimpleGroups() {
-        assertNotEquals(subsetXGroupA1, subsetYGroupA1);
-        assertNotEquals(subsetYGroupA1, subsetZGroupA1);
+        assertThat(subsetYGroupA1).isNotEqualTo(subsetXGroupA1);
+        assertThat(subsetZGroupA1).isNotEqualTo(subsetYGroupA1);
 
-        assertFalse(subsetYWhole.intersects(subsetZWhole));
+        assertThat(subsetYWhole.intersects(subsetZWhole)).isFalse();
         
-        assertFalse(subsetXGroupA1.intersects(subsetYGroupA1));
-        assertFalse(subsetYGroupA1.intersects(subsetZGroupA1));
-        assertFalse(subsetYGroupA2.contains(subsetZGroupA2));
+        assertThat(subsetXGroupA1.intersects(subsetYGroupA1)).isFalse();
+        assertThat(subsetYGroupA1.intersects(subsetZGroupA1)).isFalse();
+        assertThat(subsetYGroupA2.contains(subsetZGroupA2)).isFalse();
 
-        assertTrue(subsetXGroupA1.intersects(subsetXGroupA1));
-        assertTrue(subsetXGroupA1.contains(subsetXGroupA1));
+        assertThat(subsetXGroupA1.intersects(subsetXGroupA1)).isTrue();
+        assertThat(subsetXGroupA1.contains(subsetXGroupA1)).isTrue();
 
-        assertFalse(subsetXGroupA1.intersects(subsetXGroupA2));
+        assertThat(subsetXGroupA1.intersects(subsetXGroupA2)).isFalse();
     }
     
     @Test
     public void testSimpleOperations() {
-        assertTrue(negation(intersection(subsetXGroupA1, subsetXGroupA2)).isWhole());
-        assertTrue(negation(intersection(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole));
-        assertFalse(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole));
+        assertThat(negation(intersection(subsetXGroupA1, subsetXGroupA2)).isWhole()).isTrue();
+        assertThat(negation(intersection(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole)).isTrue();
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole)).isFalse();
 
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).intersects(subsetXGroupA3));
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).contains(subsetXGroupA3));
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXGroupA3));
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).intersects(subsetXGroupA3)).isTrue();
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).contains(subsetXGroupA3)).isTrue();
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXGroupA3)).isTrue();
         
-        assertEquals(subsetXGroupA1, intersection(subsetXGroupA1, subsetXGroupA1));
-        assertEquals(subsetXGroupA1, intersection(subsetXGroupA1, subsetXGroupA1, subsetXGroupA1));
-        assertEquals(subsetXGroupA1, union(subsetXGroupA1));
-        assertEquals(subsetXGroupA1, union(subsetXGroupA1, subsetXGroupA1));
-        assertEquals(subsetXGroupA1, union(subsetXGroupA1, subsetXGroupA1, subsetXGroupA1));
+        assertThat(intersection(subsetXGroupA1, subsetXGroupA1)).isEqualTo(subsetXGroupA1);
+        assertThat(intersection(subsetXGroupA1, subsetXGroupA1, subsetXGroupA1)).isEqualTo(subsetXGroupA1);
+        assertThat(union(subsetXGroupA1)).isEqualTo(subsetXGroupA1);
+        assertThat(union(subsetXGroupA1, subsetXGroupA1)).isEqualTo(subsetXGroupA1);
+        assertThat(union(subsetXGroupA1, subsetXGroupA1, subsetXGroupA1)).isEqualTo(subsetXGroupA1);
 
-        assertEquals(subsetXGroupA1, intersection(subsetXWhole, subsetXGroupA1));
-        assertEquals(subsetXWhole, union(subsetXWhole, subsetXGroupA1));
+        assertThat(intersection(subsetXWhole, subsetXGroupA1)).isEqualTo(subsetXGroupA1);
+        assertThat(union(subsetXWhole, subsetXGroupA1)).isEqualTo(subsetXWhole);
 
-        assertEquals(subsetXGroupD1, negation(subsetXGroupD2));
-        assertEquals(subsetXGroupD1, difference(subsetXWhole, subsetXGroupD2));
-        assertEquals(subsetXGroupD1, symmetricDifference(subsetXWhole, subsetXGroupD2));
+        assertThat(negation(subsetXGroupD2)).isEqualTo(subsetXGroupD1);
+        assertThat(difference(subsetXWhole, subsetXGroupD2)).isEqualTo(subsetXGroupD1);
+        assertThat(symmetricDifference(subsetXWhole, subsetXGroupD2)).isEqualTo(subsetXGroupD1);
         
-        assertFalse(union(subsetXGroupA1, subsetXGroupA2).intersects(subsetXGroupA3));
-        assertFalse(union(subsetXGroupA1, subsetXGroupA2).contains(subsetXGroupA3));
-        assertFalse(union(subsetXGroupA1, subsetXGroupA2).equals(subsetXGroupA3));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).intersects(subsetXGroupA2));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).contains(subsetXGroupA2));
-        assertFalse(union(subsetXGroupA1, subsetXGroupA2).equals(subsetXGroupA2));
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).intersects(subsetXGroupA3)).isFalse();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).contains(subsetXGroupA3)).isFalse();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).equals(subsetXGroupA3)).isFalse();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).intersects(subsetXGroupA2)).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).contains(subsetXGroupA2)).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).equals(subsetXGroupA2)).isFalse();
 
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).intersects(subsetXGroupA3));
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).contains(subsetXGroupA3));
-        assertTrue(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXGroupA3));
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).intersects(subsetXGroupA3)).isTrue();
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).contains(subsetXGroupA3)).isTrue();
+        assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXGroupA3)).isTrue();
 
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(subsetXWhole));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(subsetXWhole));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(subsetXWhole));
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(subsetXWhole)).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(subsetXWhole)).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(subsetXWhole)).isTrue();
     }
     
     public void testUnion() {
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(
             union(subsetXGroupB1, subsetXGroupB2)
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(
             union(subsetXGroupB1, subsetXGroupB2)
-        ));
-        assertFalse(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(
             union(subsetXGroupB1, subsetXGroupB2)
-        ));
+        )).isTrue();
 
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(
             union(subsetXGroupD1, subsetXGroupD2)
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).contains(
             union(subsetXGroupD1, subsetXGroupD2)
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(
             union(subsetXGroupD1, subsetXGroupD2)
-        ));
+        )).isTrue();
 
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).intersects(union(subsetXGroupA2, subsetXGroupA1)));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).contains(union(subsetXGroupA2, subsetXGroupA1)));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).equals(union(subsetXGroupA2, subsetXGroupA1)));
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).intersects(union(subsetXGroupA2, subsetXGroupA1))).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).contains(union(subsetXGroupA2, subsetXGroupA1))).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).equals(union(subsetXGroupA2, subsetXGroupA1))).isTrue();
 
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).intersects(union(subsetXGroupB1, subsetXGroupA1)));
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).contains(union(subsetXGroupB1, subsetXGroupA1)));
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).equals(union(subsetXGroupB1, subsetXGroupA1)));
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).intersects(union(subsetXGroupB1, subsetXGroupA1))).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).contains(union(subsetXGroupB1, subsetXGroupA1))).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).equals(union(subsetXGroupB1, subsetXGroupA1))).isTrue();
     }
     
     public void testDifferentOperations() {
-        assertEquals(
-            union(subsetXGroupA2, subsetXGroupA3),
+        assertThat(
             difference(subsetXWhole, subsetXGroupA1)
+        ).isEqualTo(
+            union(subsetXGroupA2, subsetXGroupA3)
         );
-        assertEquals(
-            union(subsetXGroupA2, subsetXGroupA3),
+        assertThat(
             symmetricDifference(subsetXWhole, subsetXGroupA1)
+        ).isEqualTo(
+            union(subsetXGroupA2, subsetXGroupA3)
         );
         
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).intersects(
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).intersects(
             symmetricDifference(subsetXGroupA1, subsetXGroupA2)
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupA2).contains(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupA2).contains(
             symmetricDifference(subsetXGroupA1, subsetXGroupA2)
-        ));
-        assertEquals(
-            union(subsetXGroupA1, subsetXGroupA2),
+        )).isTrue();
+        assertThat(
             symmetricDifference(subsetXGroupA1, subsetXGroupA2)
+        ).isEqualTo(
+            union(subsetXGroupA1, subsetXGroupA2)
         );
 
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).intersects(
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).intersects(
             symmetricDifference(subsetXGroupA1, subsetXGroupB1)
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).contains(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).contains(
             symmetricDifference(subsetXGroupA1, subsetXGroupB1)
-        ));
-        assertNotEquals(
-            union(subsetXGroupA1, subsetXGroupB1),
-            symmetricDifference(subsetXGroupA1, subsetXGroupB1)
+        )).isTrue();
+        assertThat(symmetricDifference(subsetXGroupA1, subsetXGroupB1)).isNotEqualTo(
+            union(subsetXGroupA1, subsetXGroupB1)
         );
     }
 
     public void testComplexOperations() {
-        assertEquals(union(
-            intersection(subsetXGroupA1, subsetXGroupB2),
-            intersection(subsetXGroupA1, subsetXGroupB3),
-            intersection(subsetXGroupA1, subsetXGroupB4)
-        ), difference(subsetXGroupA1, subsetXGroupB1));
+        assertThat(
+            difference(subsetXGroupA1, subsetXGroupB1)
+        ).isEqualTo(
+            union(
+                intersection(subsetXGroupA1, subsetXGroupB2),
+                intersection(subsetXGroupA1, subsetXGroupB3),
+                intersection(subsetXGroupA1, subsetXGroupB4)
+            )
+        );
         
-        assertEquals(union(
-            intersection(subsetXGroupA1, subsetXGroupB2),
-            intersection(subsetXGroupA1, subsetXGroupB3),
-            intersection(subsetXGroupA1, subsetXGroupB4),
-            intersection(subsetXGroupA2, subsetXGroupB1),
-            intersection(subsetXGroupA3, subsetXGroupB1)
-        ), symmetricDifference(subsetXGroupA1, subsetXGroupB1));
+        assertThat(
+            symmetricDifference(subsetXGroupA1, subsetXGroupB1)
+        ).isEqualTo(
+            union(
+                intersection(subsetXGroupA1, subsetXGroupB2),
+                intersection(subsetXGroupA1, subsetXGroupB3),
+                intersection(subsetXGroupA1, subsetXGroupB4),
+                intersection(subsetXGroupA2, subsetXGroupB1),
+                intersection(subsetXGroupA3, subsetXGroupB1)
+            )
+        );
         
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).intersects(union(
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).intersects(union(
             symmetricDifference(subsetXGroupA1, subsetXGroupB1),
             intersection(subsetXGroupA1, subsetXGroupB1))
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).contains(union(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).contains(union(
             symmetricDifference(subsetXGroupA1, subsetXGroupB1),
             intersection(subsetXGroupA1, subsetXGroupB1))
-        ));
-        assertTrue(union(subsetXGroupA1, subsetXGroupB1).equals(union(
+        )).isTrue();
+        assertThat(union(subsetXGroupA1, subsetXGroupB1).equals(union(
             symmetricDifference(subsetXGroupA1, subsetXGroupB1),
             intersection(subsetXGroupA1, subsetXGroupB1))
-        ));
+        )).isTrue();
     }
     
     @Test
@@ -203,31 +207,31 @@ public class ResourceSubsetTest {
             union(subsetXGroupA1, subsetXGroupB1, subsetXGroupB2),
             subsetXGroupC1
         );
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
         
         ResourceSubset secondSubset = union(subsetXGroupA1, subsetXGroupC2);
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
         
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertFalse(firstSubset.contains(secondSubset));
-        assertFalse(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isFalse();
+        assertThat(firstSubset.equals(secondSubset)).isFalse();
     }
 
     @Test
     public void testMoreComplex2() {
         ResourceSubset firstSubset = union(subsetXGroupA1, subsetXGroupB1);
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
         
         ResourceSubset secondSubset = union(
             subsetXGroupA1,
             intersection(subsetXGroupA2, subsetXGroupB1),
             intersection(subsetXGroupA3, subsetXGroupB1)
         );
-        assertFalse(secondSubset.isWhole());
+        assertThat(secondSubset.isWhole()).isFalse();
 
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertTrue(firstSubset.contains(secondSubset));
-        assertTrue(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isTrue();
+        assertThat(firstSubset.equals(secondSubset)).isTrue();
     }
     
     @Test
@@ -236,18 +240,18 @@ public class ResourceSubsetTest {
             union(subsetXGroupA1, subsetXGroupB1, subsetXGroupC1),
             subsetXGroupC2
         );
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
         
         ResourceSubset secondSubset = union(
             intersection(subsetXGroupA1, subsetXGroupC2),
             intersection(subsetXGroupA2, subsetXGroupB1, subsetXGroupC2),
             intersection(subsetXGroupA3, subsetXGroupB1, subsetXGroupC2)
         );
-        assertFalse(secondSubset.isWhole());
+        assertThat(secondSubset.isWhole()).isFalse();
 
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertTrue(firstSubset.contains(secondSubset));
-        assertTrue(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isTrue();
+        assertThat(firstSubset.equals(secondSubset)).isTrue();
     }
 
     @Test
@@ -256,7 +260,7 @@ public class ResourceSubsetTest {
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
         );
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
 
         ResourceSubset secondSubset = union(
             intersection(subsetXGroupA1, subsetXGroupC1, subsetXGroupD1),
@@ -275,11 +279,11 @@ public class ResourceSubsetTest {
             intersection(subsetXGroupA3, subsetXGroupB3, subsetXGroupD1),
             intersection(subsetXGroupA3, subsetXGroupB4, subsetXGroupD1)
         );
-        assertFalse(secondSubset.isWhole());
+        assertThat(secondSubset.isWhole()).isFalse();
 
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertTrue(firstSubset.contains(secondSubset));
-        assertTrue(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isTrue();
+        assertThat(firstSubset.equals(secondSubset)).isTrue();
     }
 
     @Test
@@ -288,7 +292,7 @@ public class ResourceSubsetTest {
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
         );
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
 
         ResourceSubset secondSubset = union(
             intersection(subsetXGroupA1, subsetXGroupC1, subsetXGroupD1),
@@ -307,11 +311,11 @@ public class ResourceSubsetTest {
             intersection(subsetXGroupA3, subsetXGroupB3, subsetXGroupD1)
             // intersection of (X_A3, X_B4, X_D1) removed
         );
-        assertFalse(secondSubset.isWhole());
+        assertThat(secondSubset.isWhole()).isFalse();
 
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertTrue(firstSubset.contains(secondSubset));
-        assertFalse(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isTrue();
+        assertThat(firstSubset.equals(secondSubset)).isFalse();
     }
 
     @Test
@@ -320,7 +324,7 @@ public class ResourceSubsetTest {
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
         );
-        assertFalse(firstSubset.isWhole());
+        assertThat(firstSubset.isWhole()).isFalse();
 
         ResourceSubset secondSubset = union(
             intersection(subsetXGroupA1, subsetXGroupC1), // without X_D1
@@ -339,11 +343,11 @@ public class ResourceSubsetTest {
             intersection(subsetXGroupA3, subsetXGroupB3, subsetXGroupD1),
             intersection(subsetXGroupA3, subsetXGroupB4, subsetXGroupD1)
         );
-        assertFalse(secondSubset.isWhole());
+        assertThat(secondSubset.isWhole()).isFalse();
 
-        assertTrue(firstSubset.intersects(secondSubset));
-        assertFalse(firstSubset.contains(secondSubset));
-        assertFalse(firstSubset.equals(secondSubset));
+        assertThat(firstSubset.intersects(secondSubset)).isTrue();
+        assertThat(firstSubset.contains(secondSubset)).isFalse();
+        assertThat(firstSubset.equals(secondSubset)).isFalse();
     }
 
     private ResourceSubset union(ResourceSubset... subsets) {

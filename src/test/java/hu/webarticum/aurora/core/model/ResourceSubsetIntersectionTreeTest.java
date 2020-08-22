@@ -1,9 +1,8 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,275 +34,277 @@ public class ResourceSubsetIntersectionTreeTest {
 
     @Test
     public void testEmptyTree() {
-        assertTrue(emptyTree.equals(emptyTree.copy()));
-        assertTrue(haveSameLeafs(emptyTree, emptyTree.copy()));
-        assertTrue(emptyTree.isEmpty());
-        assertFalse(emptyTree.isWhole());
-        assertTrue(iterableToSet(emptyTree.getLeafIterable()).isEmpty());
+        assertThat(emptyTree).isEqualTo(emptyTree.copy());
+        assertThat(emptyTree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(emptyTree.copy().getLeafIterable());
+        assertThat(emptyTree.isEmpty()).isTrue();
+        assertThat(emptyTree.isWhole()).isFalse();
+        assertThat(emptyTree.getLeafIterable()).isEmpty();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testWholeTree() {
-        assertTrue(wholeTree.equals(wholeTree.copy()));
-        assertTrue(haveSameLeafs(wholeTree, wholeTree.copy()));
-        assertFalse(wholeTree.isEmpty());
-        assertTrue(wholeTree.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(asSet(Resource.Splitting.Part.class));
-        assertEquals(expectedLeafs, iterableToSet(wholeTree.getLeafIterable()));
+        assertThat(wholeTree).isEqualTo(wholeTree.copy());
+        assertThat(wholeTree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(wholeTree.copy().getLeafIterable());
+        assertThat(wholeTree.isEmpty()).isFalse();
+        assertThat(wholeTree.isWhole()).isTrue();
+        assertThat(wholeTree.getLeafIterable()).containsExactlyInAnyOrder(partSet());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testPart11Tree() {
-        assertTrue(part11Tree.equals(part11Tree.copy()));
-        assertTrue(haveSameLeafs(part11Tree, part11Tree.copy()));
-        assertFalse(part11Tree.isEmpty());
-        assertFalse(part11Tree.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(asSet(splittingPart11));
-        assertEquals(expectedLeafs, iterableToSet(part11Tree.getLeafIterable()));
+        assertThat(part11Tree).isEqualTo(part11Tree.copy());
+        assertThat(part11Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            part11Tree.copy().getLeafIterable()
+        );
+        assertThat(part11Tree.isEmpty()).isFalse();
+        assertThat(part11Tree.isWhole()).isFalse();
+        assertThat(part11Tree.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart11));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testPart12Tree() {
-        assertTrue(part12Tree.equals(part12Tree.copy()));
-        assertTrue(haveSameLeafs(part12Tree, part12Tree.copy()));
-        assertFalse(part12Tree.isEmpty());
-        assertFalse(part12Tree.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(asSet(splittingPart12));
-        assertEquals(expectedLeafs, iterableToSet(part12Tree.getLeafIterable()));
+        assertThat(part12Tree).isEqualTo(part12Tree.copy());
+        assertThat(part12Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            part12Tree.copy().getLeafIterable()
+        );
+        assertThat(part12Tree.isEmpty()).isFalse();
+        assertThat(part12Tree.isWhole()).isFalse();
+        assertThat(part12Tree.getLeafIterable()).containsExactly(partSet(splittingPart12));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testPart21Tree() {
-        assertTrue(part21Tree.equals(part21Tree.copy()));
-        assertTrue(haveSameLeafs(part21Tree, part21Tree.copy()));
-        assertFalse(part21Tree.isEmpty());
-        assertFalse(part21Tree.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(asSet(splittingPart21));
-        assertEquals(expectedLeafs, iterableToSet(part21Tree.getLeafIterable()));
+        assertThat(part21Tree).isEqualTo(part21Tree.copy());
+        assertThat(part21Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            part21Tree.copy().getLeafIterable()
+        );
+        assertThat(part21Tree.isEmpty()).isFalse();
+        assertThat(part21Tree.isWhole()).isFalse();
+        assertThat(part21Tree.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart21));
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void testComplexTree1() {
-        assertTrue(complexTree1.equals(complexTree1.copy()));
-        assertTrue(haveSameLeafs(complexTree1, complexTree1.copy()));
-        assertFalse(complexTree1.isEmpty());
-        assertFalse(complexTree1.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(
-            asSet(splittingPart21, splittingPart31)
+        assertThat(complexTree1).isEqualTo(complexTree1.copy());
+        assertThat(complexTree1.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            complexTree1.copy().getLeafIterable()
         );
-        assertEquals(expectedLeafs, iterableToSet(complexTree1.getLeafIterable()));
+        assertThat(complexTree1.isEmpty()).isFalse();
+        assertThat(complexTree1.isWhole()).isFalse();
+        assertThat(complexTree1.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart21, splittingPart31));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testComplexTree2() {
-        assertTrue(complexTree2.equals(complexTree2.copy()));
-        assertTrue(haveSameLeafs(complexTree2, complexTree2.copy()));
-        assertFalse(complexTree2.isEmpty());
-        assertFalse(complexTree2.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(
-            asSet(splittingPart22, splittingPart32)
+        assertThat(complexTree2).isEqualTo(complexTree2.copy());
+        assertThat(complexTree2.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            complexTree2.copy().getLeafIterable()
         );
-        assertEquals(expectedLeafs, iterableToSet(complexTree2.getLeafIterable()));
+        assertThat(complexTree2.isEmpty()).isFalse();
+        assertThat(complexTree2.isWhole()).isFalse();
+        assertThat(complexTree2.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart22, splittingPart32));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testComplexTree3() {
-        assertTrue(complexTree3.equals(complexTree3.copy()));
-        assertTrue(haveSameLeafs(complexTree3, complexTree3.copy()));
-        assertFalse(complexTree3.isEmpty());
-        assertFalse(complexTree3.isWhole());
-        Set<Set<Resource.Splitting.Part>> expectedLeafs = asSet(
-            asSet(splittingPart11, splittingPart31),
-            asSet(splittingPart12, splittingPart21, splittingPart31),
-            asSet(splittingPart13, splittingPart21, splittingPart31)
+        assertThat(complexTree3).isEqualTo(complexTree3.copy());
+        assertThat(complexTree3.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
+            complexTree3.copy().getLeafIterable()
         );
-        assertEquals(expectedLeafs, iterableToSet(complexTree3.getLeafIterable()));
+        assertThat(complexTree3.isEmpty()).isFalse();
+        assertThat(complexTree3.isWhole()).isFalse();
+        assertThat(complexTree3.getLeafIterable()).containsExactlyInAnyOrder(
+            partSet(splittingPart11, splittingPart31),
+            partSet(splittingPart12, splittingPart21, splittingPart31),
+            partSet(splittingPart13, splittingPart21, splittingPart31)
+        );
     }
 
     @Test
     public void testIntersects() {
-        assertFalse(emptyTree.intersects(emptyTree));
-        assertFalse(emptyTree.intersects(wholeTree));
-        assertFalse(emptyTree.intersects(part11Tree));
-        assertFalse(emptyTree.intersects(part12Tree));
-        assertFalse(emptyTree.intersects(part21Tree));
-        assertFalse(emptyTree.intersects(complexTree1));
-        assertFalse(emptyTree.intersects(complexTree2));
-        assertFalse(emptyTree.intersects(complexTree3));
+        assertThat(emptyTree.intersects(emptyTree)).isFalse();
+        assertThat(emptyTree.intersects(wholeTree)).isFalse();
+        assertThat(emptyTree.intersects(part11Tree)).isFalse();
+        assertThat(emptyTree.intersects(part12Tree)).isFalse();
+        assertThat(emptyTree.intersects(part21Tree)).isFalse();
+        assertThat(emptyTree.intersects(complexTree1)).isFalse();
+        assertThat(emptyTree.intersects(complexTree2)).isFalse();
+        assertThat(emptyTree.intersects(complexTree3)).isFalse();
         
-        assertFalse(wholeTree.intersects(emptyTree));
-        assertTrue(wholeTree.intersects(wholeTree));
-        assertTrue(wholeTree.intersects(part11Tree));
-        assertTrue(wholeTree.intersects(part12Tree));
-        assertTrue(wholeTree.intersects(part21Tree));
-        assertTrue(wholeTree.intersects(complexTree1));
-        assertTrue(wholeTree.intersects(complexTree2));
-        assertTrue(wholeTree.intersects(complexTree3));
+        assertThat(wholeTree.intersects(emptyTree)).isFalse();
+        assertThat(wholeTree.intersects(wholeTree)).isTrue();
+        assertThat(wholeTree.intersects(part11Tree)).isTrue();
+        assertThat(wholeTree.intersects(part12Tree)).isTrue();
+        assertThat(wholeTree.intersects(part21Tree)).isTrue();
+        assertThat(wholeTree.intersects(complexTree1)).isTrue();
+        assertThat(wholeTree.intersects(complexTree2)).isTrue();
+        assertThat(wholeTree.intersects(complexTree3)).isTrue();
         
-        assertFalse(part11Tree.intersects(emptyTree));
-        assertTrue(part11Tree.intersects(wholeTree));
-        assertTrue(part11Tree.intersects(part11Tree));
-        assertFalse(part11Tree.intersects(part12Tree));
-        assertTrue(part11Tree.intersects(part21Tree));
-        assertTrue(part11Tree.intersects(complexTree1));
-        assertTrue(part11Tree.intersects(complexTree2));
-        assertTrue(part11Tree.intersects(complexTree3));
+        assertThat(part11Tree.intersects(emptyTree)).isFalse();
+        assertThat(part11Tree.intersects(wholeTree)).isTrue();
+        assertThat(part11Tree.intersects(part11Tree)).isTrue();
+        assertThat(part11Tree.intersects(part12Tree)).isFalse();
+        assertThat(part11Tree.intersects(part21Tree)).isTrue();
+        assertThat(part11Tree.intersects(complexTree1)).isTrue();
+        assertThat(part11Tree.intersects(complexTree2)).isTrue();
+        assertThat(part11Tree.intersects(complexTree3)).isTrue();
         
-        assertFalse(part12Tree.intersects(emptyTree));
-        assertTrue(part12Tree.intersects(wholeTree));
-        assertFalse(part12Tree.intersects(part11Tree));
-        assertTrue(part12Tree.intersects(part12Tree));
-        assertTrue(part12Tree.intersects(part21Tree));
-        assertTrue(part12Tree.intersects(complexTree1));
-        assertTrue(part12Tree.intersects(complexTree2));
-        assertTrue(part12Tree.intersects(complexTree3));
+        assertThat(part12Tree.intersects(emptyTree)).isFalse();
+        assertThat(part12Tree.intersects(wholeTree)).isTrue();
+        assertThat(part12Tree.intersects(part11Tree)).isFalse();
+        assertThat(part12Tree.intersects(part12Tree)).isTrue();
+        assertThat(part12Tree.intersects(part21Tree)).isTrue();
+        assertThat(part12Tree.intersects(complexTree1)).isTrue();
+        assertThat(part12Tree.intersects(complexTree2)).isTrue();
+        assertThat(part12Tree.intersects(complexTree3)).isTrue();
         
-        assertFalse(part21Tree.intersects(emptyTree));
-        assertTrue(part21Tree.intersects(wholeTree));
-        assertTrue(part21Tree.intersects(part11Tree));
-        assertTrue(part21Tree.intersects(part12Tree));
-        assertTrue(part21Tree.intersects(part21Tree));
-        assertTrue(part21Tree.intersects(complexTree1));
-        assertFalse(part21Tree.intersects(complexTree2));
-        assertTrue(part21Tree.intersects(complexTree3));
+        assertThat(part21Tree.intersects(emptyTree)).isFalse();
+        assertThat(part21Tree.intersects(wholeTree)).isTrue();
+        assertThat(part21Tree.intersects(part11Tree)).isTrue();
+        assertThat(part21Tree.intersects(part12Tree)).isTrue();
+        assertThat(part21Tree.intersects(part21Tree)).isTrue();
+        assertThat(part21Tree.intersects(complexTree1)).isTrue();
+        assertThat(part21Tree.intersects(complexTree2)).isFalse();
+        assertThat(part21Tree.intersects(complexTree3)).isTrue();
 
-        assertFalse(complexTree1.intersects(emptyTree));
-        assertTrue(complexTree1.intersects(wholeTree));
-        assertTrue(complexTree1.intersects(part11Tree));
-        assertTrue(complexTree1.intersects(part12Tree));
-        assertTrue(complexTree1.intersects(part21Tree));
-        assertTrue(complexTree1.intersects(complexTree1));
-        assertFalse(complexTree1.intersects(complexTree2));
-        assertTrue(complexTree1.intersects(complexTree3));
+        assertThat(complexTree1.intersects(emptyTree)).isFalse();
+        assertThat(complexTree1.intersects(wholeTree)).isTrue();
+        assertThat(complexTree1.intersects(part11Tree)).isTrue();
+        assertThat(complexTree1.intersects(part12Tree)).isTrue();
+        assertThat(complexTree1.intersects(part21Tree)).isTrue();
+        assertThat(complexTree1.intersects(complexTree1)).isTrue();
+        assertThat(complexTree1.intersects(complexTree2)).isFalse();
+        assertThat(complexTree1.intersects(complexTree3)).isTrue();
 
-        assertFalse(complexTree2.intersects(emptyTree));
-        assertTrue(complexTree2.intersects(wholeTree));
-        assertTrue(complexTree2.intersects(part11Tree));
-        assertTrue(complexTree2.intersects(part12Tree));
-        assertFalse(complexTree2.intersects(part21Tree));
-        assertFalse(complexTree2.intersects(complexTree1));
-        assertTrue(complexTree2.intersects(complexTree2));
-        assertFalse(complexTree2.intersects(complexTree3));
+        assertThat(complexTree2.intersects(emptyTree)).isFalse();
+        assertThat(complexTree2.intersects(wholeTree)).isTrue();
+        assertThat(complexTree2.intersects(part11Tree)).isTrue();
+        assertThat(complexTree2.intersects(part12Tree)).isTrue();
+        assertThat(complexTree2.intersects(part21Tree)).isFalse();
+        assertThat(complexTree2.intersects(complexTree1)).isFalse();
+        assertThat(complexTree2.intersects(complexTree2)).isTrue();
+        assertThat(complexTree2.intersects(complexTree3)).isFalse();
 
-        assertFalse(complexTree3.intersects(emptyTree));
-        assertTrue(complexTree3.intersects(wholeTree));
-        assertTrue(complexTree3.intersects(part11Tree));
-        assertTrue(complexTree3.intersects(part12Tree));
-        assertTrue(complexTree3.intersects(part21Tree));
-        assertTrue(complexTree3.intersects(complexTree1));
-        assertFalse(complexTree3.intersects(complexTree2));
-        assertTrue(complexTree3.intersects(complexTree3));
+        assertThat(complexTree3.intersects(emptyTree)).isFalse();
+        assertThat(complexTree3.intersects(wholeTree)).isTrue();
+        assertThat(complexTree3.intersects(part11Tree)).isTrue();
+        assertThat(complexTree3.intersects(part12Tree)).isTrue();
+        assertThat(complexTree3.intersects(part21Tree)).isTrue();
+        assertThat(complexTree3.intersects(complexTree1)).isTrue();
+        assertThat(complexTree3.intersects(complexTree2)).isFalse();
+        assertThat(complexTree3.intersects(complexTree3)).isTrue();
     }
 
     @Test
     public void testContains() {
-        assertTrue(emptyTree.contains(emptyTree));
-        assertFalse(emptyTree.contains(wholeTree));
-        assertFalse(emptyTree.contains(part11Tree));
-        assertFalse(emptyTree.contains(part12Tree));
-        assertFalse(emptyTree.contains(part21Tree));
-        assertFalse(emptyTree.contains(complexTree1));
-        assertFalse(emptyTree.contains(complexTree2));
-        assertFalse(emptyTree.contains(complexTree3));
+        assertThat(emptyTree.contains(emptyTree)).isTrue();
+        assertThat(emptyTree.contains(wholeTree)).isFalse();
+        assertThat(emptyTree.contains(part11Tree)).isFalse();
+        assertThat(emptyTree.contains(part12Tree)).isFalse();
+        assertThat(emptyTree.contains(part21Tree)).isFalse();
+        assertThat(emptyTree.contains(complexTree1)).isFalse();
+        assertThat(emptyTree.contains(complexTree2)).isFalse();
+        assertThat(emptyTree.contains(complexTree3)).isFalse();
         
-        assertTrue(wholeTree.contains(emptyTree));
-        assertTrue(wholeTree.contains(wholeTree));
-        assertTrue(wholeTree.contains(part11Tree));
-        assertTrue(wholeTree.contains(part12Tree));
-        assertTrue(wholeTree.contains(part21Tree));
-        assertTrue(wholeTree.contains(complexTree1));
-        assertTrue(wholeTree.contains(complexTree2));
-        assertTrue(wholeTree.contains(complexTree3));
+        assertThat(wholeTree.contains(emptyTree)).isTrue();
+        assertThat(wholeTree.contains(wholeTree)).isTrue();
+        assertThat(wholeTree.contains(part11Tree)).isTrue();
+        assertThat(wholeTree.contains(part12Tree)).isTrue();
+        assertThat(wholeTree.contains(part21Tree)).isTrue();
+        assertThat(wholeTree.contains(complexTree1)).isTrue();
+        assertThat(wholeTree.contains(complexTree2)).isTrue();
+        assertThat(wholeTree.contains(complexTree3)).isTrue();
         
-        assertTrue(part11Tree.contains(emptyTree));
-        assertFalse(part11Tree.contains(wholeTree));
-        assertTrue(part11Tree.contains(part11Tree));
-        assertFalse(part11Tree.contains(part12Tree));
-        assertFalse(part11Tree.contains(part21Tree));
-        assertFalse(part11Tree.contains(complexTree1));
-        assertFalse(part11Tree.contains(complexTree2));
-        assertFalse(part11Tree.contains(complexTree3));
+        assertThat(part11Tree.contains(emptyTree)).isTrue();
+        assertThat(part11Tree.contains(wholeTree)).isFalse();
+        assertThat(part11Tree.contains(part11Tree)).isTrue();
+        assertThat(part11Tree.contains(part12Tree)).isFalse();
+        assertThat(part11Tree.contains(part21Tree)).isFalse();
+        assertThat(part11Tree.contains(complexTree1)).isFalse();
+        assertThat(part11Tree.contains(complexTree2)).isFalse();
+        assertThat(part11Tree.contains(complexTree3)).isFalse();
         
-        assertTrue(part12Tree.contains(emptyTree));
-        assertFalse(part12Tree.contains(wholeTree));
-        assertFalse(part12Tree.contains(part11Tree));
-        assertTrue(part12Tree.contains(part12Tree));
-        assertFalse(part12Tree.contains(part21Tree));
-        assertFalse(part12Tree.contains(complexTree1));
-        assertFalse(part12Tree.contains(complexTree2));
-        assertFalse(part12Tree.contains(complexTree3));
+        assertThat(part12Tree.contains(emptyTree)).isTrue();
+        assertThat(part12Tree.contains(wholeTree)).isFalse();
+        assertThat(part12Tree.contains(part11Tree)).isFalse();
+        assertThat(part12Tree.contains(part12Tree)).isTrue();
+        assertThat(part12Tree.contains(part21Tree)).isFalse();
+        assertThat(part12Tree.contains(complexTree1)).isFalse();
+        assertThat(part12Tree.contains(complexTree2)).isFalse();
+        assertThat(part12Tree.contains(complexTree3)).isFalse();
         
-        assertTrue(part21Tree.contains(emptyTree));
-        assertFalse(part21Tree.contains(wholeTree));
-        assertFalse(part21Tree.contains(part11Tree));
-        assertFalse(part21Tree.contains(part12Tree));
-        assertTrue(part21Tree.contains(part21Tree));
-        assertTrue(part21Tree.contains(complexTree1));
-        assertFalse(part21Tree.contains(complexTree2));
-        assertFalse(part21Tree.contains(complexTree3));
+        assertThat(part21Tree.contains(emptyTree)).isTrue();
+        assertThat(part21Tree.contains(wholeTree)).isFalse();
+        assertThat(part21Tree.contains(part11Tree)).isFalse();
+        assertThat(part21Tree.contains(part12Tree)).isFalse();
+        assertThat(part21Tree.contains(part21Tree)).isTrue();
+        assertThat(part21Tree.contains(complexTree1)).isTrue();
+        assertThat(part21Tree.contains(complexTree2)).isFalse();
+        assertThat(part21Tree.contains(complexTree3)).isFalse();
 
-        assertTrue(complexTree1.contains(emptyTree));
-        assertFalse(complexTree1.contains(wholeTree));
-        assertFalse(complexTree1.contains(part11Tree));
-        assertFalse(complexTree1.contains(part12Tree));
-        assertFalse(complexTree1.contains(part21Tree));
-        assertTrue(complexTree1.contains(complexTree1));
-        assertFalse(complexTree1.contains(complexTree2));
-        assertFalse(complexTree1.contains(complexTree3));
+        assertThat(complexTree1.contains(emptyTree)).isTrue();
+        assertThat(complexTree1.contains(wholeTree)).isFalse();
+        assertThat(complexTree1.contains(part11Tree)).isFalse();
+        assertThat(complexTree1.contains(part12Tree)).isFalse();
+        assertThat(complexTree1.contains(part21Tree)).isFalse();
+        assertThat(complexTree1.contains(complexTree1)).isTrue();
+        assertThat(complexTree1.contains(complexTree2)).isFalse();
+        assertThat(complexTree1.contains(complexTree3)).isFalse();
 
-        assertTrue(complexTree2.contains(emptyTree));
-        assertFalse(complexTree2.contains(wholeTree));
-        assertFalse(complexTree2.contains(part11Tree));
-        assertFalse(complexTree2.contains(part12Tree));
-        assertFalse(complexTree2.contains(part21Tree));
-        assertFalse(complexTree2.contains(complexTree1));
-        assertTrue(complexTree2.contains(complexTree2));
-        assertFalse(complexTree2.contains(complexTree3));
+        assertThat(complexTree2.contains(emptyTree)).isTrue();
+        assertThat(complexTree2.contains(wholeTree)).isFalse();
+        assertThat(complexTree2.contains(part11Tree)).isFalse();
+        assertThat(complexTree2.contains(part12Tree)).isFalse();
+        assertThat(complexTree2.contains(part21Tree)).isFalse();
+        assertThat(complexTree2.contains(complexTree1)).isFalse();
+        assertThat(complexTree2.contains(complexTree2)).isTrue();
+        assertThat(complexTree2.contains(complexTree3)).isFalse();
 
-        assertTrue(complexTree3.contains(emptyTree));
-        assertFalse(complexTree3.contains(wholeTree));
-        assertFalse(complexTree3.contains(part11Tree));
-        assertFalse(complexTree3.contains(part12Tree));
-        assertFalse(complexTree3.contains(part21Tree));
-        assertTrue(complexTree3.contains(complexTree1));
-        assertFalse(complexTree3.contains(complexTree2));
-        assertTrue(complexTree3.contains(complexTree3));
+        assertThat(complexTree3.contains(emptyTree)).isTrue();
+        assertThat(complexTree3.contains(wholeTree)).isFalse();
+        assertThat(complexTree3.contains(part11Tree)).isFalse();
+        assertThat(complexTree3.contains(part12Tree)).isFalse();
+        assertThat(complexTree3.contains(part21Tree)).isFalse();
+        assertThat(complexTree3.contains(complexTree1)).isTrue();
+        assertThat(complexTree3.contains(complexTree2)).isFalse();
+        assertThat(complexTree3.contains(complexTree3)).isTrue();
     }
 
     @Test
     public void testNegate() {
-        assertTrue(negated(emptyTree).isWhole());
-        assertTrue(negated(wholeTree).isEmpty());
-        assertEquals(union(part(splittingPart12),part(splittingPart13)), negated(part11Tree));
-        assertEquals(
-            union(part(splittingPart11), part(splittingPart13)),
-            negated(part12Tree)
+        assertThat(negated(emptyTree).isWhole()).isTrue();
+        assertThat(negated(wholeTree).isEmpty()).isTrue();
+        assertThat(negated(part11Tree)).isEqualTo(union(part(splittingPart12), part(splittingPart13)));
+        assertThat(negated(part12Tree)).isEqualTo(union(part(splittingPart11), part(splittingPart13)));
+        assertThat(negated(part21Tree)).isEqualTo(part(splittingPart22));
+        assertThat(negated(complexTree1)).isEqualTo(
+            union(difference(part(splittingPart21), part(splittingPart31)), part(splittingPart22))
         );
-        assertEquals(part(splittingPart22), negated(part21Tree));
-        assertEquals(
-            union(difference(part(splittingPart21), part(splittingPart31)), part(splittingPart22)),
-            negated(complexTree1)
+        assertThat(negated(complexTree2)).isEqualTo(
+            union(difference(part(splittingPart22), part(splittingPart32)), part(splittingPart21))
         );
-        assertEquals(
-            union(difference(part(splittingPart22), part(splittingPart32)), part(splittingPart21)),
-            negated(complexTree2)
-        );
-        assertEquals(
+        assertThat(negated(complexTree3)).isEqualTo(
             union(
                 difference(whole(), part(splittingPart31)),
                 difference(part(splittingPart22), part(splittingPart11))
-            ),
-            negated(complexTree3)
+            )
         );
     }
 
     @Test
     public void testUnion() {
-        assertEquals(empty(), union(emptyTree, emptyTree));
-        assertEquals(whole(), union(emptyTree, wholeTree));
-        assertEquals(whole(), union(part21Tree, part(splittingPart22)));
-        assertEquals(complexTree3, union(complexTree1, complexTree3));
-        assertEquals(
+        assertThat(union(emptyTree, emptyTree)).isEqualTo(empty());
+        assertThat(union(emptyTree, wholeTree)).isEqualTo(whole());
+        assertThat(union(part21Tree, part(splittingPart22))).isEqualTo(whole());
+        assertThat(union(complexTree1, complexTree3)).isEqualTo(complexTree3);
+        assertThat(union(complexTree2, complexTree3)).isEqualTo(
             union(
                 intersection(part(splittingPart11), part(splittingPart21), part(splittingPart31)),
                 intersection(part(splittingPart11), part(splittingPart22), part(splittingPart31)),
@@ -312,58 +313,51 @@ public class ResourceSubsetIntersectionTreeTest {
                 intersection(part(splittingPart12), part(splittingPart22), part(splittingPart32)),
                 intersection(part(splittingPart13), part(splittingPart21), part(splittingPart31)),
                 intersection(part(splittingPart13), part(splittingPart22), part(splittingPart32))
-            ),
-            union(complexTree2, complexTree3)
+            )
         );
     }
 
     @Test
     public void testIntersection() {
-        assertEquals(empty(), intersection(emptyTree, emptyTree));
-        assertEquals(empty(), intersection(emptyTree, wholeTree));
-        assertEquals(
-            intersection(part(splittingPart12), part(splittingPart21), part(splittingPart31)),
-            intersection(part12Tree, complexTree3)
+        assertThat(intersection(emptyTree, emptyTree)).isEqualTo(empty());
+        assertThat(intersection(emptyTree, wholeTree)).isEqualTo(empty());
+        assertThat(intersection(part12Tree, complexTree3)).isEqualTo(
+            intersection(part(splittingPart12), part(splittingPart21), part(splittingPart31))
         );
     }
 
     @Test
     public void testDifference() {
-        assertEquals(empty(), difference(emptyTree, emptyTree));
-        assertEquals(empty(), difference(emptyTree, wholeTree));
-        assertEquals(part11Tree, difference(part11Tree, part12Tree));
-        assertEquals(
-            intersection(part11Tree, part(splittingPart22)),
-            difference(part11Tree, part21Tree)
+        assertThat(difference(emptyTree, emptyTree)).isEqualTo(empty());
+        assertThat(difference(emptyTree, wholeTree)).isEqualTo(empty());
+        assertThat(difference(part11Tree, part12Tree)).isEqualTo(part11Tree);
+        assertThat(difference(part11Tree, part21Tree)).isEqualTo(
+            intersection(part11Tree, part(splittingPart22))
         );
-        assertEquals(
+        assertThat(difference(wholeTree, complexTree2)).isEqualTo(
             union(
                 part(splittingPart21),
                 intersection(part(splittingPart22), part(splittingPart31)),
                 intersection(part(splittingPart22), part(splittingPart33))
-            ),
-            difference(wholeTree, complexTree2)
+            )
         );
     }
     
     @Test
     public void testSymmetricDifference() {
-        assertEquals(empty(), symmetricDifference(emptyTree, emptyTree));
-        assertEquals(whole(), symmetricDifference(emptyTree, wholeTree));
-        assertEquals(part11Tree, symmetricDifference(emptyTree, part11Tree));
-        assertEquals(complexTree3, symmetricDifference(emptyTree, complexTree3));
-        assertEquals(whole(), symmetricDifference(wholeTree, emptyTree));
-        assertEquals(
-            difference(union(part11Tree, part12Tree), intersection(part11Tree, part12Tree)),
-            symmetricDifference(part11Tree, part12Tree)
+        assertThat(symmetricDifference(emptyTree, emptyTree)).isEqualTo(empty());
+        assertThat(symmetricDifference(emptyTree, wholeTree)).isEqualTo(whole());
+        assertThat(symmetricDifference(emptyTree, part11Tree)).isEqualTo(part11Tree);
+        assertThat(symmetricDifference(emptyTree, complexTree3)).isEqualTo(complexTree3);
+        assertThat(symmetricDifference(wholeTree, emptyTree)).isEqualTo(whole());
+        assertThat(symmetricDifference(part11Tree, part12Tree)).isEqualTo(
+            difference(union(part11Tree, part12Tree), intersection(part11Tree, part12Tree))
         );
-        assertEquals(
-            union(complexTree3, complexTree2),
-            symmetricDifference(complexTree3, complexTree2)
+        assertThat(symmetricDifference(complexTree3, complexTree2)).isEqualTo(
+            union(complexTree3, complexTree2)
         );
-        assertEquals(
-            intersection(part(splittingPart11), part(splittingPart22), part(splittingPart31)),
-            symmetricDifference(complexTree3, complexTree1)
+        assertThat(symmetricDifference(complexTree3, complexTree1)).isEqualTo(
+            intersection(part(splittingPart11), part(splittingPart22), part(splittingPart31))
         );
     }
     
@@ -415,13 +409,6 @@ public class ResourceSubsetIntersectionTreeTest {
         );
     }
     
-    private boolean haveSameLeafs(
-        ResourceSubsetIntersectionTree tree1,
-        ResourceSubsetIntersectionTree tree2
-    ) {
-        return iterableToSet(tree1.getLeafIterable()).equals(iterableToSet(tree2.getLeafIterable()));
-    }
-
     private static ResourceSubsetIntersectionTree empty() {
         return new ResourceSubsetIntersectionTree(false);
     }
@@ -484,25 +471,8 @@ public class ResourceSubsetIntersectionTreeTest {
         return result;
     }
 
-    private static <T> Set<T> asSet(Class<T> clazz) {
-        return new HashSet<T>();
-    }
-    
-    @SafeVarargs
-    private static <T> Set<T> asSet(T... items) {
-        Set<T> result = new HashSet<T>();
-        for (T item : items) {
-            result.add(item);
-        }
-        return result;
-    }
-    
-    private static <T> Set<T> iterableToSet(Iterable<T> iterable) {
-        Set<T> result = new HashSet<T>();
-        for (T item : iterable) {
-            result.add(item);
-        }
-        return result;
+    private static Set<Resource.Splitting.Part> partSet(Resource.Splitting.Part... parts) {
+        return new HashSet<Resource.Splitting.Part>(Arrays.asList(parts));
     }
     
 }
