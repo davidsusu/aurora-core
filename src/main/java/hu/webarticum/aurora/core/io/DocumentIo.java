@@ -54,7 +54,7 @@ public interface DocumentIo extends Labeled {
         public ParseException(String message) {
             super(message);
         }
-        
+
     }
     
 }

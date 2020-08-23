@@ -66,7 +66,7 @@ public class BlockIntersectionTable implements Iterable<BlockIntersectionTable.E
 
     public static BlockIntersectionTable fromEntries(Entry... entryArray) {
         List<List<Entry>> entryLists = new ArrayList<List<Entry>>(entryArray.length);
-        for (int i=0; i<entryArray.length; i++) {
+        for (int i = 0; i < entryArray.length; i++) {
             entryLists.add(new ArrayList<Entry>(Arrays.asList(entryArray[i])));
         }
         BlockIntersectionTable table = new BlockIntersectionTable();

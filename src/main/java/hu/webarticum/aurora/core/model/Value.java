@@ -448,7 +448,7 @@ public class Value implements Serializable {
     }
     
     public ValueMap getAsMap() {
-        if (type== Type.MAP) {
+        if (type == Type.MAP) {
             return (ValueMap)value;
         } else {
             return new ValueMap();

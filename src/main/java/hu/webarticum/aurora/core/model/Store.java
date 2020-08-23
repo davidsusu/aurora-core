@@ -1,5 +1,7 @@
 package hu.webarticum.aurora.core.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +25,7 @@ public class Store<T> implements Iterable<T>, Serializable {
     /** @serial */
     protected final Map<T, String> itemIdMap; // NOSONAR serial
     
-    /** @serial */
-    protected final List<StoreListener<T>> listeners = new ArrayList<StoreListener<T>>(1); // NOSONAR serial
+    protected transient List<StoreListener<T>> listeners = new ArrayList<StoreListener<T>>(1);
     
     
     public enum REGISTER_MODE {
@@ -348,8 +349,13 @@ public class Store<T> implements Iterable<T>, Serializable {
         return result;
     }
     
+    private void readObject(ObjectInputStream serialized) throws ClassNotFoundException, IOException {
+        serialized.defaultReadObject();
+        listeners = new ArrayList<Store.StoreListener<T>>();
+    }
     
-    public interface StoreListener<T> extends EventListener, Serializable {
+    
+    public interface StoreListener<T> extends EventListener {
 
         public void registered(RegisterEvent<T> registerEvent);
 

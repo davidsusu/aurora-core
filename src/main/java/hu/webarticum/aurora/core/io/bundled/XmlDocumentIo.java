@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -17,11 +18,16 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import hu.webarticum.aurora.core.io.AbstractDocumentIo;
 import hu.webarticum.aurora.core.model.Activity;
@@ -79,16 +85,41 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
     @Override
     public Document load(InputStream inputStream) throws IOException, ParseException {
-        DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance(); // NOSONAR protected below
-        xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        DocumentBuilderFactory xmlFactory = createXmlBuilderFactory();
+        DocumentBuilder documentBuilder;
+        try {
+            documentBuilder = xmlFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new IOException("Can not create XML builder", e);
+        }
         org.w3c.dom.Document xmlDocument;
         try {
-            xmlDocument = xmlFactory.newDocumentBuilder().parse(inputStream);
-        } catch (Exception e) {
-            throw new IOException(e.getMessage(), e);
+            xmlDocument = documentBuilder.parse(inputStream);
+        } catch (SAXException e) {
+            throw new IOException("Can not process XML", e);
         }
         return new XmlProcessor(xmlDocument).process();
+    }
+    
+    private DocumentBuilderFactory createXmlBuilderFactory() throws IOException {
+        try {
+            return createXmlBuilderFactorySax();
+        } catch (SAXException e) {
+            throw new IOException("Can not create XML builder factory", e);
+        }
+    }
+
+    private DocumentBuilderFactory createXmlBuilderFactorySax() throws IOException, SAXException {
+        DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
+        xmlFactory.setValidating(false);
+        xmlFactory.setNamespaceAware(true);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Source schemaSource = new StreamSource(getClass().getClassLoader().getResourceAsStream(
+            "hu/webarticum/aurora/core/io/xsd/document.xsd"
+        ));
+        Schema schema = schemaFactory.newSchema(schemaSource);
+        xmlFactory.setSchema(schema);
+        return xmlFactory;
     }
     
     
@@ -128,9 +159,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             
             resourceSplittingPartNameMap = new HashMap<Resource, Map<Resource.Splitting.Part, String>>();
             
-            DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance(); // NOSONAR protected below
-            xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            xmlFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            DocumentBuilderFactory xmlFactory = createXmlBuilderFactory();
             
             try {
                 xmlDocument = xmlFactory.newDocumentBuilder().newDocument();
@@ -309,7 +338,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
         protected Element createAspectElement(Aspect aspect, String tagName, String id) {
             Element aspectElement = xmlDocument.createElement(tagName);
-            if (id!=null) {
+            if (id != null) {
                 aspectElement.setAttribute("id", id);
             }
             aspectElement.setAttribute("label", aspect.getLabel());
@@ -324,7 +353,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             Element aspectTimingSetsElement = xmlDocument.createElement("timingSets");
             Aspect.TimingSetManager aspectTimingSetManager = aspect.getTimingSetManager();
             TimingSet aspectDefaultTimingSet = aspectTimingSetManager.getDefaultTimingSet();
-            if (aspectDefaultTimingSet!=null) {
+            if (aspectDefaultTimingSet != null) {
                 Element aspectDefaultTimingSetElement = xmlDocument.createElement("timingSetRef");
                 String aspectDefaultTimingSetId = timingSetStore.register(aspectDefaultTimingSet, Store.REGISTER_MODE.INSERT_AUTO);
                 aspectDefaultTimingSetElement.setAttribute("timingSetId", aspectDefaultTimingSetId);
@@ -343,14 +372,14 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 
                 aspectTimingSetsElement.appendChild(aspectPeriodTimingSetElement);
             }
-            if (aspectDefaultTimingSet!=null || !aspectPeriodTimingSets.isEmpty()) {
+            if (aspectDefaultTimingSet != null || !aspectPeriodTimingSets.isEmpty()) {
                 aspectElement.appendChild(aspectTimingSetsElement);
             }
 
             Element aspectTimeLimitsElement = xmlDocument.createElement("timeLimits");
             Aspect.TimeLimitManager aspectTimeLimitManager = aspect.getTimeLimitManager();
             TimeLimit aspectDefaultTimeLimit = aspectTimeLimitManager.getDefaultTimeLimit();
-            if (aspectDefaultTimeLimit!=null) {
+            if (aspectDefaultTimeLimit != null) {
                 Element aspectDefaultTimeLimitElement = createTimeLimitElement(aspectDefaultTimeLimit, null);
                 aspectTimeLimitsElement.appendChild(aspectDefaultTimeLimitElement);
             }
@@ -361,7 +390,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
             if (!aspectPeriodTimeLimits.isEmpty() ||
                 (
-                    aspectDefaultTimeLimit!=null
+                    aspectDefaultTimeLimit != null
                     && (aspect.isTimeLimitEnabled() || !aspectDefaultTimeLimit.isAlways())
                 )
             ) {
@@ -377,7 +406,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         protected Element createTimingSetElement(TimingSet timingSet, String id) {
             Element timingSetElement = xmlDocument.createElement("timingSet");
-            if (id!=null) {
+            if (id != null) {
                 timingSetElement.setAttribute("id", id);
             }
             timingSetElement.setAttribute("label", timingSet.getLabel());
@@ -396,7 +425,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         protected Element createTimeLimitElement(TimeLimit timeLimit, Period period) {
             Element timeLimitElement = xmlDocument.createElement("timeLimit");
-            if (period!=null) {
+            if (period != null) {
                 timeLimitElement.setAttribute("period", periodStore.register(period, Store.REGISTER_MODE.INSERT_AUTO));
             }
             // FIXME: dedicated elements?
@@ -417,7 +446,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         
         protected Element createBlockElement(Block block, String id) {
             Element blockElement = xmlDocument.createElement("block");
-            if (id!=null) {
+            if (id != null) {
                 blockElement.setAttribute("id", id);
             }
             blockElement.setAttribute("label", block.getLabel());
@@ -575,7 +604,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 case PERIOD:
                     Period period = value.getAsPeriod();
                     String periodId = periodStore.register(period, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (periodId==null) {
+                    if (periodId == null) {
                         resultElement = createPeriodElement(period);
                     } else {
                         resultElement = xmlDocument.createElement("periodRef");
@@ -585,7 +614,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 case TIMINGSET:
                     TimingSet timingSet = value.getAsTimingSet();
                     String timingSetId = timingSetStore.register(timingSet, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (timingSetId==null) {
+                    if (timingSetId == null) {
                         resultElement = createTimingSetElement(timingSet);
                     } else {
                         resultElement = xmlDocument.createElement("timingSetRef");
@@ -599,7 +628,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 case TAG:
                     Tag tag = value.getAsTag();
                     String tagId = tagStore.register(tag, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (tagId==null) {
+                    if (tagId == null) {
                         resultElement = createTagElement(tag);
                     } else {
                         resultElement = xmlDocument.createElement("tagRef");
@@ -609,7 +638,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 case RESOURCE:
                     Resource resource = value.getAsResource();
                     String resourceId = resourceStore.register(resource, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (resourceId==null) {
+                    if (resourceId == null) {
                         resultElement = createResourceElement(resource);
                     } else {
                         resultElement = xmlDocument.createElement("resourceRef");
@@ -620,7 +649,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                     ResourceSubset resourceSubset = value.getAsResourceSubset();
                     Resource resourceSubsetResource = resourceSubset.getResource();
                     String resourceSubsetResourceId = resourceStore.register(resourceSubsetResource, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (resourceSubsetResourceId==null) {
+                    if (resourceSubsetResourceId == null) {
                         resultElement = createResourceElement(resourceSubsetResource);
                     } else {
                         resultElement = xmlDocument.createElement("resourceRef");
@@ -632,7 +661,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                 case BLOCK:
                     Block block = value.getAsBlock();
                     String blockId = blockStore.register(block, Store.REGISTER_MODE.INSERT_STRICT);
-                    if (blockId==null) {
+                    if (blockId == null) {
                         resultElement = createBlockElement(block);
                     } else {
                         resultElement = xmlDocument.createElement("blockRef");
@@ -673,7 +702,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             resourceSplittingPartMap = new HashMap<Resource, Map<String, Resource.Splitting.Part>>();
             
             Element headerElement = findFirstByTagName(documentElement, "header");
-            if (headerElement!=null) {
+            if (headerElement != null) {
                 for (Element infoElement: findAllByTagName(headerElement, "info")) {
                     String infoName = infoElement.getAttribute("name");
                     String infoValue = infoElement.getAttribute("value");
@@ -686,7 +715,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
             
             Element periodsElement = findFirstByTagName(documentElement, "periods");
-            if (periodsElement!=null) {
+            if (periodsElement != null) {
                 for (Element periodElement: findAllByTagName(periodsElement, "period")) {
                     processPeriodElement(periodElement, true);
                 }
@@ -695,7 +724,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
             // XXX for compatibility
             Element cyclesElement = findFirstByTagName(documentElement, "cycles");
-            if (cyclesElement!=null) {
+            if (cyclesElement != null) {
                 for (Element cycleElement: findAllByTagName(cyclesElement, "cycle")) {
                     processPeriodElement(cycleElement, true);
                 }
@@ -703,7 +732,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
             
             Element timingSetsElement = findFirstByTagName(documentElement, "timingSets");
-            if (timingSetsElement!=null) {
+            if (timingSetsElement != null) {
                 for (Element timingSetElement: findAllByTagName(timingSetsElement, "timingSet")) {
                     processTimingSetElement(timingSetElement, true);
                 }
@@ -711,7 +740,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
 
             Element tagsElement = findFirstByTagName(documentElement, "tags");
-            if (tagsElement!=null) {
+            if (tagsElement != null) {
                 for (Element tagElement: findAllByTagName(tagsElement, "tag")) {
                     processTagElement(tagElement, true);
                 }
@@ -719,7 +748,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
 
             Element resourcesElement = findFirstByTagName(documentElement, "resources");
-            if (resourcesElement!=null) {
+            if (resourcesElement != null) {
                 for (Element resourceElement: findAllByTagName(resourcesElement, "resource")) {
                     processResourceElement(resourceElement, true);
                 }
@@ -727,7 +756,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
 
             Element blocksElement = findFirstByTagName(documentElement, "blocks");
-            if (blocksElement!=null) {
+            if (blocksElement != null) {
                 for (Element blockElement: findAllByTagName(blocksElement, "block")) {
                     processBlockElement(blockElement, true);
                 }
@@ -735,7 +764,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
 
             Element boardsElement = findFirstByTagName(documentElement, "boards");
-            if (boardsElement!=null) {
+            if (boardsElement != null) {
                 for (Element boardElement: findAllByTagName(boardsElement, "board")) {
                     processBoardElement(boardElement, true);
                 }
@@ -744,7 +773,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
 
             // XXX for compatibility
             Element timeTablesElement = findFirstByTagName(documentElement, "timeTables");
-            if (timeTablesElement!=null) {
+            if (timeTablesElement != null) {
                 for (Element timeTableElement: findAllByTagName(timeTablesElement, "timeTable")) {
                     processBoardElement(timeTableElement, true);
                 }
@@ -752,9 +781,9 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             }
 
             Element extraDataElement = findFirstByTagName(documentElement, "extraData");
-            if (extraDataElement!=null) {
+            if (extraDataElement != null) {
                 Element extraDataValueElement = findFirstByTagName(extraDataElement, "*");
-                if (extraDataValueElement!=null) {
+                if (extraDataValueElement != null) {
                     Value extraData = processValueElement(extraDataValueElement);
                     document.getExtraData().getAccess().set(extraData);
                 }
@@ -854,7 +883,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             resource.setEmail(resourceElement.getAttribute("email"));
             
             Element splittingsElement = findFirstByTagName(resourceElement, "splittings");
-            if (splittingsElement!=null) {
+            if (splittingsElement != null) {
                 Resource.SplittingManager splittingManager = resource.getSplittingManager();
                 Map<String, Resource.Splitting.Part> splittingPartMap = new HashMap<String, Resource.Splitting.Part>();
                 for (Element splittingElement: findAllByTagName(splittingsElement, "splitting")) {
@@ -895,7 +924,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             aspect.setColor(new Color(aspectElement.getAttribute("color")));
             aspect.setTimingSetEnabled(aspectElement.getAttribute("timingSetEnabled").equals("1")); // TODO: or "true"
             Element timingSetsElement = findFirstByTagName(aspectElement, "timingSets");
-            if (timingSetsElement!=null) {
+            if (timingSetsElement != null) {
                 Aspect.TimingSetManager timingSetManager = aspect.getTimingSetManager();
                 for (Element timingSetElement: findAllByTagName(timingSetsElement, "timingSet")) {
                     TimingSet timingSet = processTimingSetElement(timingSetElement, true);
@@ -910,14 +939,14 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                         timingSetManager.setDefaultTimingSet(timingSet);
                     } else {
                         Period period = periodStore.get(periodId);
-                        if (period!=null) {
+                        if (period != null) {
                             timingSetManager.setPeriodTimingSet(period, timingSet);
                         }
                     }
                 }
                 for (Element timingSetRefElement: findAllByTagName(timingSetsElement, "timingSetRef")) {
                     TimingSet timingSet = timingSetStore.get(timingSetRefElement.getAttribute("timingSetId"));
-                    if (timingSet!=null) {
+                    if (timingSet != null) {
                         String periodId = timingSetRefElement.getAttribute("periodId");
 
                         // XXX for compatibility
@@ -929,7 +958,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                             timingSetManager.setDefaultTimingSet(timingSet);
                         } else {
                             Period period = periodStore.get(periodId);
-                            if (period!=null) {
+                            if (period != null) {
                                 timingSetManager.setPeriodTimingSet(period, timingSet);
                             }
                         }
@@ -939,11 +968,11 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             
             aspect.setTimeLimitEnabled(aspectElement.getAttribute("timeLimitEnabled").equals("1")); // TODO: or "true"
             Element timeLimitsElement = findFirstByTagName(aspectElement, "timeLimits");
-            if (timeLimitsElement!=null) {
+            if (timeLimitsElement != null) {
                 Aspect.TimeLimitManager timeLimitManager = aspect.getTimeLimitManager();
                 for (Element timeLimitElement: findAllByTagName(timeLimitsElement, "timeLimit")) {
                     TimeLimit timeLimit = processTimeLimitElement(timeLimitElement);
-                    if (timeLimit!=null) {
+                    if (timeLimit != null) {
                         String periodId = timeLimitElement.getAttribute("periodId");
 
                         // XXX for compatibility
@@ -955,7 +984,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                             timeLimitManager.setDefaultTimeLimit(timeLimit);
                         } else {
                             Period period = periodStore.get(periodId);
-                            if (period!=null) {
+                            if (period != null) {
                                 timeLimitManager.setPeriodTimeLimit(period, timeLimit);
                             }
                         }
@@ -1015,14 +1044,14 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             List<Period> periods = new ArrayList<Period>();
             for (Element periodElement: findAllByTagName(activityElement, "periodRef")) {
                 Period period = periodStore.get(periodElement.getAttribute("periodId"));
-                if (period!=null) {
+                if (period != null) {
                     periods.add(period);
                 }
             }
             // XXX for compatibility
             for (Element cycleElement: findAllByTagName(activityElement, "cycleRef")) {
                 Period period = periodStore.get(cycleElement.getAttribute("cycleId"));
-                if (period!=null) {
+                if (period != null) {
                     periods.add(period);
                 }
             }
@@ -1034,7 +1063,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             activity.setLabel(activityElement.getAttribute("label"));
             for (Element tagElement: findAllByTagName(activityElement, "tagRef")) {
                 Tag tag = tagStore.get(tagElement.getAttribute("tagId"));
-                if (tag!=null) {
+                if (tag != null) {
                     tagManager.add(tag);
                 }
             }
@@ -1042,13 +1071,13 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             Activity.ResourceManager resourceManager = activity.getResourceManager();
             for (Element resourceElement: findAllByTagName(activityElement, "resourceRef")) {
                 Resource resource = resourceStore.get(resourceElement.getAttribute("resourceId"));
-                if (resource!=null) {
+                if (resource != null) {
                     Element subsetElement = findFirstByTagName(resourceElement, "subset");
-                    if (subsetElement==null) {
+                    if (subsetElement == null) {
                         resourceManager.add(resource);
                     } else {
                         ResourceSubset resourceSubset = processResourceSubsetElement(subsetElement, resource);
-                        if (resourceSubset!=null) {
+                        if (resourceSubset != null) {
                             resourceManager.add(resourceSubset);
                         }
                     }
@@ -1066,7 +1095,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             List<ResourceSubset> children = new ArrayList<ResourceSubset>();
             for (Element childSubsetElement: findAllByTagName(resourceSubsetElement, "subset")) {
                 ResourceSubset child = processResourceSubsetElement(childSubsetElement, resource);
-                if (child!=null) {
+                if (child != null) {
                     children.add(child);
                 }
             }
@@ -1077,10 +1106,10 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             if (type.equals("part")) {
                 String partName = resourceSubsetElement.getAttribute("partName");
                 Resource.Splitting.Part splittingPart = null;
-                if (splittingPartMap!=null && !partName.isEmpty()) {
+                if (splittingPartMap != null && !partName.isEmpty()) {
                     splittingPart = splittingPartMap.get(partName);
                 }
-                if (splittingPart!=null) {
+                if (splittingPart != null) {
                     resourceSubset = new ResourceSubset.SplittingPart(splittingPart);
                 }
             } else if (type.equals("union")) {
@@ -1092,7 +1121,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             } else if (type.equals("symmetricDifference")) {
                 resourceSubset = new ResourceSubset.SymmetricDifference(children);
             } else if (type.equals("inverse")) {
-                if (firstChild!=null) {
+                if (firstChild != null) {
                     resourceSubset = new ResourceSubset.Inverse(firstChild);
                 }
             } else if (type.equals("whole")) {
@@ -1109,7 +1138,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             for (Element entryElement: findAllByTagName(boardElement, "entry")) {
                 Block block = blockStore.get(entryElement.getAttribute("blockId"));
                 Time time = new Time(entryElement.getAttribute("time"));
-                if (block!=null) {
+                if (block != null) {
                     board.add(block, time);
                 }
             }
@@ -1128,7 +1157,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         }
         
         public Value processValueElement(Element valueElement) {
-            if (valueElement==null) {
+            if (valueElement == null) {
                 return new Value(Value.Type.NULL);
             }
 
@@ -1169,16 +1198,16 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                     Value keyValue = new Value(Value.Type.NULL);
                     Value subValue = new Value(Value.Type.NULL);
                     Element keyWrapperElement = findFirstByTagName(entryElement, "key");
-                    if (keyWrapperElement!=null) {
+                    if (keyWrapperElement != null) {
                         Element keyElement = findFirstByTagName(keyWrapperElement, "*");
-                        if (keyElement!=null) {
+                        if (keyElement != null) {
                             keyValue = processValueElement(keyElement);
                         }
                     }
                     Element subValueWrapperElement = findFirstByTagName(entryElement, "value");
-                    if (subValueWrapperElement!=null) {
+                    if (subValueWrapperElement != null) {
                         Element subValueElement = findFirstByTagName(subValueWrapperElement, "*");
-                        if (subValueElement!=null) {
+                        if (subValueElement != null) {
                             subValue = processValueElement(subValueElement);
                         }
                     }
@@ -1288,15 +1317,17 @@ public class XmlDocumentIo extends AbstractDocumentIo {
         protected Number getNumberValue(String valueStr) {
             Number result = Integer.valueOf(0);
             if (!valueStr.isEmpty()) {
-                if (valueStr.indexOf('.')==(-1)) {
+                if (valueStr.indexOf('.') == -1) {
                     try {
                         result = Long.parseLong(valueStr);
                     } catch (NumberFormatException e) {
+                        // zero fill be used
                     }
                 } else {
                     try {
                         result = Double.parseDouble(valueStr);
                     } catch (NumberFormatException e) {
+                        // zero fill be used
                     }
                 }
             }
@@ -1307,9 +1338,9 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             boolean matchAll = (tagName.equals("*"));
             NodeList nodeList = element.getChildNodes();
             int size = nodeList.getLength();
-            for (int i=0; i<size; i++) {
+            for (int i = 0; i < size; i++) {
                 Node childNode = nodeList.item(i);
-                if (childNode.getNodeType()==Node.ELEMENT_NODE) {
+                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element childElement = (Element)childNode;
                     if (matchAll || childElement.getTagName().equals(tagName)) {
                         return childElement;
@@ -1324,9 +1355,9 @@ public class XmlDocumentIo extends AbstractDocumentIo {
             boolean matchAll = (tagName.equals("*"));
             NodeList nodeList = element.getChildNodes();
             int size = nodeList.getLength();
-            for (int i=0; i<size; i++) {
+            for (int i = 0; i < size; i++) {
                 Node childNode = nodeList.item(i);
-                if (childNode.getNodeType()==Node.ELEMENT_NODE) {
+                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element childElement = (Element)childNode;
                     if (matchAll || childElement.getTagName().equals(tagName)) {
                         elements.add(childElement);
