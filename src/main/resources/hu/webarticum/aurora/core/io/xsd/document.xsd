@@ -264,6 +264,7 @@
     <xs:attribute name="label" type="xs:string" use="required" />
     <xs:attribute name="acronym" type="xs:string" />
     <xs:attribute name="color" type="color" />
+    <xs:attribute name="email" type="xs:string" />
     <xs:attribute name="quantity" type="xs:positiveInteger" />
     <xs:attribute name="timeLimitEnabled" type="xs:boolean" />
     <xs:attribute name="timingSetEnabled" type="xs:boolean" />
