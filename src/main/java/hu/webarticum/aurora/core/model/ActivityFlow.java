@@ -23,7 +23,7 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
     
     private ArrayList<Entry> entries;
 
-    private boolean sorted = true;
+    private boolean sorted = false;
     
     
     public ActivityFlow() {
