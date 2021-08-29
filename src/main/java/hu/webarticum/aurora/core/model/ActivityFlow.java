@@ -23,19 +23,20 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
     
     private ArrayList<Entry> entries;
 
-    private boolean sorted = false;
+    private boolean sorted;
     
     
     public ActivityFlow() {
-        this.entries = new ArrayList<Entry>();
+        this(new ArrayList<Entry>(), true);
     }
 
-    private ActivityFlow(Collection<Entry> entries) {
-        this.entries = new ArrayList<Entry>(entries);
+    public ActivityFlow(Collection<Entry> entries) {
+        this(new ArrayList<Entry>(entries), false);
     }
-
-    private ActivityFlow(ArrayList<Entry> entries) {
+    
+    private ActivityFlow(ArrayList<Entry> entries, boolean sorted) {
         this.entries = entries;
+        this.sorted = sorted;
     }
 
     
@@ -98,7 +99,7 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
                 newEntries.add(entry);
             }
         }
-        return new ActivityFlow(newEntries);
+        return new ActivityFlow(newEntries, false);
     }
 
     public Time getStartTime() {
@@ -136,12 +137,16 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
 
     public ActivityFlow getLimited(TimeLimit limit) {
         sort();
-        return new ActivityFlow(limit.limitSortedIntervals(entries));
+        return new ActivityFlow(new ArrayList<ActivityFlow.Entry>(
+            limit.limitSortedIntervals(entries)
+        ), true);
     }
 
     public ActivityFlow getIntersecting(TimeLimit limit) {
         sort();
-        return new ActivityFlow(limit.limitIntersectingSortedIntervals(entries));
+        return new ActivityFlow(new ArrayList<ActivityFlow.Entry>(
+            limit.limitIntersectingSortedIntervals(entries)
+        ), true);
     }
     
     public ActivityFlow getThinned(Period period) {
@@ -157,7 +162,7 @@ public class ActivityFlow implements Iterable<ActivityFlow.Entry>, Serializable 
                 newEntries.add(new Entry(entry.getActivity(), entry.getInterval(), commonPeriods));
             }
         }
-        return new ActivityFlow(newEntries);
+        return new ActivityFlow(newEntries, false);
     }
 
     @Override
