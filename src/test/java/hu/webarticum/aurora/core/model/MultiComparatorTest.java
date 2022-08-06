@@ -8,13 +8,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
-public class MultiComparatorTest {
+class MultiComparatorTest {
 
     @Test
-    public void testSort() {
+    void testSort() {
         TreeSet<String> strings = new TreeSet<String>(new MultiComparator<String>(new Comparator<String>() {
 
             @Override
@@ -42,7 +42,7 @@ public class MultiComparatorTest {
     }
 
     @Test
-    public void testSortStrict() {
+    void testSortStrict() {
         TreeSet<String> strings = new TreeSet<String>(new MultiComparator<String>(new Comparator<String>() {
 
             @Override

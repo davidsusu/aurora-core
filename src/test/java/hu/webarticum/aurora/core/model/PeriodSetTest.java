@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class PeriodSetTest {
+class PeriodSetTest {
 
     private Period period00;
     private Period period01;
@@ -23,7 +23,7 @@ public class PeriodSetTest {
     
     
     @Test
-    public void test() {
+    void test() {
         assertThat((Set<Period>) allPeriods.getAllByTerm(0)).containsExactly(period00, period01, period02);
         assertThat((Set<Period>) allPeriods.getAllByTerm(1)).containsExactly(period10, period11, period12);
         assertThat((Set<Period>) allPeriods.getAllByTerm(2)).containsExactly(period20, period21, period22);
@@ -34,7 +34,7 @@ public class PeriodSetTest {
     }
 
 
-    @Before
+    @BeforeEach
     public void buildThings() {
         allPeriods = new PeriodSet();
         

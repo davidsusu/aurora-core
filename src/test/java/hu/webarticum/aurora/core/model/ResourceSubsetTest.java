@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ResourceSubsetTest {
+class ResourceSubsetTest {
 
     private ResourceSubset subsetXWhole;
     private ResourceSubset subsetXGroupA1;
@@ -33,7 +33,7 @@ public class ResourceSubsetTest {
     
     
     @Test
-    public void testDifferentResources() {
+    void testDifferentResources() {
         assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             intersection(subsetXGroupA1, subsetYGroupA1);
         }}).isInstanceOf(IllegalArgumentException.class);
@@ -44,7 +44,7 @@ public class ResourceSubsetTest {
     }
     
     @Test
-    public void testSimpleGroups() {
+    void testSimpleGroups() {
         assertThat(subsetYGroupA1).isNotEqualTo(subsetXGroupA1);
         assertThat(subsetZGroupA1).isNotEqualTo(subsetYGroupA1);
 
@@ -61,7 +61,7 @@ public class ResourceSubsetTest {
     }
     
     @Test
-    public void testSimpleOperations() {
+    void testSimpleOperations() {
         assertThat(negation(intersection(subsetXGroupA1, subsetXGroupA2)).isWhole()).isTrue();
         assertThat(negation(intersection(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole)).isTrue();
         assertThat(negation(union(subsetXGroupA1, subsetXGroupA2)).equals(subsetXWhole)).isFalse();
@@ -99,7 +99,7 @@ public class ResourceSubsetTest {
         assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).equals(subsetXWhole)).isTrue();
     }
     
-    public void testUnion() {
+    void testUnion() {
         assertThat(union(subsetXGroupA1, subsetXGroupA2, subsetXGroupA3).intersects(
             union(subsetXGroupB1, subsetXGroupB2)
         )).isTrue();
@@ -129,7 +129,7 @@ public class ResourceSubsetTest {
         assertThat(union(subsetXGroupA1, subsetXGroupB1).equals(union(subsetXGroupB1, subsetXGroupA1))).isTrue();
     }
     
-    public void testDifferentOperations() {
+    void testDifferentOperations() {
         assertThat(
             difference(subsetXWhole, subsetXGroupA1)
         ).isEqualTo(
@@ -164,7 +164,7 @@ public class ResourceSubsetTest {
         );
     }
 
-    public void testComplexOperations() {
+    void testComplexOperations() {
         assertThat(
             difference(subsetXGroupA1, subsetXGroupB1)
         ).isEqualTo(
@@ -202,7 +202,7 @@ public class ResourceSubsetTest {
     }
     
     @Test
-    public void testMoreComplex1() {
+    void testMoreComplex1() {
         ResourceSubset firstSubset = difference(
             union(subsetXGroupA1, subsetXGroupB1, subsetXGroupB2),
             subsetXGroupC1
@@ -218,7 +218,7 @@ public class ResourceSubsetTest {
     }
 
     @Test
-    public void testMoreComplex2() {
+    void testMoreComplex2() {
         ResourceSubset firstSubset = union(subsetXGroupA1, subsetXGroupB1);
         assertThat(firstSubset.isWhole()).isFalse();
         
@@ -235,7 +235,7 @@ public class ResourceSubsetTest {
     }
     
     @Test
-    public void testMoreComplex3() {
+    void testMoreComplex3() {
         ResourceSubset firstSubset = intersection(
             union(subsetXGroupA1, subsetXGroupB1, subsetXGroupC1),
             subsetXGroupC2
@@ -255,7 +255,7 @@ public class ResourceSubsetTest {
     }
 
     @Test
-    public void testMoreComplex4() {
+    void testMoreComplex4() {
         ResourceSubset firstSubset = symmetricDifference(
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
@@ -287,7 +287,7 @@ public class ResourceSubsetTest {
     }
 
     @Test
-    public void testMoreComplex5() {
+    void testMoreComplex5() {
         ResourceSubset firstSubset = symmetricDifference(
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
@@ -319,7 +319,7 @@ public class ResourceSubsetTest {
     }
 
     @Test
-    public void testMoreComplex6() {
+    void testMoreComplex6() {
         ResourceSubset firstSubset = symmetricDifference(
             intersection(union(subsetXGroupA1, subsetXGroupB1), subsetXGroupC2),
             subsetXGroupD1
@@ -370,7 +370,7 @@ public class ResourceSubsetTest {
         return new ResourceSubset.Inverse(subset);
     }
 
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildX();
         buildY();

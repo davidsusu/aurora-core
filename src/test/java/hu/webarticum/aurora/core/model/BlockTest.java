@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.Set;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Interval;
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class BlockTest {
+class BlockTest {
 
     private Period week1;
     private Period week2;
@@ -41,7 +41,7 @@ public class BlockTest {
     
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertThat(new Block().getLength()).isEqualTo(Block.DEFAULT_LENGTH);
         assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new Block(-99);
@@ -49,7 +49,7 @@ public class BlockTest {
     }
     
     @Test
-    public void testHasConflicts() {
+    void testHasConflicts() {
         assertThat(emptyBlock.hasConflicts()).isFalse();
         assertThat(emptyBlock.hasConflicts(week1)).isFalse();
         assertThat(emptyBlock.hasConflicts(week2)).isFalse();
@@ -80,7 +80,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testConflictsWith() {
+    void testConflictsWith() {
         assertThat(emptyBlock.conflictsWith(emptyBlock)).isFalse();
         assertThat(emptyBlock.conflictsWith(independentBlock)).isFalse();
         assertThat(emptyBlock.conflictsWith(normalBlock1)).isFalse();
@@ -139,7 +139,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfEmptyBlock() {
+    void testActivityManagerOfEmptyBlock() {
         assertThat((Set<Period>) emptyBlock.getActivityManager().getPeriods()).isEmpty();
         assertThat(emptyBlock.getActivityManager().getActivities()).isEmpty();
         assertThat(emptyBlock.getActivityManager().getActivities(week1)).isEmpty();
@@ -158,7 +158,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfIndependentBlock() {
+    void testActivityManagerOfIndependentBlock() {
         assertThat((Set<Period>) independentBlock.getActivityManager().getPeriods()).isEmpty();
         assertThat(independentBlock.getActivityManager().getActivities()).hasSize(1);
         assertThat(independentBlock.getActivityManager().getActivities(week1)).isEmpty();
@@ -183,7 +183,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfNormalBlock1() {
+    void testActivityManagerOfNormalBlock1() {
         assertThat((Set<Period>) normalBlock1.getActivityManager().getPeriods()).containsExactly(week1, week2);
         assertThat(normalBlock1.getActivityManager().getActivities()).hasSize(1);
         assertThat(normalBlock1.getActivityManager().getActivities(week1)).hasSize(1);
@@ -207,7 +207,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfNormalBlock2() {
+    void testActivityManagerOfNormalBlock2() {
         assertThat((Set<Period>) normalBlock2.getActivityManager().getPeriods()).containsExactly(week1, week2);
         assertThat(normalBlock2.getActivityManager().getActivities()).hasSize(2);
         assertThat(normalBlock2.getActivityManager().getActivities(week1)).hasSize(2);
@@ -231,7 +231,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfNormalBlock3() {
+    void testActivityManagerOfNormalBlock3() {
         assertThat((Set<Period>) normalBlock3.getActivityManager().getPeriods()).containsExactly(week1);
         assertThat(normalBlock3.getActivityManager().getActivities()).hasSize(2);
         assertThat(normalBlock3.getActivityManager().getActivities(week1)).hasSize(2);
@@ -255,7 +255,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfNormalBlock4() {
+    void testActivityManagerOfNormalBlock4() {
         assertThat((Set<Period>) normalBlock4.getActivityManager().getPeriods()).containsExactly(week2);
         assertThat(normalBlock4.getActivityManager().getActivities()).hasSize(2);
         assertThat(normalBlock4.getActivityManager().getActivities(week1)).isEmpty();
@@ -279,7 +279,7 @@ public class BlockTest {
     }
 
     @Test
-    public void testActivityManagerOfConflictingBlock() {
+    void testActivityManagerOfConflictingBlock() {
         assertThat((Set<Period>) conflictingBlock.getActivityManager().getPeriods()).containsExactly(week1, week2);
         assertThat(conflictingBlock.getActivityManager().getActivities()).hasSize(2);
         assertThat(conflictingBlock.getActivityManager().getActivities(week1)).hasSize(1);
@@ -303,7 +303,7 @@ public class BlockTest {
     }
     
     @Test
-    public void testGetCalculatedTimeLimit() {
+    void testGetCalculatedTimeLimit() {
         assertThat(emptyBlock.getCalculatedTimeLimit().isAlways()).isTrue();
         assertThat(normalBlock1.getCalculatedTimeLimit().isAlways()).isTrue();
         assertThat(normalBlock2.getCalculatedTimeLimit().getSimplified()).isEqualTo(
@@ -317,9 +317,9 @@ public class BlockTest {
     }
 
     @Test
-    public void testGetCalculatedTimingSetUnlimited() {
-        assertThat(emptyBlock.getCalculatedTimingSet(false).isEmpty()).isTrue();
-        assertThat(independentBlock.getCalculatedTimingSet(false).isEmpty()).isTrue();
+    void testGetCalculatedTimingSetUnlimited() {
+        assertThat(emptyBlock.getCalculatedTimingSet(false)).isEmpty();
+        assertThat(independentBlock.getCalculatedTimingSet(false)).isEmpty();
         assertThat(normalBlock1.getCalculatedTimingSet(false).getTimes()).isEqualTo(defaultTimingSet.getTimes());
         assertThat(normalBlock2.getCalculatedTimingSet(false).getTimes()).isEqualTo(secondaryTimingSet.getTimes());
         assertThat(normalBlock3.getCalculatedTimingSet(false).getTimes()).isEqualTo(defaultTimingSet.getTimes());
@@ -328,9 +328,9 @@ public class BlockTest {
     }
 
     @Test
-    public void testGetCalculatedTimingSet() {
-        assertThat(emptyBlock.getCalculatedTimingSet().isEmpty()).isTrue();
-        assertThat(independentBlock.getCalculatedTimingSet().isEmpty()).isTrue();
+    void testGetCalculatedTimingSet() {
+        assertThat(emptyBlock.getCalculatedTimingSet()).isEmpty();
+        assertThat(independentBlock.getCalculatedTimingSet()).isEmpty();
         assertThat(normalBlock1.getCalculatedTimingSet().getTimes()).isEqualTo(defaultTimingSet.getTimes());
         assertThat(normalBlock2.getCalculatedTimingSet().getTimes()).containsExactly(new Time[] { // NOSONAR
             new Time(9 * Time.HOUR),
@@ -348,7 +348,7 @@ public class BlockTest {
         });
     }
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildPeriodsTimingSetsAndTags();
         buildResources();

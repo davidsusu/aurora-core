@@ -2,12 +2,12 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ResourceTest {
+class ResourceTest {
 
     @Test
-    public void testHasSplittings() {
+    void testHasSplittings() {
         Resource simpleResource = new Resource();
         assertThat(simpleResource.hasSplittings()).isFalse();
         

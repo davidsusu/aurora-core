@@ -1,7 +1,7 @@
 package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,27 +9,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Interval;
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class ActivityFlowTest {
+class ActivityFlowTest {
 
     @Test
-    public void testEmpty() {
+    void testEmpty() {
         ActivityFlow activityFlow = new ActivityFlow();
         
         assertThat(activityFlow.isEmpty()).isTrue();
-        assertThat(activityFlow.size()).isEqualTo(0);
+        assertThat(activityFlow.size()).isZero();
         for (ActivityFlow.Entry entry : activityFlow) {
             fail("Unexpected entry: " + entry);
         }
-        assertThat(activityFlow.getActivities().isEmpty()).isTrue();
+        assertThat(activityFlow.getActivities()).isEmpty();
     }
     
     @Test
-    public void testBounds() {
+    void testBounds() {
         Period period = new Period();
         List<Period> periods = new ArrayList<Period>(Arrays.asList(period));
         ActivityFlow activityFlow = new ActivityFlow();
@@ -45,7 +45,7 @@ public class ActivityFlowTest {
     }
 
     @Test
-    public void testGetPeriods() {
+    void testGetPeriods() {
         List<Period> periods = new ArrayList<Period>(Arrays.asList(
             new Period("Period 1a", 1, 1),
             new Period("Period 1b", 1, 1),
@@ -64,7 +64,7 @@ public class ActivityFlowTest {
     }
     
     @Test
-    public void testFilter() {
+    void testFilter() {
         Period period = new Period();
         List<Period> periods = new ArrayList<Period>(Arrays.asList(period));
         Tag tag1 = new Tag("Tag1");
@@ -89,7 +89,7 @@ public class ActivityFlowTest {
     }
     
     @Test
-    public void testGetLimited() {
+    void testGetLimited() {
         Period period = new Period();
         List<Period> periods = new ArrayList<Period>(Arrays.asList(period));
         ActivityFlow activityFlow = new ActivityFlow();
@@ -117,7 +117,7 @@ public class ActivityFlowTest {
     }
 
     @Test
-    public void testGetLimitedIntersecting() {
+    void testGetLimitedIntersecting() {
         Period period = new Period();
         List<Period> periods = new ArrayList<Period>(Arrays.asList(period));
         ActivityFlow activityFlow = new ActivityFlow();
@@ -147,7 +147,7 @@ public class ActivityFlowTest {
     }
 
     @Test
-    public void testGetThinned() {
+    void testGetThinned() {
         List<Period> periods = new ArrayList<Period>(Arrays.asList(
             new Period("Period 1a", 1, 1),
             new Period("Period 1b", 1, 1),

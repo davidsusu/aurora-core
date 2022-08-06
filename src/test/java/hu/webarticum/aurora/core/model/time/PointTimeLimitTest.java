@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PointTimeLimitTest {
+class PointTimeLimitTest {
 
     private static final Interval[] intervals = new Interval[] {
         new Interval(0, 5),
@@ -20,7 +20,7 @@ public class PointTimeLimitTest {
     };
     
     @Test
-    public void testBasics() {
+    void testBasics() {
         PointTimeLimit point = new PointTimeLimit(10);
         
         assertThat(point.isAlways()).isFalse();
@@ -31,7 +31,7 @@ public class PointTimeLimitTest {
     }
 
     @Test
-    public void testLimitSortedIntervals() {
+    void testLimitSortedIntervals() {
         PointTimeLimit point = new PointTimeLimit(10);
         List<Interval> expected = Arrays.asList(new Interval(10, 10));
         List<Interval> actual = point.limitSortedIntervals(Arrays.asList(intervals));
@@ -40,7 +40,7 @@ public class PointTimeLimitTest {
     }
 
     @Test
-    public void testLimitIntersectingSortedIntervals() {
+    void testLimitIntersectingSortedIntervals() {
         PointTimeLimit point = new PointTimeLimit(10);
         List<Interval> expected = Arrays.asList(new Interval(5, 15));
         List<Interval> actual = point.limitIntersectingSortedIntervals(Arrays.asList(intervals));
@@ -49,7 +49,7 @@ public class PointTimeLimitTest {
     }
 
     @Test
-    public void testContainsInterval() {
+    void testContainsInterval() {
         PointTimeLimit limit = new PointTimeLimit(10);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -65,7 +65,7 @@ public class PointTimeLimitTest {
     }
 
     @Test
-    public void testIntersectsInterval() {
+    void testIntersectsInterval() {
         PointTimeLimit limit = new PointTimeLimit(10);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -83,7 +83,7 @@ public class PointTimeLimitTest {
     }
 
     @Test
-    public void testContainsTime() {
+    void testContainsTime() {
         PointTimeLimit point = new PointTimeLimit(10);
         
         assertThat(point.contains(new Time(5))).isFalse();

@@ -4,32 +4,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Interval;
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class TimingSetTest {
+class TimingSetTest {
 
     private TimingSet timingSet;
     
 
     @Test
-    public void testContainsTime() {
+    void testContainsTime() {
         assertThat(new TimingSet().containsTime(new Time(10 * Time.HOUR))).isFalse();
         assertThat(timingSet.containsTime(new Time(10 * Time.HOUR))).isTrue();
         assertThat(timingSet.containsTime(new Time(15 * Time.HOUR))).isFalse();
     }
 
     @Test
-    public void testGetTimes() {
+    void testGetTimes() {
         assertThat(new TimingSet().getTimes()).isEmpty();
         assertThat(timingSet.getTimes()).hasSize(13);
     }
 
     @Test
-    public void testGetLimited() {
+    void testGetLimited() {
         assertThat(new TimingSet().getLimited(new Interval(0, Time.WEDNESDAY))).isEmpty();
         assertThat(timingSet.getLimited(new Interval(Time.TUESDAY, Time.THURSDAY)).getTimes()).hasSize(8);
         assertThat(timingSet.getLimited(new Interval(
@@ -42,7 +42,7 @@ public class TimingSetTest {
     }
 
     @Test
-    public void testGetLimitedWithLength() {
+    void testGetLimitedWithLength() {
         assertThat(new TimingSet().getLimited(new Interval(0, Time.WEDNESDAY), Block.DEFAULT_LENGTH)).isEmpty();
         assertThat(timingSet.getLimited(
             new Interval(Time.TUESDAY, Time.THURSDAY), Block.DEFAULT_LENGTH
@@ -56,7 +56,7 @@ public class TimingSetTest {
     }
 
     @Test
-    public void testSplit() {
+    void testSplit() {
         assertThat(new TimingSet().split(Time.DAY).isEmpty()).isTrue();
         
         Map<Time, TimingSet> splitted = timingSet.split(Time.DAY);
@@ -85,7 +85,7 @@ public class TimingSetTest {
     }
 
     @Test
-    public void testSplitWithDiff() {
+    void testSplitWithDiff() {
         assertThat(new TimingSet().split(Time.DAY, 11 * Time.HOUR).isEmpty()).isTrue();
         
         Map<Time, TimingSet> splitted = timingSet.split(Time.DAY, 11 * Time.HOUR);
@@ -114,7 +114,7 @@ public class TimingSetTest {
     }
     
     
-    @Before
+    @BeforeEach
     public void buildTimingSet() {
         timingSet = new TimingSet(new Time(10 * Time.HOUR), new Time(11 * Time.HOUR));
         timingSet.add(new Time(12 * Time.HOUR));

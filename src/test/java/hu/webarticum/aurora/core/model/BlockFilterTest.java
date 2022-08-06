@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class BlockFilterTest {
+class BlockFilterTest {
 
     private Period period1;
     private Period period2;
@@ -23,7 +23,7 @@ public class BlockFilterTest {
     private Block complexBlock;
 
     @Test
-    public void testTrue() {
+    void testTrue() {
         BlockFilter filter = new BlockFilter.TrueBlockFilter();
         
         assertThat(filter.validate(emptyBlock)).isTrue();
@@ -34,7 +34,7 @@ public class BlockFilterTest {
     }
 
     @Test
-    public void testFalse() {
+    void testFalse() {
         BlockFilter filter = new BlockFilter.FalseBlockFilter();
         
         assertThat(filter.validate(emptyBlock)).isFalse();
@@ -45,7 +45,7 @@ public class BlockFilterTest {
     }
 
     @Test
-    public void testActivity() {
+    void testActivity() {
         BlockFilter filter = new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasResource(class2));
         
         assertThat(filter.validate(emptyBlock)).isFalse();
@@ -56,7 +56,7 @@ public class BlockFilterTest {
     }
 
     @Test
-    public void testPeriod() {
+    void testPeriod() {
         BlockFilter filter = new BlockFilter.PeriodBlockFilter(period1);
         
         assertThat(filter.validate(emptyBlock)).isFalse();
@@ -67,7 +67,7 @@ public class BlockFilterTest {
     }
 
     @Test
-    public void testPeriodActivity() {
+    void testPeriodActivity() {
         BlockFilter filter1 = new BlockFilter.PeriodActivityBlockFilter(
             new ActivityFilter.HasResource(object),
             period1
@@ -92,7 +92,7 @@ public class BlockFilterTest {
     }
 
     @Test
-    public void testComplex() {
+    void testComplex() {
         BlockFilter filter = new BlockFilter.And(
             new BlockFilter.Or(
                 new BlockFilter.PeriodActivityBlockFilter(new ActivityFilter.HasResource(class1), period2),
@@ -110,7 +110,7 @@ public class BlockFilterTest {
         assertThat(filter.validate(complexBlock)).isFalse();
     }
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildPeriods();
         buildResources();

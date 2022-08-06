@@ -2,12 +2,12 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BooleanOperationTest {
+class BooleanOperationTest {
 
     @Test
-    public void testFalse() {
+    void testFalse() {
         assertThat(BooleanOperation.FALSE.operate(false, false)).isFalse();
         assertThat(BooleanOperation.FALSE.operate(false, true)).isFalse();
         assertThat(BooleanOperation.FALSE.operate(true, false)).isFalse();
@@ -15,7 +15,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNor() {
+    void testNor() {
         assertThat(BooleanOperation.NOR.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NOR.operate(false, true)).isFalse();
         assertThat(BooleanOperation.NOR.operate(true, false)).isFalse();
@@ -23,7 +23,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testXright() {
+    void testXright() {
         assertThat(BooleanOperation.XRIGHT.operate(false, false)).isFalse();
         assertThat(BooleanOperation.XRIGHT.operate(false, true)).isTrue();
         assertThat(BooleanOperation.XRIGHT.operate(true, false)).isFalse();
@@ -31,7 +31,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testXleft() {
+    void testXleft() {
         assertThat(BooleanOperation.XLEFT.operate(false, false)).isFalse();
         assertThat(BooleanOperation.XLEFT.operate(false, true)).isFalse();
         assertThat(BooleanOperation.XLEFT.operate(true, false)).isTrue();
@@ -39,7 +39,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testAnd() {
+    void testAnd() {
         assertThat(BooleanOperation.AND.operate(false, false)).isFalse();
         assertThat(BooleanOperation.AND.operate(false, true)).isFalse();
         assertThat(BooleanOperation.AND.operate(true, false)).isFalse();
@@ -47,7 +47,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNLeft() {
+    void testNLeft() {
         assertThat(BooleanOperation.NLEFT.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NLEFT.operate(false, true)).isTrue();
         assertThat(BooleanOperation.NLEFT.operate(true, false)).isFalse();
@@ -55,7 +55,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNright() {
+    void testNright() {
         assertThat(BooleanOperation.NRIGHT.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NRIGHT.operate(false, true)).isFalse();
         assertThat(BooleanOperation.NRIGHT.operate(true, false)).isTrue();
@@ -63,7 +63,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNxor() {
+    void testNxor() {
         assertThat(BooleanOperation.NXOR.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NXOR.operate(false, true)).isFalse();
         assertThat(BooleanOperation.NXOR.operate(true, false)).isFalse();
@@ -71,7 +71,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testXor() {
+    void testXor() {
         assertThat(BooleanOperation.XOR.operate(false, false)).isFalse();
         assertThat(BooleanOperation.XOR.operate(false, true)).isTrue();
         assertThat(BooleanOperation.XOR.operate(true, false)).isTrue();
@@ -79,7 +79,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testRight() {
+    void testRight() {
         assertThat(BooleanOperation.RIGHT.operate(false, false)).isFalse();
         assertThat(BooleanOperation.RIGHT.operate(false, true)).isTrue();
         assertThat(BooleanOperation.RIGHT.operate(true, false)).isFalse();
@@ -87,7 +87,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testLeft() {
+    void testLeft() {
         assertThat(BooleanOperation.LEFT.operate(false, false)).isFalse();
         assertThat(BooleanOperation.LEFT.operate(false, true)).isFalse();
         assertThat(BooleanOperation.LEFT.operate(true, false)).isTrue();
@@ -95,7 +95,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNand() {
+    void testNand() {
         assertThat(BooleanOperation.NAND.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NAND.operate(false, true)).isTrue();
         assertThat(BooleanOperation.NAND.operate(true, false)).isTrue();
@@ -103,7 +103,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNxleft() {
+    void testNxleft() {
         assertThat(BooleanOperation.NXLEFT.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NXLEFT.operate(false, true)).isTrue();
         assertThat(BooleanOperation.NXLEFT.operate(true, false)).isFalse();
@@ -111,7 +111,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testNxright() {
+    void testNxright() {
         assertThat(BooleanOperation.NXRIGHT.operate(false, false)).isTrue();
         assertThat(BooleanOperation.NXRIGHT.operate(false, true)).isFalse();
         assertThat(BooleanOperation.NXRIGHT.operate(true, false)).isTrue();
@@ -119,7 +119,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testOr() {
+    void testOr() {
         assertThat(BooleanOperation.OR.operate(false, false)).isFalse();
         assertThat(BooleanOperation.OR.operate(false, true)).isTrue();
         assertThat(BooleanOperation.OR.operate(true, false)).isTrue();
@@ -127,7 +127,7 @@ public class BooleanOperationTest {
     }
 
     @Test
-    public void testTrue() {
+    void testTrue() {
         assertThat(BooleanOperation.TRUE.operate(false, false)).isTrue();
         assertThat(BooleanOperation.TRUE.operate(false, true)).isTrue();
         assertThat(BooleanOperation.TRUE.operate(true, false)).isTrue();

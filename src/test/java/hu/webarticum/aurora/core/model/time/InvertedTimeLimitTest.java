@@ -2,12 +2,12 @@ package hu.webarticum.aurora.core.model.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class InvertedTimeLimitTest {
+class InvertedTimeLimitTest {
 
     @Test
-    public void testAlwaysAndNever() {
+    void testAlwaysAndNever() {
         assertThat(new InvertedTimeLimit(new AlwaysTimeLimit()).isAlways()).isFalse();
         assertThat(new InvertedTimeLimit(new AlwaysTimeLimit()).isNever()).isTrue();
         assertThat(new InvertedTimeLimit(new NeverTimeLimit()).isAlways()).isTrue();
@@ -17,7 +17,7 @@ public class InvertedTimeLimitTest {
     }
 
     @Test
-    public void testGetTimes() {
+    void testGetTimes() {
         assertThat(new InvertedTimeLimit(new AlwaysTimeLimit()).getTimes()).isEmpty();;
         assertThat(new InvertedTimeLimit(new Interval(5, 12)).getTimes()).containsExactly(new Time(5), new Time(12));
         assertThat(new InvertedTimeLimit(new Interval(5, 12)).getTimes(false)).containsExactly(new Time(12));
@@ -25,7 +25,7 @@ public class InvertedTimeLimitTest {
     }
     
     @Test
-    public void testContainsTime() {
+    void testContainsTime() {
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Time(3))).isTrue();
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Time(5))).isTrue();
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Time(7))).isFalse();
@@ -34,7 +34,7 @@ public class InvertedTimeLimitTest {
     }
 
     @Test
-    public void testContainsInterval() {
+    void testContainsInterval() {
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Interval(2, 4))).isTrue();
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Interval(2, 7))).isFalse();
         assertThat(new InvertedTimeLimit(new Interval(5, 10)).contains(new Interval(5, 8))).isFalse();

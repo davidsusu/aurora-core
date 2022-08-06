@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ActivityFilterTest {
+class ActivityFilterTest {
 
     private Tag subject1;
     private Tag subject2;
@@ -23,7 +23,7 @@ public class ActivityFilterTest {
     
     
     @Test
-    public void testFalse() {
+    void testFalse() {
         ActivityFilter falseFilter = new ActivityFilter.FalseActivityFilter();
         assertThat(falseFilter.validate(activity1)).isFalse();
         assertThat(falseFilter.validate(activity2)).isFalse();
@@ -32,7 +32,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testTrue() {
+    void testTrue() {
         ActivityFilter trueFilter = new ActivityFilter.TrueActivityFilter();
         assertThat(trueFilter.validate(activity1)).isTrue();
         assertThat(trueFilter.validate(activity2)).isTrue();
@@ -41,7 +41,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testTagType() {
+    void testTagType() {
         ActivityFilter subjectFilter = new ActivityFilter.HasTagType(Tag.Type.SUBJECT);
         assertThat(subjectFilter.validate(activity1)).isTrue();
         assertThat(subjectFilter.validate(activity2)).isTrue();
@@ -56,7 +56,7 @@ public class ActivityFilterTest {
     }
     
     @Test
-    public void testTag() {
+    void testTag() {
         ActivityFilter subject1Filter = new ActivityFilter.HasTag(subject1);
         assertThat(subject1Filter.validate(activity1)).isTrue();
         assertThat(subject1Filter.validate(activity2)).isFalse();
@@ -71,7 +71,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testResourceType() {
+    void testResourceType() {
         ActivityFilter personFilter = new ActivityFilter.HasResourceType(Resource.Type.PERSON);
         assertThat(personFilter.validate(activity1)).isTrue();
         assertThat(personFilter.validate(activity2)).isTrue();
@@ -92,7 +92,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testResource() {
+    void testResource() {
         ActivityFilter class1Filter = new ActivityFilter.HasResource(class1);
         assertThat(class1Filter.validate(activity1)).isTrue();
         assertThat(class1Filter.validate(activity2)).isFalse();
@@ -113,7 +113,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testIntersectsResourceSplittingPart() {
+    void testIntersectsResourceSplittingPart() {
         ActivityFilter class1PartFilter = new ActivityFilter.IntersectsResourceSplittingPart(
             class1.getSplittingManager().getSplittings().get(0).getParts().get(0)
         );
@@ -132,7 +132,7 @@ public class ActivityFilterTest {
     }
 
     @Test
-    public void testComplex() {
+    void testComplex() {
         ActivityFilter complexActivityFilter = new ActivityFilter.And(
             new ActivityFilter.HasResource(teacher1),
             new ActivityFilter.Not(new ActivityFilter.Or(
@@ -147,7 +147,7 @@ public class ActivityFilterTest {
     }
     
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildTags();
         buildResources();

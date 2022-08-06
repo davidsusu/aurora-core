@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class IntervalTest {
+class IntervalTest {
 
     private static final Interval[] intervals = new Interval[] {
         new Interval(0, 5),
@@ -28,7 +28,7 @@ public class IntervalTest {
     };
     
     @Test
-    public void testBasics() {
+    void testBasics() {
         Interval interval = new Interval(10, 20);
         
         assertThat(interval.isAlways()).isFalse();
@@ -40,7 +40,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testLimitSortedIntervals() {
+    void testLimitSortedIntervals() {
         Interval interval = new Interval(10, 20);
         List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(10, 10),
@@ -54,7 +54,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testLimitIntersectingSortedIntervals() {
+    void testLimitIntersectingSortedIntervals() {
         Interval interval = new Interval(10, 20);
         List<Interval> expected = Arrays.asList(new Interval[] { // NOSONAR comma
             new Interval(0, 15),
@@ -71,7 +71,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testContainsInterval() {
+    void testContainsInterval() {
         Interval limit = new Interval(10, 20);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -87,7 +87,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testIntersectsInterval() {
+    void testIntersectsInterval() {
         Interval limit = new Interval(10, 20);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -105,7 +105,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testContainsTime() {
+    void testContainsTime() {
         Interval limit = new Interval(10, 20);
         
         assertThat(limit.contains(new Time(5))).isFalse();
@@ -116,7 +116,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void testContainsTimeInclusion() {
+    void testContainsTimeInclusion() {
         Interval limit = new Interval(10, 20);
 
         assertThat(limit.contains(new Time(5), true, true)).isFalse();

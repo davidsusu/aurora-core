@@ -8,12 +8,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TimeTest {
+class TimeTest {
 
     @Test
-    public void testParse() {
+    void testParse() {
         assertThat(new Time("25").getSeconds()).isEqualTo(25 * Time.SECOND);
         assertThat(new Time("11:03").getSeconds()).isEqualTo((11 * Time.MINUTE) + (3 * Time.SECOND));
         assertThat(new Time("3:01:02").getSeconds()).isEqualTo((3 * Time.HOUR) + (1 * Time.MINUTE) + (2 * Time.SECOND));
@@ -30,7 +30,7 @@ public class TimeTest {
     }
     
     @Test
-    public void testParseFail() {
+    void testParseFail() {
         assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new Time("");
         }}).isInstanceOf(IllegalArgumentException.class);
@@ -46,7 +46,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(new Time(3 * Time.HOUR)).asString().isEqualTo("W.0 D.0 03:00:00");
         assertThat(new Time(
             (1 * Time.WEEK) + (2 * Time.DAY) +
@@ -55,7 +55,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testToTimeString() {
+    void testToTimeString() {
         assertThat(new Time((7 * Time.HOUR) + (4 * Time.MINUTE)).toTimeString()).isEqualTo("07:04");
         assertThat(new Time(5 * Time.HOUR).toTimeString()).isEqualTo("05:00");
         assertThat(new Time((4 * Time.HOUR) + (3 * Time.MINUTE) + (2 * Time.SECOND)).toTimeString()).isEqualTo("04:03:02");
@@ -67,7 +67,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testCompare() {
+    void testCompare() {
         List<Time> timesToSort = new ArrayList<Time>();
         timesToSort.add(new Time(2 * Time.MINUTE));
         timesToSort.add(new Time(0));
@@ -96,7 +96,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         Time time1 = new Time(5 * Time.MINUTE);
         Time time2 = new Time(5 * Time.MINUTE);
         Time time3 = new Time((1 * Time.WEEK) + (12 * Time.HOUR));
@@ -121,7 +121,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testGetDateOnly() {
+    void testGetDateOnly() {
         assertThat(new Time(0).getDateOnly()).isEqualTo(new Time(0));
         assertThat(new Time((1 * Time.HOUR) + (5 * Time.MINUTE)).getDateOnly()).isEqualTo(new Time(0));
         assertThat(new Time(
@@ -138,7 +138,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testGetTimeOnly() {
+    void testGetTimeOnly() {
         assertThat(new Time(0).getTimeOnly()).isEqualTo(new Time(0));
         assertThat(new Time(
             (1 * Time.HOUR) + (5 * Time.MINUTE)
@@ -155,7 +155,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testGetMoved() {
+    void testGetMoved() {
         Time baseTime = new Time((2 * Time.DAY) + (5 * Time.HOUR));
 
         assertThat(baseTime.getMoved(0)).isEqualTo(baseTime);
@@ -175,7 +175,7 @@ public class TimeTest {
     }
 
     @Test
-    public void testNegative() {
+    void testNegative() {
         Time negativeTime = new Time(-Time.DAY + (3 * Time.HOUR));
 
         assertThat(negativeTime.getPart(Time.PART.WEEKS)).isEqualTo(-1);

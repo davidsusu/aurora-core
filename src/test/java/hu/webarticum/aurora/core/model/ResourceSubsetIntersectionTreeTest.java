@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ResourceSubsetIntersectionTreeTest {
+class ResourceSubsetIntersectionTreeTest {
 
     private Resource resource;
 
@@ -33,7 +33,7 @@ public class ResourceSubsetIntersectionTreeTest {
     
 
     @Test
-    public void testEmptyTree() {
+    void testEmptyTree() {
         assertThat(emptyTree).isEqualTo(emptyTree.copy());
         assertThat(emptyTree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(emptyTree.copy().getLeafIterable());
         assertThat(emptyTree.isEmpty()).isTrue();
@@ -41,9 +41,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(emptyTree.getLeafIterable()).isEmpty();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testWholeTree() {
+    void testWholeTree() {
         assertThat(wholeTree).isEqualTo(wholeTree.copy());
         assertThat(wholeTree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(wholeTree.copy().getLeafIterable());
         assertThat(wholeTree.isEmpty()).isFalse();
@@ -51,9 +50,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(wholeTree.getLeafIterable()).containsExactlyInAnyOrder(partSet());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testPart11Tree() {
+    void testPart11Tree() {
         assertThat(part11Tree).isEqualTo(part11Tree.copy());
         assertThat(part11Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             part11Tree.copy().getLeafIterable()
@@ -63,9 +61,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(part11Tree.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart11));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testPart12Tree() {
+    void testPart12Tree() {
         assertThat(part12Tree).isEqualTo(part12Tree.copy());
         assertThat(part12Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             part12Tree.copy().getLeafIterable()
@@ -75,9 +72,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(part12Tree.getLeafIterable()).containsExactly(partSet(splittingPart12));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testPart21Tree() {
+    void testPart21Tree() {
         assertThat(part21Tree).isEqualTo(part21Tree.copy());
         assertThat(part21Tree.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             part21Tree.copy().getLeafIterable()
@@ -87,9 +83,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(part21Tree.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart21));
     }
     
-    @SuppressWarnings("unchecked")
     @Test
-    public void testComplexTree1() {
+    void testComplexTree1() {
         assertThat(complexTree1).isEqualTo(complexTree1.copy());
         assertThat(complexTree1.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             complexTree1.copy().getLeafIterable()
@@ -99,9 +94,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(complexTree1.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart21, splittingPart31));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testComplexTree2() {
+    void testComplexTree2() {
         assertThat(complexTree2).isEqualTo(complexTree2.copy());
         assertThat(complexTree2.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             complexTree2.copy().getLeafIterable()
@@ -111,9 +105,8 @@ public class ResourceSubsetIntersectionTreeTest {
         assertThat(complexTree2.getLeafIterable()).containsExactlyInAnyOrder(partSet(splittingPart22, splittingPart32));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testComplexTree3() {
+    void testComplexTree3() {
         assertThat(complexTree3).isEqualTo(complexTree3.copy());
         assertThat(complexTree3.getLeafIterable()).containsExactlyInAnyOrderElementsOf(
             complexTree3.copy().getLeafIterable()
@@ -128,7 +121,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testIntersects() {
+    void testIntersects() {
         assertThat(emptyTree.intersects(emptyTree)).isFalse();
         assertThat(emptyTree.intersects(wholeTree)).isFalse();
         assertThat(emptyTree.intersects(part11Tree)).isFalse();
@@ -203,7 +196,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testContains() {
+    void testContains() {
         assertThat(emptyTree.contains(emptyTree)).isTrue();
         assertThat(emptyTree.contains(wholeTree)).isFalse();
         assertThat(emptyTree.contains(part11Tree)).isFalse();
@@ -278,7 +271,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testNegate() {
+    void testNegate() {
         assertThat(negated(emptyTree).isWhole()).isTrue();
         assertThat(negated(wholeTree).isEmpty()).isTrue();
         assertThat(negated(part11Tree)).isEqualTo(union(part(splittingPart12), part(splittingPart13)));
@@ -299,7 +292,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testUnion() {
+    void testUnion() {
         assertThat(union(emptyTree, emptyTree)).isEqualTo(empty());
         assertThat(union(emptyTree, wholeTree)).isEqualTo(whole());
         assertThat(union(part21Tree, part(splittingPart22))).isEqualTo(whole());
@@ -318,7 +311,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testIntersection() {
+    void testIntersection() {
         assertThat(intersection(emptyTree, emptyTree)).isEqualTo(empty());
         assertThat(intersection(emptyTree, wholeTree)).isEqualTo(empty());
         assertThat(intersection(part12Tree, complexTree3)).isEqualTo(
@@ -327,7 +320,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
 
     @Test
-    public void testDifference() {
+    void testDifference() {
         assertThat(difference(emptyTree, emptyTree)).isEqualTo(empty());
         assertThat(difference(emptyTree, wholeTree)).isEqualTo(empty());
         assertThat(difference(part11Tree, part12Tree)).isEqualTo(part11Tree);
@@ -344,7 +337,7 @@ public class ResourceSubsetIntersectionTreeTest {
     }
     
     @Test
-    public void testSymmetricDifference() {
+    void testSymmetricDifference() {
         assertThat(symmetricDifference(emptyTree, emptyTree)).isEqualTo(empty());
         assertThat(symmetricDifference(emptyTree, wholeTree)).isEqualTo(whole());
         assertThat(symmetricDifference(emptyTree, part11Tree)).isEqualTo(part11Tree);
@@ -361,7 +354,7 @@ public class ResourceSubsetIntersectionTreeTest {
         );
     }
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         resource = new Resource();
         buildSplittings();

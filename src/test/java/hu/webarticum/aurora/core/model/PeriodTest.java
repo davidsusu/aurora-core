@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PeriodTest {
+class PeriodTest {
 
     @Test
-    public void testSort() {
+    void testSort() {
         Period period1 = new Period("bar");
         Period period2 = new Period("bar", 1);
         Period period3 = new Period("", 1);

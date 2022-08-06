@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ValueTest {
+class ValueTest {
 
     private Resource resource1 = new Resource("p1");
     private Resource resource2 = new Resource("p2");
@@ -19,7 +19,7 @@ public class ValueTest {
     private Value rootValue;
     
     @Test
-    public void testAccess() {
+    void testAccess() {
         assertThat(rootValue.getAccess("apple").get().get()).isEqualTo("x");
         assertThat(rootValue.getAccess("pear").get().getAsSet()).hasSize(4);
         assertThat(rootValue.getAccess("pear[].a{0}", resource1).get().get()).isEqualTo("n");
@@ -37,7 +37,7 @@ public class ValueTest {
     }
 
     @Test
-    public void testIncompatibleConversion() {
+    void testIncompatibleConversion() {
         rootValue.getAccess("apple").get().getAsList().add(new Value(3));
         assertThat(rootValue.getAccess("apple").get().getType()).isEqualTo(Value.Type.STRING);
         
@@ -60,7 +60,7 @@ public class ValueTest {
     }
     
     @Test
-    public void testListToMapAutoConversion() {
+    void testListToMapAutoConversion() {
         Value value = rootValue.getAccess("orange").get();
         
         assertThat(value.getAccess("[1]").get().get()).isEqualTo(2);
@@ -82,7 +82,7 @@ public class ValueTest {
     }
 
     @Test
-    public void testSetToListAutoConversion() {
+    void testSetToListAutoConversion() {
         Value value = rootValue.getAccess("orange").get();
 
         assertThat(value.getAccess("[1]").get().get()).isEqualTo(2);
@@ -94,7 +94,7 @@ public class ValueTest {
     }
     
     @Test
-    public void testSetToMapAutoConversion() {
+    void testSetToMapAutoConversion() {
         Value value = new Value(Value.Type.SET);
         value.getAccess("[]").set(1);
         value.getAccess("[]").set(2);
@@ -109,7 +109,7 @@ public class ValueTest {
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         assertThat(rootValue.getAccess("cherry").exists()).isTrue();
         
         rootValue.getAsMap().remove(new Value("cherry"));
@@ -121,7 +121,7 @@ public class ValueTest {
     }
 
     @Test
-    public void testSetEquality() {
+    void testSetEquality() {
         Value.ValueSet set1 = new Value(Value.Type.SET).getAsSet();
         set1.addRaw(1);
         set1.addRaw(3);
@@ -134,7 +134,7 @@ public class ValueTest {
         assertThat(set2).isEqualTo(set1);
     }
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         resource1 = new Resource("p1");
         resource2 = new Resource("p2");

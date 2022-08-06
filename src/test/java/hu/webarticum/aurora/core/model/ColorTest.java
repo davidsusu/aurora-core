@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ColorTest {
+class ColorTest {
 
     @Test
-    public void testNumericConstructors() {
+    void testNumericConstructors() {
         assertThat(new Color()).isEqualTo(Color.BLACK);
         assertThat(new Color(0xFF0000)).isEqualTo(Color.RED);
         assertThat(new Color(0x00FF00)).isEqualTo(Color.GREEN);
@@ -18,7 +18,7 @@ public class ColorTest {
         assertThat(new Color(0xFFFF00)).isNotEqualTo(Color.RED);
         assertThat(new Color(0xFFFF00).getRed()).isEqualTo(0xFF);
         assertThat(new Color(0xFFFF00).getGreen()).isEqualTo(0xFF);
-        assertThat(new Color(0xFFFF00).getBlue()).isEqualTo(0);
+        assertThat(new Color(0xFFFF00).getBlue()).isZero();
         assertThat(new Color(Color.Component.BLUE, 0xFF)).isEqualTo(Color.BLUE);
         assertThat(new Color(0xFF, 0, 0xFF)).isEqualTo(Color.PURPLE);
         assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
@@ -30,7 +30,7 @@ public class ColorTest {
     }
 
     @Test
-    public void testStringConstructor() {
+    void testStringConstructor() {
         assertThat(new Color("foo-bar")).isEqualTo(Color.BLACK);
         assertThat(new Color("#1234567")).isEqualTo(Color.BLACK);
         assertThat(new Color("#C730B2").toInt()).isEqualTo(0xC730B2);
@@ -39,7 +39,7 @@ public class ColorTest {
     }
 
     @Test
-    public void testBlackWhite() {
+    void testBlackWhite() {
         testBlackWhiteProperties(true, Color.BLACK);
         testBlackWhiteProperties(false, Color.WHITE);
         testBlackWhiteProperties(true, Color.BLUE);
@@ -55,7 +55,7 @@ public class ColorTest {
     }
 
     @Test
-    public void testGetContrastColor() {
+    void testGetContrastColor() {
         assertThat(Color.WHITE.getContrastColor()).isEqualTo(Color.BLACK);
         assertThat(Color.BLACK.getContrastColor()).isEqualTo(Color.WHITE);
         assertThat(Color.GREY.getContrastColor()).isEqualTo(Color.WHITE);
@@ -70,7 +70,7 @@ public class ColorTest {
     }
 
     @Test
-    public void testAvg() {
+    void testAvg() {
         assertThat(Color.avg()).isEqualTo(Color.BLACK);
         assertThat(Color.avg(
             new Color(0x100111), new Color(0x1176C7), new Color(0x15252A)

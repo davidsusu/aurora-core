@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class StoreTest {
+class StoreTest {
 
     @Test
-    public void testSimpleRegister() {
+    void testSimpleRegister() {
         Store<String> store = new Store<String>();
         assertThat(store.isSorted()).isFalse();
         
@@ -31,7 +31,7 @@ public class StoreTest {
     }
     
     @Test
-    public void testRegisterModes() {
+    void testRegisterModes() {
         Store<String> store = new Store<String>();
         assertThat(store.size()).isEqualTo(0);
         
@@ -110,7 +110,7 @@ public class StoreTest {
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         Store<String> store = new Store<String>();
         store.register("Apple", "apple");
         store.register("Banana", "banana");
@@ -140,7 +140,7 @@ public class StoreTest {
     }
 
     @Test
-    public void testSorted() {
+    void testSorted() {
         Store<String> sortedStore = new Store<String>(new Comparator<String>() {
 
             @Override
@@ -163,7 +163,7 @@ public class StoreTest {
     }
 
     @Test
-    public void testListener() {
+    void testListener() {
         Store<String> store = new Store<String>();
         
         final StringBuilder eventStringBuilder = new StringBuilder();

@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class BlockListTest {
+class BlockListTest {
 
     private Period week1;
     private Period week2;
@@ -36,34 +36,36 @@ public class BlockListTest {
     
 
     @Test
-    public void testCopy() {
+    void testCopy() {
         BlockList copyOfAllBlocks = allBlocks.copy();
-        assertThat(copyOfAllBlocks).isNotSameAs(allBlocks);
-        assertThat(copyOfAllBlocks).isEqualTo(allBlocks);
+        assertThat(copyOfAllBlocks)
+            .isNotSameAs(allBlocks)
+            .isEqualTo(allBlocks)
+        ;
     }
 
     @Test
-    public void testGetShortestAndLongest() {
+    void testGetShortestAndLongest() {
         assertThat(allBlocks.getShortest()).isSameAs(block5);
         assertThat(allBlocks.getLongest()).isSameAs(block6);
     }
 
     @Test
-    public void testGetPeriods() {
+    void testGetPeriods() {
         assertThat((Set<Period>) new BlockList().getPeriods()).isEmpty();
         assertThat((Set<Period>) new BlockList(block4).getPeriods()).containsExactly(week1);
         assertThat((Set<Period>) allBlocks.getPeriods()).containsExactly(week1, week2);
     }
 
     @Test
-    public void testGetActivities() {
+    void testGetActivities() {
         assertThat((List<Activity>) new BlockList().getActivities()).isEmpty();
         assertThat((List<Activity>) new BlockList(block2, block6).getActivities()).hasSize(5);
         assertThat((List<Activity>) allBlocks.getActivities()).hasSize(9);
     }
 
     @Test
-    public void testGetActivitiesByPeriod() {
+    void testGetActivitiesByPeriod() {
         assertThat((List<Activity>) new BlockList().getActivities(week1)).isEmpty();
         assertThat((List<Activity>) new BlockList(block2, block6).getActivities(week1)).hasSize(4);
         assertThat((List<Activity>) allBlocks.getActivities(week1)).hasSize(7);
@@ -74,21 +76,21 @@ public class BlockListTest {
     }
     
     @Test
-    public void testGetActivitiesByPeriods() {
+    void testGetActivitiesByPeriods() {
         assertThat((List<Activity>) new BlockList().getActivities(Arrays.asList(week1, week2))).isEmpty();
         assertThat((List<Activity>) new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2))).hasSize(5);
         assertThat((List<Activity>) allBlocks.getActivities(Arrays.asList(week1, week2))).hasSize(9);
     }
 
     @Test
-    public void testGetActivitiesByPeriodsRequireAll() {
+    void testGetActivitiesByPeriodsRequireAll() {
         assertThat((List<Activity>) new BlockList().getActivities(Arrays.asList(week1, week2), true)).isEmpty();
         assertThat((List<Activity>) new BlockList(block2, block6).getActivities(Arrays.asList(week1, week2), true)).hasSize(3);
         assertThat((List<Activity>) allBlocks.getActivities(Arrays.asList(week1, week2), true)).hasSize(5);
     }
     
     @Test
-    public void testHasConflicts() {
+    void testHasConflicts() {
         assertThat(new BlockList().hasConflicts()).isFalse();
         assertThat(new BlockList(block1, block2, block3).hasConflicts()).isTrue();
         assertThat(new BlockList(block2, block3).hasConflicts()).isFalse();
@@ -97,7 +99,7 @@ public class BlockListTest {
     }
 
     @Test
-    public void testHasConflictsInPeriod() {
+    void testHasConflictsInPeriod() {
         assertThat(new BlockList().hasConflicts(week1)).isFalse();
         assertThat(new BlockList(block1, block2, block3).hasConflicts(week1)).isTrue();
         assertThat(new BlockList(block2, block3).hasConflicts(week1)).isFalse();
@@ -112,7 +114,7 @@ public class BlockListTest {
     }
 
     @Test
-    public void testConflictsWith() {
+    void testConflictsWith() {
         assertThat(new BlockList().conflictsWith(new BlockList())).isFalse();
         assertThat(new BlockList().conflictsWith(new BlockList(block3, block4))).isFalse();
         assertThat(new BlockList(block3, block4).conflictsWith(new BlockList())).isFalse();
@@ -121,7 +123,7 @@ public class BlockListTest {
     }
 
     @Test
-    public void testConflictsWithInPeriod() {
+    void testConflictsWithInPeriod() {
         assertThat(new BlockList().conflictsWith(new BlockList(), week1)).isFalse();
         assertThat(new BlockList().conflictsWith(new BlockList(block3, block4), week1)).isTrue();
         assertThat(new BlockList(block3, block4).conflictsWith(new BlockList(), week1)).isTrue();
@@ -138,7 +140,7 @@ public class BlockListTest {
     }
 
     @Test
-    public void testFilter() {
+    void testFilter() {
         BlockFilter teacher2Filter = new BlockFilter.ActivityBlockFilter(new ActivityFilter.HasResource(teacher2));
         assertThat(allBlocks.filter(teacher2Filter)).containsExactly(block6);
         
@@ -147,7 +149,7 @@ public class BlockListTest {
     }
 
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildPeriodsAndTags();
         buildResources();

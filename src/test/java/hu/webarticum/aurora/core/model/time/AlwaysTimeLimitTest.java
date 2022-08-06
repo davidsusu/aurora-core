@@ -2,12 +2,12 @@ package hu.webarticum.aurora.core.model.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class AlwaysTimeLimitTest {
+class AlwaysTimeLimitTest {
 
     @Test
-    public void testBasics() {
+    void testBasics() {
         AlwaysTimeLimit always = new AlwaysTimeLimit();
         
         assertThat(always.isAlways()).isTrue();

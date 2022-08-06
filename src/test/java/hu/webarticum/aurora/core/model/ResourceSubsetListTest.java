@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ResourceSubsetListTest {
+class ResourceSubsetListTest {
 
     private Resource resourceX;
     
@@ -17,7 +17,7 @@ public class ResourceSubsetListTest {
     
     
     @Test
-    public void testSetListIntersectionCount() {
+    void testSetListIntersectionCount() {
         assertThat(new ResourceSubsetList(subsetX).getMaximumCount(resourceX)).isEqualTo(1);
         assertThat(new ResourceSubsetList(subsetXGroupA1, subsetXGroupB1).getMaximumCount(resourceX)).isEqualTo(2);
         assertThat(new ResourceSubsetList(subsetXGroupA1, subsetXGroupA2).getMaximumCount(resourceX)).isEqualTo(1);
@@ -29,7 +29,7 @@ public class ResourceSubsetListTest {
         ).getMaximumCount(resourceX)).isEqualTo(2);
     }
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         resourceX = new Resource("X");
         subsetX = new ResourceSubset.Whole(resourceX);

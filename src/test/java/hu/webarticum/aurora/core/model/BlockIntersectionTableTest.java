@@ -8,21 +8,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Interval;
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class BlockIntersectionTableTest {
+class BlockIntersectionTableTest {
 
     @Test
-    public void testEmpty() {
+    void testEmpty() {
         BlockIntersectionTable intersectionTable = new BlockIntersectionTable();
         assertThat(toMap(intersectionTable)).isEmpty();
     }
     
     @Test
-    public void testTwoDisjointBlocks() {
+    void testTwoDisjointBlocks() {
         Block block1 = new Block("B1", 10);
         Block block2 = new Block("B2", 10);
         
@@ -39,7 +39,7 @@ public class BlockIntersectionTableTest {
     }
     
     @Test
-    public void testTwoIntersectingBlocks() {
+    void testTwoIntersectingBlocks() {
         Block block1 = new Block("B1", 10);
         Block block2 = new Block("B2", 10);
         
@@ -57,7 +57,7 @@ public class BlockIntersectionTableTest {
     }
     
     @Test
-    public void testMoreIntersectingBlocks() {
+    void testMoreIntersectingBlocks() {
         Block block1 = new Block("B1", 10);
         Block block2 = new Block("B2", 30);
         Block block3 = new Block("B3", 10);
@@ -98,7 +98,7 @@ public class BlockIntersectionTableTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         Block block1 = new Block("B1", 10);
         Block block2 = new Block("B2", 30);
         Block block3 = new Block("B3", 10);
@@ -145,7 +145,7 @@ public class BlockIntersectionTableTest {
     }
 
     @Test
-    public void testMergeMore() {
+    void testMergeMore() {
         Block block1 = new Block("B1", 15);
         Block block2 = new Block("B2", 30);
         Block block3 = new Block("B3", 10);
@@ -195,7 +195,7 @@ public class BlockIntersectionTableTest {
     }
     
     @Test
-    public void testCopy() {
+    void testCopy() {
         Block block1 = new Block("B1", 10);
         Block block2 = new Block("B2", 30);
         Block block3 = new Block("B3", 10);

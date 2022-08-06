@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ActivityListTest {
+class ActivityListTest {
 
     private Tag subject1;
     private Tag subject2;
@@ -25,7 +25,7 @@ public class ActivityListTest {
     private ActivityList conflictingActivityList2;
     
     @Test
-    public void testCopy() {
+    void testCopy() {
         assertThat(emptyActivityList.copy()).isNotSameAs(emptyActivityList);
         assertThat(emptyActivityList.copy()).isEqualTo(emptyActivityList);
 
@@ -46,9 +46,9 @@ public class ActivityListTest {
     }
     
     @Test
-    public void testTags() {
-        assertThat(emptyActivityList.getTags()).hasSize(0);
-        assertThat(emptyActivityList.getTags(Tag.Type.SUBJECT)).hasSize(0);
+    void testTags() {
+        assertThat(emptyActivityList.getTags()).isEmpty();
+        assertThat(emptyActivityList.getTags(Tag.Type.SUBJECT)).isEmpty();
 
         assertThat(normalActivityList1.getTags()).hasSize(1);
         assertThat(normalActivityList1.getTags(Tag.Type.SUBJECT)).hasSize(1);
@@ -67,24 +67,24 @@ public class ActivityListTest {
     }
     
     @Test
-    public void testResources() {
-        assertThat(emptyActivityList.getResources()).hasSize(0);
-        assertThat(emptyActivityList.getResources(Resource.Type.CLASS)).hasSize(0);
-        assertThat(emptyActivityList.getResources(Resource.Type.PERSON)).hasSize(0);
-        assertThat(emptyActivityList.getResources(Resource.Type.OBJECT)).hasSize(0);
-        assertThat(emptyActivityList.getResourceSubsets()).hasSize(0);
-        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.CLASS)).hasSize(0);
-        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.PERSON)).hasSize(0);
-        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
+    void testResources() {
+        assertThat(emptyActivityList.getResources()).isEmpty();
+        assertThat(emptyActivityList.getResources(Resource.Type.CLASS)).isEmpty();
+        assertThat(emptyActivityList.getResources(Resource.Type.PERSON)).isEmpty();
+        assertThat(emptyActivityList.getResources(Resource.Type.OBJECT)).isEmpty();
+        assertThat(emptyActivityList.getResourceSubsets()).isEmpty();
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.CLASS)).isEmpty();
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.PERSON)).isEmpty();
+        assertThat(emptyActivityList.getResourceSubsets(Resource.Type.OBJECT)).isEmpty();
 
         assertThat(normalActivityList1.getResources()).hasSize(4);
         assertThat(normalActivityList1.getResources(Resource.Type.CLASS)).hasSize(2);
         assertThat(normalActivityList1.getResources(Resource.Type.PERSON)).hasSize(2);
-        assertThat(normalActivityList1.getResources(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(normalActivityList1.getResources(Resource.Type.OBJECT)).isEmpty();
         assertThat(normalActivityList1.getResourceSubsets()).hasSize(4);
         assertThat(normalActivityList1.getResourceSubsets(Resource.Type.CLASS)).hasSize(2);
         assertThat(normalActivityList1.getResourceSubsets(Resource.Type.PERSON)).hasSize(2);
-        assertThat(normalActivityList1.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(normalActivityList1.getResourceSubsets(Resource.Type.OBJECT)).isEmpty();
 
         assertThat(normalActivityList2.getResources()).hasSize(3);
         assertThat(normalActivityList2.getResources(Resource.Type.CLASS)).hasSize(1);
@@ -105,13 +105,13 @@ public class ActivityListTest {
         assertThat(normalActivityList3.getResourceSubsets(Resource.Type.OBJECT)).hasSize(1);
 
         assertThat(conflictingActivityList1.getResources()).hasSize(1);
-        assertThat(conflictingActivityList1.getResources(Resource.Type.CLASS)).hasSize(0);
+        assertThat(conflictingActivityList1.getResources(Resource.Type.CLASS)).isEmpty();
         assertThat(conflictingActivityList1.getResources(Resource.Type.PERSON)).hasSize(1);
-        assertThat(conflictingActivityList1.getResources(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(conflictingActivityList1.getResources(Resource.Type.OBJECT)).isEmpty();
         assertThat(conflictingActivityList1.getResourceSubsets()).hasSize(2);
-        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.CLASS)).hasSize(0);
+        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.CLASS)).isEmpty();
         assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.PERSON)).hasSize(2);
-        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.OBJECT)).hasSize(0);
+        assertThat(conflictingActivityList1.getResourceSubsets(Resource.Type.OBJECT)).isEmpty();
 
         assertThat(conflictingActivityList2.getResources()).hasSize(4);
         assertThat(conflictingActivityList2.getResources(Resource.Type.CLASS)).hasSize(2);
@@ -124,7 +124,7 @@ public class ActivityListTest {
     }
     
     @Test
-    public void testHasConflicts() {
+    void testHasConflicts() {
         assertThat(emptyActivityList.hasConflicts()).isFalse();
         assertThat(normalActivityList1.hasConflicts()).isFalse();
         assertThat(normalActivityList2.hasConflicts()).isFalse();
@@ -134,7 +134,7 @@ public class ActivityListTest {
     }
     
     @Test
-    public void testConflictsWith() {
+    void testConflictsWith() {
         assertThat(emptyActivityList.conflictsWith(emptyActivityList)).isFalse(); // NOSONAR
         assertThat(emptyActivityList.conflictsWith(normalActivityList1)).isFalse();
         assertThat(emptyActivityList.conflictsWith(normalActivityList2)).isFalse();
@@ -179,13 +179,13 @@ public class ActivityListTest {
     }
     
     @Test
-    public void testFilter() {
+    void testFilter() {
         ActivityList actual = normalActivityList3.filter(new ActivityFilter.HasResource(teacher2));
         ActivityList expected = new ActivityList(normalActivityList3.get(0));
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildTags();
         buildResources();

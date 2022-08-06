@@ -1,55 +1,122 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'signing'
+    id 'maven-publish'
+    id 'com.palantir.git-version' version '0.15.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+}
 
-buildscript {
+sourceCompatibility = "1.8";
+targetCompatibility = "1.8";
+
+group = 'hu.webarticum.aurora'
+description = 'Aurora TimeTable Core'
+
+def moduleName = 'hu.webarticum.aurora.core'
+def scmUrl = 'https://github.com/davidsusu/aurora-core.git'
+def websiteUrl = scmUrl.replaceAll(/\.git$/, "");
+
+def versionMatcher = gitVersion() =~ /^v?(\d+\.\d+\.)(\d+)(.*)$/
+if (versionMatcher.size() > 0) {
+    def versionMatch = versionMatcher[0]
+	def isVersionDirty = !versionMatch[3].isEmpty()
+	def versionPrefix = versionMatch[1]
+	def versionPatch = isVersionDirty ? (Integer.parseInt(versionMatch[2]) + 1) + "" : versionMatch[2];
+	def versionSuffix = isVersionDirty ? "-SNAPSHOT" : ""
+    version versionPrefix + versionPatch + versionSuffix
+} else {
+    version '0.1.0-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.7.1'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+}
+
+defaultTasks 'build'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+jar {
+    manifest {
+        attributes('Automatic-Module-Name': moduleName)
+    }
+}
+
+nexusPublishing {
     repositories {
-        jcenter()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
+        sonatype()
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
         }
     }
 }
 
-plugins {
-    id 'java'
-    id 'java-library'
+signing {
+    required { true }
+    sign configurations.archives
+    sign publishing.publications.mavenJava
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-
-group = 'hu.webarticum'
-description = 'Aurora TimeTable Core Librarys'
-
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-version = '0.1.0' // FIXME
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.assertj:assertj-core:3.16.1'
-}
-
-task buildFullSource(type: Exec) {
-    mkdir 'build/full-source'
-    def filename = project.jar.archiveName.replaceAll(/\.jar$/, '') + "-source.zip"
-    commandLine 'git', 'archive', '--format', 'zip', '-o', './build/full-source/' + filename, '--', 'HEAD'
-}
-
-task buildEverything(type: Copy, dependsOn: [
-    'jar', 'buildFullSource'
-]) {
-    into 'build/everything'
-    
-    from ('build/libs') {
-        include '*.jar'
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'failed'
+        showExceptions true
+        exceptionFormat 'full'
+        showCauses true
+        showStackTraces true
+        showStandardStreams false
     }
-    
-    from ('build/full-source') {
-        include '*.zip'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+}
+
+project.plugins.withType(MavenPublishPlugin).all {
+    PublishingExtension publishing = project.extensions.getByType(PublishingExtension)
+    publishing.publications.withType(MavenPublication).all { mavenPublication ->
+        mavenPublication.pom {
+            name = project.name
+            description = project.description
+            url = websiteUrl
+            licenses {
+                license {
+                    name = 'The Apache Software License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution = 'repo'
+                }
+            }
+            scm {
+                connection = 'scm:git:' + scmUrl
+                developerConnection = 'scm:git:' + scmUrl
+                url = scmUrl
+            }
+            developers {
+                developer {
+                    id = 'davidsusu'
+                    name = 'Dávid Horváth'
+                    email = 'horvath@webarticum.hu'
+                }
+            }
+        }
     }
 }

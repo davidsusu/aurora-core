@@ -1,17 +1,15 @@
 package hu.webarticum.aurora.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import hu.webarticum.aurora.core.model.time.Time;
 
-public class BoardTest {
+class BoardTest {
 
     private Period week1;
     private Period week2;
@@ -37,138 +35,138 @@ public class BoardTest {
     
 
     @Test
-    public void testSize() {
-        assertEquals(0, emptyBoard.getEntries().size());
-        assertEquals(0, emptyBoard.size());
-        assertEquals(true, emptyBoard.isEmpty());
-
-        assertEquals(4, normalBoard1.getEntries().size());
-        assertEquals(4, normalBoard1.size());
-        assertEquals(false, normalBoard1.isEmpty());
-
-        assertEquals(1, normalBoard2.getEntries().size());
-        assertEquals(1, normalBoard2.size());
-        assertEquals(false, normalBoard2.isEmpty());
-
-        assertEquals(2, boardWithNegativeTime.getEntries().size());
-        assertEquals(2, boardWithNegativeTime.size());
-        assertEquals(false, boardWithNegativeTime.isEmpty());
-
-        assertEquals(3, conflictingBoard.getEntries().size());
-        assertEquals(3, conflictingBoard.size());
-        assertEquals(false, conflictingBoard.isEmpty());
+    void testSize() {
+    	assertThat(emptyBoard.getEntries()).isEmpty();
+    	assertThat(emptyBoard.size()).isZero();
+    	assertThat(emptyBoard.isEmpty()).isTrue();
+    	
+    	assertThat(normalBoard1.getEntries()).hasSize(4);
+    	assertThat(normalBoard1.size()).isEqualTo(4);
+    	assertThat(normalBoard1.isEmpty()).isFalse();
+    	
+    	assertThat(normalBoard2.getEntries()).hasSize(1);
+    	assertThat(normalBoard2.size()).isEqualTo(1);
+    	assertThat(normalBoard2.isEmpty()).isFalse();
+    	
+    	assertThat(boardWithNegativeTime.getEntries()).hasSize(2);
+    	assertThat(boardWithNegativeTime.size()).isEqualTo(2);
+    	assertThat(boardWithNegativeTime.isEmpty()).isFalse();
+    	
+    	assertThat(conflictingBoard.getEntries()).hasSize(3);
+    	assertThat(conflictingBoard.size()).isEqualTo(3);
+    	assertThat(conflictingBoard.isEmpty()).isFalse();
     }
     
     @Test
-    public void testCopy() {
-        assertEquals(normalBoard1.getEntries(), normalBoard1.copy().getEntries());
-        assertEquals(normalBoard1.getEntries(), new Board(normalBoard1).getEntries());
-
-        assertEquals(normalBoard2.getEntries(), normalBoard2.copy().getEntries());
-        assertEquals(normalBoard2.getEntries(), new Board(normalBoard2).getEntries());
-
-        assertEquals(boardWithNegativeTime.getEntries(), boardWithNegativeTime.copy().getEntries());
-        assertEquals(boardWithNegativeTime.getEntries(), new Board(boardWithNegativeTime).getEntries());
-
-        assertEquals(conflictingBoard.getEntries(), conflictingBoard.copy().getEntries());
-        assertEquals(conflictingBoard.getEntries(), new Board(conflictingBoard).getEntries());
+    void testCopy() {
+    	assertThat(normalBoard1.copy().getEntries()).isEqualTo(normalBoard1.getEntries());
+    	assertThat(new Board(normalBoard1).getEntries()).isEqualTo(normalBoard1.getEntries());
+    	
+    	assertThat(normalBoard2.copy().getEntries()).isEqualTo(normalBoard2.getEntries());
+    	assertThat(new Board(normalBoard2).getEntries()).isEqualTo(normalBoard2.getEntries());
+    	
+    	assertThat(boardWithNegativeTime.copy().getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
+    	assertThat(new Board(boardWithNegativeTime).getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
+    	
+    	assertThat(conflictingBoard.copy().getEntries()).isEqualTo(conflictingBoard.getEntries());
+    	assertThat(new Board(conflictingBoard).getEntries()).isEqualTo(conflictingBoard.getEntries());
     }
 
     @Test
-    public void testApplyFrom() {
+    void testApplyFrom() {
         Block temporaryBlock = new Block();
         Board targetBoard = new Board();
         targetBoard.add(temporaryBlock, new Time(0));
         
-        assertTrue(targetBoard.contains(temporaryBlock));
+        assertThat(targetBoard.contains(temporaryBlock)).isTrue();
         
         targetBoard.applyFrom(normalBoard1);
 
-        assertFalse(targetBoard.contains(temporaryBlock));
-        assertEquals(normalBoard1.getEntries(), targetBoard.getEntries());
+        assertThat(targetBoard.contains(temporaryBlock)).isFalse();
+        assertThat(targetBoard.getEntries()).isEqualTo(normalBoard1.getEntries());
     }
     
     @Test
-    public void testGetBlocks() {
-        assertTrue(emptyBoard.getBlocks().isEmpty());
-        assertEquals(new BlockList(block1, block2, block3, block4), normalBoard1.getBlocks());
-        assertEquals(new BlockList(block1), normalBoard2.getBlocks());
-        assertEquals(new BlockList(block1, block3), boardWithNegativeTime.getBlocks());
-        assertEquals(new BlockList(block1, block2, block4), conflictingBoard.getBlocks());
+    void testGetBlocks() {
+        assertThat(emptyBoard.getBlocks()).isEmpty();
+        assertThat(normalBoard1.getBlocks()).containsExactly(block1, block2, block3, block4);
+        assertThat(normalBoard2.getBlocks()).containsExactly(block1);
+        assertThat(boardWithNegativeTime.getBlocks()).containsExactly(block1, block3);
+        assertThat(conflictingBoard.getBlocks()).containsExactly(block1, block2, block4);
     }
 
     @Test
-    public void testGetPeriods() {
-        assertTrue(emptyBoard.getPeriods().isEmpty());
-        assertEquals(new PeriodSet(week1, week2), normalBoard1.getPeriods());
-        assertEquals(new PeriodSet(week1), normalBoard2.getPeriods());
-        assertEquals(new PeriodSet(week1, week2), boardWithNegativeTime.getPeriods());
-        assertEquals(new PeriodSet(week1, week2), conflictingBoard.getPeriods());
+    void testGetPeriods() {
+        assertThat((Set<Period>) emptyBoard.getPeriods()).isEmpty();
+        assertThat((Set<Period>) normalBoard1.getPeriods()).containsExactlyInAnyOrder(week1, week2);
+        assertThat((Set<Period>) normalBoard2.getPeriods()).containsExactlyInAnyOrder(week1);
+        assertThat((Set<Period>) boardWithNegativeTime.getPeriods()).containsExactlyInAnyOrder(week1, week2);
+        assertThat((Set<Period>) conflictingBoard.getPeriods()).containsExactlyInAnyOrder(week1, week2);
     }
 
     @Test
-    public void testBounds() {
-        assertEquals(new Time(0), emptyBoard.getStartTime());
-        assertEquals(new Time(0), emptyBoard.getLastTime());
-        assertEquals(new Time(0), emptyBoard.getEndTime());
+    void testBounds() {
+        assertThat(emptyBoard.getStartTime()).isEqualTo(new Time(0));
+        assertThat(emptyBoard.getLastTime()).isEqualTo(new Time(0));
+        assertThat(emptyBoard.getEndTime()).isEqualTo(new Time(0));
 
-        assertEquals(new Time(8 * Time.HOUR), normalBoard1.getStartTime());
-        assertEquals(new Time(11 * Time.HOUR), normalBoard1.getLastTime());
-        assertEquals(new Time(11 * Time.HOUR + Block.DEFAULT_LENGTH + Time.MINUTE), normalBoard1.getEndTime());
+        assertThat(normalBoard1.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard1.getLastTime()).isEqualTo(new Time(11 * Time.HOUR));
+        assertThat(normalBoard1.getEndTime()).isEqualTo(new Time(11 * Time.HOUR + Block.DEFAULT_LENGTH + Time.MINUTE));
 
-        assertEquals(new Time(8 * Time.HOUR), normalBoard2.getStartTime());
-        assertEquals(new Time(8 * Time.HOUR), normalBoard2.getLastTime());
-        assertEquals(new Time(8 * Time.HOUR + Block.DEFAULT_LENGTH), normalBoard2.getEndTime());
+        assertThat(normalBoard2.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard2.getLastTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard2.getEndTime()).isEqualTo(new Time(8 * Time.HOUR + Block.DEFAULT_LENGTH));
 
-        assertEquals(new Time(-3 * Time.HOUR), boardWithNegativeTime.getStartTime());
-        assertEquals(new Time(7 * Time.HOUR), boardWithNegativeTime.getLastTime());
-        assertEquals(new Time(7 * Time.HOUR + Block.DEFAULT_LENGTH), boardWithNegativeTime.getEndTime());
+        assertThat(boardWithNegativeTime.getStartTime()).isEqualTo(new Time(-3 * Time.HOUR));
+        assertThat(boardWithNegativeTime.getLastTime()).isEqualTo(new Time(7 * Time.HOUR));
+        assertThat(boardWithNegativeTime.getEndTime()).isEqualTo(new Time(7 * Time.HOUR + Block.DEFAULT_LENGTH));
 
-        assertEquals(new Time(8 * Time.HOUR), conflictingBoard.getStartTime());
-        assertEquals(new Time(9 * Time.HOUR), conflictingBoard.getLastTime());
-        assertEquals(new Time(9 * Time.HOUR + Block.DEFAULT_LENGTH + Time.MINUTE), conflictingBoard.getEndTime());
+        assertThat(conflictingBoard.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(conflictingBoard.getLastTime()).isEqualTo(new Time(9 * Time.HOUR));
+        assertThat(conflictingBoard.getEndTime()).isEqualTo(new Time(9 * Time.HOUR + Block.DEFAULT_LENGTH + Time.MINUTE));
     }
 
     @Test
-    public void testBasicOperationsOnCopy() {
+    void testBasicOperationsOnCopy() {
         Board normalBoard1Copy = normalBoard1.copy();
         
-        assertEquals(new Time(8 * Time.HOUR), normalBoard1Copy.getStartTime());
-        assertEquals(new Time(11 * Time.HOUR), normalBoard1Copy.getLastTime());
-        assertEquals(new Time((11 * Time.HOUR) + (46 * Time.MINUTE)), normalBoard1Copy.getEndTime());
+        assertThat(normalBoard1Copy.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard1Copy.getLastTime()).isEqualTo(new Time(11 * Time.HOUR));
+        assertThat(normalBoard1Copy.getEndTime()).isEqualTo(new Time((11 * Time.HOUR) + (46 * Time.MINUTE)));
 
         normalBoard1Copy.add(new Block(Time.HOUR), new Time((11 * Time.HOUR) + (30 * Time.MINUTE)));
         normalBoard1Copy.add(new Board.Entry(new Block(10 * Time.MINUTE), new Time((11 * Time.HOUR) + (50 * Time.MINUTE))));
 
-        assertEquals(new Time(8 * Time.HOUR), normalBoard1Copy.getStartTime());
-        assertEquals(new Time((11 * Time.HOUR) + (50 * Time.MINUTE)), normalBoard1Copy.getLastTime());
-        assertEquals(new Time((12 * Time.HOUR) + (30 * Time.MINUTE)), normalBoard1Copy.getEndTime());
+        assertThat(normalBoard1Copy.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard1Copy.getLastTime()).isEqualTo(new Time((11 * Time.HOUR) + (50 * Time.MINUTE)));
+        assertThat(normalBoard1Copy.getEndTime()).isEqualTo(new Time((12 * Time.HOUR) + (30 * Time.MINUTE)));
 
         normalBoard1Copy.remove(block1);
 
-        assertEquals(new Time((8 * Time.HOUR) + (30 * Time.MINUTE)), normalBoard1Copy.getStartTime());
-        assertEquals(new Time((11 * Time.HOUR) + (50 * Time.MINUTE)), normalBoard1Copy.getLastTime());
-        assertEquals(new Time((12 * Time.HOUR) + (30 * Time.MINUTE)), normalBoard1Copy.getEndTime());
+        assertThat(normalBoard1Copy.getStartTime()).isEqualTo(new Time((8 * Time.HOUR) + (30 * Time.MINUTE)));
+        assertThat(normalBoard1Copy.getLastTime()).isEqualTo(new Time((11 * Time.HOUR) + (50 * Time.MINUTE)));
+        assertThat(normalBoard1Copy.getEndTime()).isEqualTo(new Time((12 * Time.HOUR) + (30 * Time.MINUTE)));
 
         normalBoard1Copy.clear();
-        assertTrue(normalBoard1Copy.isEmpty());
+        assertThat(normalBoard1Copy.isEmpty()).isTrue();
 
-        assertFalse(normalBoard1.isEmpty());
-        assertEquals(new Time(8 * Time.HOUR), normalBoard1.getStartTime());
-        assertEquals(new Time(11 * Time.HOUR), normalBoard1.getLastTime());
-        assertEquals(new Time((11 * Time.HOUR) + (46 * Time.MINUTE)), normalBoard1.getEndTime());
+        assertThat(normalBoard1.isEmpty()).isFalse();
+        assertThat(normalBoard1.getStartTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard1.getLastTime()).isEqualTo(new Time(11 * Time.HOUR));
+        assertThat(normalBoard1.getEndTime()).isEqualTo(new Time((11 * Time.HOUR) + (46 * Time.MINUTE)));
     }
 
     @Test
-    public void testSearchBlock() {
-        assertSame(block1, normalBoard1.search(block1).getBlock());
-        assertEquals(new Time(8 * Time.HOUR), normalBoard1.search(block1).getTime());
-        assertNull(normalBoard2.search(block2));
+    void testSearchBlock() {
+        assertThat(normalBoard1.search(block1).getBlock()).isSameAs(block1);
+        assertThat(normalBoard1.search(block1).getTime()).isEqualTo(new Time(8 * Time.HOUR));
+        assertThat(normalBoard2.search(block2)).isNull();
     }
 
     @Test
-    public void testSearchActivity() {
-        assertSame(block1, normalBoard1.search(activity11).getBlock()); 
+    void testSearchActivity() {
+        assertThat(normalBoard1.search(activity11).getBlock()).isSameAs(block1); 
     }
     
     /*
@@ -209,7 +207,7 @@ public class BoardTest {
     */
     
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildPeriods();
         buildResources();

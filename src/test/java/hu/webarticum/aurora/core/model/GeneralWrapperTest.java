@@ -2,12 +2,12 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GeneralWrapperTest {
+class GeneralWrapperTest {
 
     @Test
-    public void testValue() {
+    void testValue() {
         GeneralWrapper<Integer> numberWrapper = new GeneralWrapper<Integer>();
         
         assertThat(numberWrapper.isNull()).isTrue();

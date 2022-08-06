@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CustomTimeLimitTest {
+class CustomTimeLimitTest {
 
     private static final Interval[] intervals = new Interval[] {
         new Interval(0, 10),
@@ -39,14 +39,14 @@ public class CustomTimeLimitTest {
     };
 
     @Test
-    public void testThrowInvalidTimeOrder() {
+    void testThrowInvalidTimeOrder() {
         assertThatThrownBy(new ThrowableAssert.ThrowingCallable() { @Override public void call() throws Throwable {
             new CustomTimeLimit(false, new Time(10), new Time(7), new Time(14));
         }}).isInstanceOf(CustomTimeLimit.InvalidTimeOrderException.class);
     }
     
     @Test
-    public void testCopyStartFalse() {
+    void testCopyStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit copiedLimit = new CustomTimeLimit(limit);
         
@@ -54,7 +54,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testCopyStartTrue() {
+    void testCopyStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         CustomTimeLimit copiedLimit = new CustomTimeLimit(limit);
         
@@ -62,7 +62,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testBasicsNever() {
+    void testBasicsNever() {
         CustomTimeLimit limit = new CustomTimeLimit(false);
         
         assertThat(limit.isAlways()).isFalse();
@@ -75,7 +75,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testBasicsAlways() {
+    void testBasicsAlways() {
         CustomTimeLimit limit = new CustomTimeLimit(true);
         
         assertThat(limit.isAlways()).isTrue();
@@ -88,7 +88,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testBasicsStartFalse() {
+    void testBasicsStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         
         assertThat(limit.isAlways()).isFalse();
@@ -101,7 +101,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testBasicsStartTrue() {
+    void testBasicsStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         
         assertThat(limit.isAlways()).isFalse();
@@ -114,7 +114,7 @@ public class CustomTimeLimitTest {
     }
     
     @Test
-    public void testLimitSortedIntervalsStartFalse() {
+    void testLimitSortedIntervalsStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         List<Interval> actual = limit.limitSortedIntervals(Arrays.asList(intervals));
         
@@ -129,7 +129,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testLimitSortedIntervalsStartTrue() {
+    void testLimitSortedIntervalsStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         List<Interval> actual = limit.limitSortedIntervals(Arrays.asList(intervals));
         
@@ -146,7 +146,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testLimitIntersectingSortedIntervalsStartFalse() {
+    void testLimitIntersectingSortedIntervalsStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         List<Interval> actual = limit.limitIntersectingSortedIntervals(Arrays.asList(intervals));
         
@@ -165,7 +165,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testLimitIntersectingSortedIntervalsStartTrue() {
+    void testLimitIntersectingSortedIntervalsStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         List<Interval> actual = limit.limitIntersectingSortedIntervals(Arrays.asList(intervals));
 
@@ -186,7 +186,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsIntervalStartFalse() {
+    void testContainsIntervalStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -202,7 +202,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsIntervalStartTrue() {
+    void testContainsIntervalStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -218,7 +218,7 @@ public class CustomTimeLimitTest {
     }
     
     @Test
-    public void testIntersectsIntervalStartFalse() {
+    void testIntersectsIntervalStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -236,7 +236,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testIntersectsIntervalStartTrue() {
+    void testIntersectsIntervalStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         
         List<Interval> actuals = new ArrayList<Interval>();
@@ -252,7 +252,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsTimeStartFalse() {
+    void testContainsTimeStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         assertThat(limit.contains(new Time(0))).isFalse();
         assertThat(limit.contains(new Time(10))).isTrue();
@@ -262,7 +262,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsTimeInclusionStartFalse() {
+    void testContainsTimeInclusionStartFalse() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
 
         assertThat(limit.contains(new Time(0), true, true)).isFalse();
@@ -297,7 +297,7 @@ public class CustomTimeLimitTest {
     }
     
     @Test
-    public void testContainsTimeStartTrue() {
+    void testContainsTimeStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
         
         assertThat(limit.contains(new Time(0))).isTrue();
@@ -308,7 +308,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsTimeInclusionStartTrue() {
+    void testContainsTimeInclusionStartTrue() {
         CustomTimeLimit limit = new CustomTimeLimit(true, switches);
 
         assertThat(limit.contains(new Time(0), true, true)).isTrue();
@@ -343,7 +343,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testContainsOther() {
+    void testContainsOther() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(15),
@@ -360,7 +360,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testIntersectsOther() {
+    void testIntersectsOther() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit otherLimit1 = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(10), new Time(15),
@@ -377,7 +377,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testUnionWith() {
+    void testUnionWith() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit otherLimit = new CustomTimeLimit(false, new Time[] { // NOSONAR comma
             new Time(5), new Time(15),
@@ -397,7 +397,7 @@ public class CustomTimeLimitTest {
     }
 
     @Test
-    public void testIntersectionWith() {
+    void testIntersectionWith() {
         CustomTimeLimit limit = new CustomTimeLimit(false, switches);
         CustomTimeLimit otherLimit = new CustomTimeLimit(true, new Time[] { // NOSONAR comma
             new Time(15),

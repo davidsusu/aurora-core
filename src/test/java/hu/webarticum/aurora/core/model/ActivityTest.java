@@ -2,10 +2,10 @@ package hu.webarticum.aurora.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ActivityTest {
+class ActivityTest {
     
     private Tag subject1;
     private Tag subject2;
@@ -24,7 +24,7 @@ public class ActivityTest {
 
     
     @Test
-    public void testTags() {
+    void testTags() {
         assertThat(emptyActivity.getTagManager().has(subject1)).isFalse();
         assertThat(emptyActivity.getTagManager().has(subject2)).isFalse();
         assertThat(emptyActivity.getTagManager().hasType(Tag.Type.SUBJECT)).isFalse();
@@ -52,7 +52,7 @@ public class ActivityTest {
     }
 
     @Test
-    public void testResources() {
+    void testResources() {
         assertThat(emptyActivity.getResourceManager().hasResource(class1)).isFalse();
         assertThat(emptyActivity.getResourceManager().hasResource(class2)).isFalse();
         assertThat(emptyActivity.getResourceManager().hasResource(teacher1)).isFalse();
@@ -62,8 +62,8 @@ public class ActivityTest {
         assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.PERSON)).isFalse();
         assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.OBJECT)).isFalse();
         assertThat(emptyActivity.getResourceManager().hasResourceType(Resource.Type.LOCALE)).isFalse();
-        assertThat(emptyActivity.getResourceManager().getResources()).hasSize(0);
-        assertThat(emptyActivity.getResourceManager().getResourceSubsets()).hasSize(0);
+        assertThat(emptyActivity.getResourceManager().getResources()).isEmpty();
+        assertThat(emptyActivity.getResourceManager().getResourceSubsets()).isEmpty();
 
         assertThat(simpleActivity.getResourceManager().hasResource(class1)).isTrue();
         assertThat(simpleActivity.getResourceManager().hasResource(class2)).isFalse();
@@ -115,7 +115,7 @@ public class ActivityTest {
     }
     
     @Test
-    public void testConflictsWith() {
+    void testConflictsWith() {
         assertThat(emptyActivity.conflictsWith(emptyActivity)).isFalse();
         assertThat(emptyActivity.conflictsWith(simpleActivity)).isFalse();
         assertThat(emptyActivity.conflictsWith(multiActivity)).isFalse();
@@ -148,7 +148,7 @@ public class ActivityTest {
     }
     
     
-    @Before
+    @BeforeEach
     public void buildThings() {
         buildTags();
         buildResources();
