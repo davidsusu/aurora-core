@@ -13,9 +13,13 @@ public class ActivityList extends ArrayList<Activity> {
 
     private static final long serialVersionUID = 1L;
 
-    
+
     public ActivityList() {
         super();
+    }
+
+    public ActivityList(int initialCapacity) {
+        super(initialCapacity);
     }
 
     public ActivityList(Activity... activities) {

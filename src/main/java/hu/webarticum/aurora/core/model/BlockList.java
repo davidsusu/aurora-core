@@ -17,6 +17,10 @@ public class BlockList extends ArrayList<Block> {
         super();
     }
 
+    public BlockList(int initialCapacity) {
+        super(initialCapacity);
+    }
+
     public BlockList(Block... blocks) {
         super(Arrays.<Block>asList(blocks));
     }

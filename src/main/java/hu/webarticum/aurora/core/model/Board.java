@@ -421,6 +421,14 @@ public class Board implements Iterable<Board.Entry>, Labeled {
             Collections.sort(this, new SortComparator());
         }
         
+        public BlockList getBlocks() {
+        	BlockList result = new BlockList(this.size());
+        	for (Entry entry : this) {
+        		result.add(entry.block);
+        	}
+        	return result;
+        }
+        
         
         private static class SortComparator implements Comparator<Entry> {
 
