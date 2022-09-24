@@ -1,6 +1,7 @@
 package hu.webarticum.aurora.core.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.text.Collator;
 import java.text.Normalizer;
 import java.util.AbstractList;
@@ -44,6 +45,9 @@ public interface Labeled extends Serializable {
     public static class StringComparator implements Comparator<String>, Serializable {
 
         private static final long serialVersionUID = 1L;
+        
+        
+        private static final Pattern DIGITS_PATTERN = Pattern.compile("\\d+");
 
         
         private enum CharacterType { LETTER, DIGIT, OTHER }
@@ -139,32 +143,37 @@ public interface Labeled extends Serializable {
         }
         
         private static int compareTokens(String token1, String token2) {
-            int result = 0;
-
-            boolean isNumeric1 = token1.matches("\\d+");
-            boolean isNumeric2 = token2.matches("\\d+");
+            boolean isNumeric1 = DIGITS_PATTERN.matcher(token1).matches();
+            boolean isNumeric2 = DIGITS_PATTERN.matcher(token2).matches();
             
             if (isNumeric1) {
                 if (isNumeric2) {
-                    int number1 = Integer.parseInt(token1);
-                    int number2 = Integer.parseInt(token2);
-                    result = Integer.compare(number1, number2);
+                    return compareNumericTokens(token1, token2);
                 } else {
-                    result = -1;
+                    return -1;
                 }
+            } else if (isNumeric2) {
+                return 1;
             } else {
-                if (isNumeric2) {
-                    result = 1;
-                } else {
-                    Locale locale = new Locale("HU_hu");
-                    Collator collator = Collator.getInstance(locale);
-                    collator.setStrength(Collator.PRIMARY);
-                    result = collator.compare(token1, token2);
-                }
+                Locale locale = new Locale("HU_hu");
+                Collator collator = Collator.getInstance(locale);
+                collator.setStrength(Collator.PRIMARY);
+                return collator.compare(token1, token2);
             }
-            
-            return result;
         }
+        
+        private static int compareNumericTokens(String token1, String token2) {
+            if (token1.length() <= 18 && token2.length() <= 18) {
+                long long1 = Long.parseLong(token1);
+                long long2 = Long.parseLong(token2);
+                return Long.compare(long1, long2);
+            } else {
+                BigInteger bigInteger1 = new BigInteger(token1);
+                BigInteger bigInteger2 = new BigInteger(token2);
+                return bigInteger1.compareTo(bigInteger2);
+            }
+        }
+        
     }
     
 
