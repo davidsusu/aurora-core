@@ -36,40 +36,40 @@ class BoardTest {
 
     @Test
     void testSize() {
-    	assertThat(emptyBoard.getEntries()).isEmpty();
-    	assertThat(emptyBoard.size()).isZero();
-    	assertThat(emptyBoard.isEmpty()).isTrue();
-    	
-    	assertThat(normalBoard1.getEntries()).hasSize(4);
-    	assertThat(normalBoard1.size()).isEqualTo(4);
-    	assertThat(normalBoard1.isEmpty()).isFalse();
-    	
-    	assertThat(normalBoard2.getEntries()).hasSize(1);
-    	assertThat(normalBoard2.size()).isEqualTo(1);
-    	assertThat(normalBoard2.isEmpty()).isFalse();
-    	
-    	assertThat(boardWithNegativeTime.getEntries()).hasSize(2);
-    	assertThat(boardWithNegativeTime.size()).isEqualTo(2);
-    	assertThat(boardWithNegativeTime.isEmpty()).isFalse();
-    	
-    	assertThat(conflictingBoard.getEntries()).hasSize(3);
-    	assertThat(conflictingBoard.size()).isEqualTo(3);
-    	assertThat(conflictingBoard.isEmpty()).isFalse();
+        assertThat(emptyBoard.getEntries()).isEmpty();
+        assertThat(emptyBoard.size()).isZero();
+        assertThat(emptyBoard.isEmpty()).isTrue();
+        
+        assertThat(normalBoard1.getEntries()).hasSize(4);
+        assertThat(normalBoard1.size()).isEqualTo(4);
+        assertThat(normalBoard1.isEmpty()).isFalse();
+        
+        assertThat(normalBoard2.getEntries()).hasSize(1);
+        assertThat(normalBoard2.size()).isEqualTo(1);
+        assertThat(normalBoard2.isEmpty()).isFalse();
+        
+        assertThat(boardWithNegativeTime.getEntries()).hasSize(2);
+        assertThat(boardWithNegativeTime.size()).isEqualTo(2);
+        assertThat(boardWithNegativeTime.isEmpty()).isFalse();
+        
+        assertThat(conflictingBoard.getEntries()).hasSize(3);
+        assertThat(conflictingBoard.size()).isEqualTo(3);
+        assertThat(conflictingBoard.isEmpty()).isFalse();
     }
     
     @Test
     void testCopy() {
-    	assertThat(normalBoard1.copy().getEntries()).isEqualTo(normalBoard1.getEntries());
-    	assertThat(new Board(normalBoard1).getEntries()).isEqualTo(normalBoard1.getEntries());
-    	
-    	assertThat(normalBoard2.copy().getEntries()).isEqualTo(normalBoard2.getEntries());
-    	assertThat(new Board(normalBoard2).getEntries()).isEqualTo(normalBoard2.getEntries());
-    	
-    	assertThat(boardWithNegativeTime.copy().getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
-    	assertThat(new Board(boardWithNegativeTime).getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
-    	
-    	assertThat(conflictingBoard.copy().getEntries()).isEqualTo(conflictingBoard.getEntries());
-    	assertThat(new Board(conflictingBoard).getEntries()).isEqualTo(conflictingBoard.getEntries());
+        assertThat(normalBoard1.copy().getEntries()).isEqualTo(normalBoard1.getEntries());
+        assertThat(new Board(normalBoard1).getEntries()).isEqualTo(normalBoard1.getEntries());
+        
+        assertThat(normalBoard2.copy().getEntries()).isEqualTo(normalBoard2.getEntries());
+        assertThat(new Board(normalBoard2).getEntries()).isEqualTo(normalBoard2.getEntries());
+        
+        assertThat(boardWithNegativeTime.copy().getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
+        assertThat(new Board(boardWithNegativeTime).getEntries()).isEqualTo(boardWithNegativeTime.getEntries());
+        
+        assertThat(conflictingBoard.copy().getEntries()).isEqualTo(conflictingBoard.getEntries());
+        assertThat(new Board(conflictingBoard).getEntries()).isEqualTo(conflictingBoard.getEntries());
     }
 
     @Test

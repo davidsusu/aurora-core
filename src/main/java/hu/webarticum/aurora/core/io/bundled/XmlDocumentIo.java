@@ -1055,9 +1055,7 @@ public class XmlDocumentIo extends AbstractDocumentIo {
                     periods.add(period);
                 }
             }
-            if (periods.isEmpty()) {
-                return;
-            }
+            
             Activity activity = new Activity();
             Activity.TagManager tagManager = activity.getTagManager();
             activity.setLabel(activityElement.getAttribute("label"));

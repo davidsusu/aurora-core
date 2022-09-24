@@ -48,47 +48,23 @@ public abstract class AbstractDocumentIo implements DocumentIo {
 
     @Override
     public void save(Document document, File file) throws IOException {
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             save(document, new FileOutputStream(file));
-        } finally {
-            if (fileOutputStream != null) {
-                fileOutputStream.close();
-            }
         }
     }
-    
+
     @Override
     public Document load(URL url) throws IOException, ParseException {
-        Document document;
-        InputStream urlInputStream = null;
-        try {
-            urlInputStream = url.openStream();
-            document = load(urlInputStream);
-        } finally {
-            if (urlInputStream != null) {
-                urlInputStream.close();
-            }
+        try (InputStream urlInputStream = url.openStream()) {
+            return load(urlInputStream);
         }
-        return document;
     }
 
     @Override
     public Document load(File file) throws IOException, ParseException {
-        FileInputStream fileInputStream = null;
-        Document document;
-        try {
-            fileInputStream = new FileInputStream(file);
-            document = load(fileInputStream);
-        } finally {
-            if (fileInputStream != null) {
-                fileInputStream.close();
-            }
+        try (InputStream fileInputStream = new FileInputStream(file)) {
+            return load(fileInputStream);
         }
-        return document;
     }
 
-    
-    
 }

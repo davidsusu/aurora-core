@@ -422,11 +422,11 @@ public class Board implements Iterable<Board.Entry>, Labeled {
         }
         
         public BlockList getBlocks() {
-        	BlockList result = new BlockList(this.size());
-        	for (Entry entry : this) {
-        		result.add(entry.block);
-        	}
-        	return result;
+            BlockList result = new BlockList(this.size());
+            for (Entry entry : this) {
+                result.add(entry.block);
+            }
+            return result;
         }
         
         
