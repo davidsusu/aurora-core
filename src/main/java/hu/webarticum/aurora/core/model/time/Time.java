@@ -197,7 +197,7 @@ public class Time implements Comparable<Time>, Serializable {
         long result = 0;
         Matcher matcher = TIME_STRING_PATTERN.matcher(timeString);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("Unvalid time string: '" + timeString + "'");
+            throw new IllegalArgumentException("Invalid time string: '" + timeString + "'");
         }
         String weeksString = matcher.group(6);
         String daysString = matcher.group(7);
@@ -221,7 +221,7 @@ public class Time implements Comparable<Time>, Serializable {
                 result += Integer.parseInt(secondsString);
             }
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Unvalid time string: '" + timeString + "'", e);
+            throw new IllegalArgumentException("Invalid time string: '" + timeString + "'", e);
         }
         return result;
     }
